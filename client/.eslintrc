@@ -39,6 +39,7 @@
     "semi": [
       "warn",
       "never"
-    ]
+    ],
+    "react/prop-types": 1
   }
 }

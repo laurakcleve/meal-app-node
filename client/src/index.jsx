@@ -9,7 +9,6 @@ import theme from './theme/theme'
 import GlobalStyles from './theme/GlobalStyles'
 
 import Header from './components/Header'
-import Home from './components/Home'
 import Items from './components/Items'
 
 const client = new ApolloClient({ uri: 'http://localhost:4000/graphql' })
@@ -20,7 +19,7 @@ const App = () => (
       <ThemeProvider theme={theme}>
         <GlobalStyles />
         <Header />
-        <Route exact path="/" component={Home} />
+        <Route exact path="/" component={Items} />
         <Route exact path="/items" component={Items} />
       </ThemeProvider>
     </BrowserRouter>
