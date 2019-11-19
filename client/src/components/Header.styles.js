@@ -8,10 +8,11 @@ export const Header = styled.header`
 
 export const Container = styled.div`
   display: flex;
-  height: 100%;
   align-items: flex-end;
+  height: 100%;
   max-width: ${({ theme }) => theme.containerWidth};
   margin: 0 auto;
+  padding: 0 20px;
 `
 
 export const CustomLink = styled(Link)`
