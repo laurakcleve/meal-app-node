@@ -1,5 +1,6 @@
 import React from 'react'
 import { withRouter } from 'react-router-dom'
+import PropTypes from 'prop-types'
 
 import * as Styled from './Header.styles'
 
@@ -12,5 +13,11 @@ const Header = ({ location }) => (
     </Styled.Container>
   </Styled.Header>
 )
+
+Header.propTypes = {
+  location: PropTypes.shape({
+    pathname: PropTypes.string.isRequired,
+  }).isRequired,
+}
 
 export default withRouter(Header)
