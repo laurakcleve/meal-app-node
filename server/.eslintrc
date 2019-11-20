@@ -37,5 +37,6 @@
       "never"
     ],
     "class-methods-use-this": "off",
+    "no-use-before-define": "off",
   }
 }
