@@ -11,6 +11,7 @@ import GlobalStyles from './theme/GlobalStyles'
 import Header from './components/Header'
 import Items from './components/Items'
 import Dishes from './components/Dishes'
+import Inventory from './components/Inventory'
 
 const cache = new InMemoryCache()
 
@@ -18,6 +19,7 @@ cache.writeData({
   data: {
     searchedItems: [],
     searchedDishes: [],
+    searchedInventoryItems: [],
   },
 })
 
@@ -36,6 +38,7 @@ const App = () => (
         <Route exact path="/" component={Items} />
         <Route exact path="/items" component={Items} />
         <Route exact path="/dishes" component={Dishes} />
+        <Route exact path="/inventory" component={Inventory} />
       </ThemeProvider>
     </BrowserRouter>
   </ApolloProvider>

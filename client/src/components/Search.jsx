@@ -11,9 +11,12 @@ const Search = ({ readQuery, writeQuery, listName, cacheListName }) => {
   useEffect(() => {
     const data = client.readQuery({ query: readQuery })
 
-    const searchedList = data[listName].filter((item) =>
-      item.name.includes(searchText)
-    )
+    const searchedList = data[listName].filter((item) => {
+      if (item.name) {
+        return item.name.includes(searchText)
+      }
+      return item.item.name.includes(searchText)
+    })
 
     const newData = { ...data }
     newData[cacheListName] = searchedList
