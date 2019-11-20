@@ -11,11 +11,11 @@ const Items = () => {
   const client = useApolloClient()
   const [selectedItemID, setSelectedItemID] = useState('182')
   const { data, loading } = useQuery(ITEMS_QUERY)
-  const { data: searchedItemsData } = useQuery(SEARCHED_ITEMS_QUERY)
+  const { data: filteredItemsData } = useQuery(FILTERED_ITEMS_QUERY)
 
   useEffect(() => {
     if (data && data.items) {
-      client.writeData({ data: { searchedItems: data.items } })
+      client.writeData({ data: { filteredItems: data.items } })
     }
   }, [client, data])
 
@@ -25,18 +25,18 @@ const Items = () => {
       <Styled.List>
         {loading && <p>Loading...</p>}
 
-        {searchedItemsData && searchedItemsData.searchedItems && (
+        {filteredItemsData && filteredItemsData.filteredItems && (
           <>
             {data && data.items && (
               <Search
                 readQuery={ITEMS_QUERY}
-                writeQuery={SEARCHED_ITEMS_QUERY}
+                writeQuery={FILTERED_ITEMS_QUERY}
                 listName="items"
-                cacheListName="searchedItems"
+                cacheListName="filteredItems"
               />
             )}
 
-            {searchedItemsData.searchedItems.map((item) => (
+            {filteredItemsData.filteredItems.map((item) => (
               <ListItem
                 key={item.id}
                 item={item}
@@ -60,9 +60,9 @@ const ITEMS_QUERY = gql`
   }
 `
 
-const SEARCHED_ITEMS_QUERY = gql`
-  query searchedItems {
-    searchedItems @client {
+const FILTERED_ITEMS_QUERY = gql`
+  query filteredItems {
+    filteredItems @client {
       id
       name
     }

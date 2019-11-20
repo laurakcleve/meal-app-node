@@ -84,6 +84,10 @@ test('fetches all inventory items', () => {
             id: expect.any(String),
             name: expect.any(String),
           }),
+          location: expect.objectContaining({
+            id: expect.any(String),
+            name: expect.any(String),
+          }),
         }),
       ])
     )
@@ -97,6 +101,10 @@ test('fetches inventory item by id', () => {
     expect(results.data.inventoryItem).toMatchObject({
       id: expect.any(String),
       item: expect.objectContaining({
+        id: expect.any(String),
+        name: expect.any(String),
+      }),
+      location: expect.objectContaining({
         id: expect.any(String),
         name: expect.any(String),
       }),
@@ -148,6 +156,10 @@ const GET_INVENTORY_ITEMS = gql`
         id
         name
       }
+      location {
+        id
+        name
+      }
     }
   }
 `
@@ -157,6 +169,10 @@ const GET_ONE_INVENTORY_ITEM = gql`
     inventoryItem(id: 697) {
       id
       item {
+        id
+        name
+      }
+      location {
         id
         name
       }

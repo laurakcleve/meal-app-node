@@ -10,13 +10,13 @@ import ListItem from './ListItem'
 const Dishes = () => {
   const client = useApolloClient()
   const { data, loading } = useQuery(DISHES_QUERY)
-  const { data: searchedDishesData } = useQuery(SEARCHED_DISHES_QUERY)
+  const { data: filteredDishesData } = useQuery(FILTERED_DISHES_QUERY)
 
   const [selectedItemID, setSelectedItemID] = useState('')
 
   useEffect(() => {
     if (data && data.dishes) {
-      client.writeData({ data: { searchedDishes: data.dishes } })
+      client.writeData({ data: { filteredDishes: data.dishes } })
     }
   }, [client, data])
 
@@ -26,18 +26,18 @@ const Dishes = () => {
       <Styled.List>
         {loading && <p>Loading...</p>}
 
-        {searchedDishesData && searchedDishesData.searchedDishes && (
+        {filteredDishesData && filteredDishesData.filteredDishes && (
           <>
             {data && data.dishes && (
               <Search
                 readQuery={DISHES_QUERY}
-                writeQuery={SEARCHED_DISHES_QUERY}
+                writeQuery={FILTERED_DISHES_QUERY}
                 listName="dishes"
-                cacheListName="searchedDishes"
+                cacheListName="filteredDishes"
               />
             )}
 
-            {searchedDishesData.searchedDishes.map((dish) => (
+            {filteredDishesData.filteredDishes.map((dish) => (
               <ListItem
                 key={dish.id}
                 item={dish}
@@ -61,9 +61,9 @@ const DISHES_QUERY = gql`
   }
 `
 
-const SEARCHED_DISHES_QUERY = gql`
-  query searchedDishes {
-    searchedDishes @client {
+const FILTERED_DISHES_QUERY = gql`
+  query filteredDishes {
+    filteredDishes @client {
       id
       name
     }

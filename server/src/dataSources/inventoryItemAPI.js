@@ -21,13 +21,26 @@ class inventoryItemAPI extends DataSource {
     return db.query(queryString, [id]).then((results) => results.rows[0])
   }
 
-  getInventoryItemItem({ id }) {
+  getSubItem({ id }) {
     const queryString = `
       SELECT item.id, item.name
       FROM item
       INNER JOIN inventory_item
         ON inventory_item.item_id = item.id
       WHERE inventory_item.id = $1
+    `
+    return db
+      .query(queryString, [Number(id)])
+      .then((results) => Promise.resolve(results.rows[0]))
+  }
+
+  getLocation({ id }) {
+    const queryString = `
+      SELECT inventory_item_location.*
+      FROM inventory_item_location
+      INNER JOIN inventory_item 
+        ON inventory_item.location_id = inventory_item_location.id
+      WHERE inventory_item.id = $1 
     `
     return db
       .query(queryString, [Number(id)])

@@ -8,11 +8,16 @@ const resolvers = {
       dataSources.inventoryItemAPI.getAll(),
     inventoryItem: (_, { id }, { dataSources }) =>
       dataSources.inventoryItemAPI.getByID({ id }),
+    itemLocations: (_, __, { dataSources }) => dataSources.itemLocationAPI.getAll(),
   },
 
   InventoryItem: {
     item: (InventoryItem, __, { dataSources }) =>
-      dataSources.inventoryItemAPI.getInventoryItemItem({
+      dataSources.inventoryItemAPI.getSubItem({
+        id: InventoryItem.id,
+      }),
+    location: (InventoryItem, __, { dataSources }) =>
+      dataSources.inventoryItemAPI.getLocation({
         id: InventoryItem.id,
       }),
   },
