@@ -13,6 +13,15 @@ const GlobalStyles = createGlobalStyle`
   a {
     text-decoration: none;
   }
+
+  input {
+    padding: 10px 12px;
+    background-color: ${({ theme }) => theme.colors.lightGrey}; 
+    color: ${({ theme }) => theme.colors.darkGrey};
+    border: none;
+    border-radius: 4px;
+    font-family: 'Roboto'
+  }
 `
 
 export default GlobalStyles

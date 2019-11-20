@@ -1,4 +1,4 @@
-import ApolloClient from 'apollo-boost'
+import ApolloClient, { InMemoryCache } from 'apollo-boost'
 import React from 'react'
 import { ApolloProvider } from '@apollo/react-hooks'
 import { render } from 'react-dom'
@@ -11,7 +11,19 @@ import GlobalStyles from './theme/GlobalStyles'
 import Header from './components/Header'
 import Items from './components/Items'
 
-const client = new ApolloClient({ uri: 'http://localhost:4000/graphql' })
+const cache = new InMemoryCache()
+
+cache.writeData({
+  data: {
+    searchedItems: [],
+  },
+})
+
+const client = new ApolloClient({
+  uri: 'http://localhost:4000/graphql',
+  resolvers: {},
+  cache,
+})
 
 const App = () => (
   <ApolloProvider client={client}>
