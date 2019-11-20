@@ -6,6 +6,8 @@ const typeDefs = gql`
     item(id: ID!): Item
     dishes: [Dish]!
     dish(id: ID!): Dish
+    inventoryItems: [InventoryItem]!
+    inventoryItem(id: ID!): InventoryItem
   }
 
   type Item {
@@ -16,6 +18,11 @@ const typeDefs = gql`
   type Dish {
     id: ID!
     name: String!
+  }
+
+  type InventoryItem {
+    id: ID!
+    item: Item!
   }
 `
 

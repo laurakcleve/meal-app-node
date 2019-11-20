@@ -4,6 +4,7 @@ const typeDefs = require('./schema')
 const resolvers = require('./resolvers')
 const ItemAPI = require('./dataSources/itemAPI')
 const DishAPI = require('./dataSources/dishAPI')
+const InventoryItemAPI = require('./dataSources/inventoryItemAPI')
 
 const server = new ApolloServer({
   typeDefs,
@@ -11,6 +12,7 @@ const server = new ApolloServer({
   dataSources: () => ({
     itemAPI: new ItemAPI(),
     dishAPI: new DishAPI(),
+    inventoryItemAPI: new InventoryItemAPI(),
   }),
 })
 
