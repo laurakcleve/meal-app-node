@@ -3,6 +3,7 @@ import { useQuery, useApolloClient } from '@apollo/react-hooks'
 import { gql } from 'apollo-boost'
 
 import * as Styled from './Layout.styles'
+import Sidebar from './Sidebar'
 import Search from './Search'
 import ListItem from './ListItem'
 
@@ -22,30 +23,33 @@ const Inventory = () => {
 
   return (
     <Styled.Container>
-      {loading && <p>Loading...</p>}
+      <Sidebar />
+      <Styled.List>
+        {loading && <p>Loading...</p>}
 
-      {searchedInventoryItemsData &&
-        searchedInventoryItemsData.searchedInventoryItems && (
-          <>
-            {data && data.inventoryItems && (
-              <Search
-                readQuery={INVENTORY_ITEMS_QUERY}
-                writeQuery={SEARCHED_INVENTORY_ITEMS_QUERY}
-                listName="inventoryItems"
-                cacheListName="searchedInventoryItems"
-              />
-            )}
+        {searchedInventoryItemsData &&
+          searchedInventoryItemsData.searchedInventoryItems && (
+            <>
+              {data && data.inventoryItems && (
+                <Search
+                  readQuery={INVENTORY_ITEMS_QUERY}
+                  writeQuery={SEARCHED_INVENTORY_ITEMS_QUERY}
+                  listName="inventoryItems"
+                  cacheListName="searchedInventoryItems"
+                />
+              )}
 
-            {searchedInventoryItemsData.searchedInventoryItems.map((item) => (
-              <ListItem
-                key={item.id}
-                item={{ id: item.id, name: item.item.name }}
-                selectedItemID={selectedItemID}
-                setSelectedItemID={setSelectedItemID}
-              />
-            ))}
-          </>
-        )}
+              {searchedInventoryItemsData.searchedInventoryItems.map((item) => (
+                <ListItem
+                  key={item.id}
+                  item={{ id: item.id, name: item.item.name }}
+                  selectedItemID={selectedItemID}
+                  setSelectedItemID={setSelectedItemID}
+                />
+              ))}
+            </>
+          )}
+      </Styled.List>
     </Styled.Container>
   )
 }

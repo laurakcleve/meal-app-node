@@ -16,7 +16,7 @@ const GlobalStyles = createGlobalStyle`
 
   input {
     padding: 10px 12px;
-    background-color: ${({ theme }) => theme.colors.lightGrey}; 
+    background-color: ${({ theme }) => theme.colors.inputBackground}; 
     color: ${({ theme }) => theme.colors.darkGrey};
     border: none;
     border-radius: 4px;

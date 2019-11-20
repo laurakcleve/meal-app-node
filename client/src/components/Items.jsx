@@ -3,6 +3,7 @@ import { useQuery, useApolloClient } from '@apollo/react-hooks'
 import { gql } from 'apollo-boost'
 
 import * as Styled from './Layout.styles'
+import Sidebar from './Sidebar'
 import Search from './Search'
 import ListItem from './ListItem'
 
@@ -20,29 +21,32 @@ const Items = () => {
 
   return (
     <Styled.Container>
-      {loading && <p>Loading...</p>}
+      <Sidebar />
+      <Styled.List>
+        {loading && <p>Loading...</p>}
 
-      {searchedItemsData && searchedItemsData.searchedItems && (
-        <>
-          {data && data.items && (
-            <Search
-              readQuery={ITEMS_QUERY}
-              writeQuery={SEARCHED_ITEMS_QUERY}
-              listName="items"
-              cacheListName="searchedItems"
-            />
-          )}
+        {searchedItemsData && searchedItemsData.searchedItems && (
+          <>
+            {data && data.items && (
+              <Search
+                readQuery={ITEMS_QUERY}
+                writeQuery={SEARCHED_ITEMS_QUERY}
+                listName="items"
+                cacheListName="searchedItems"
+              />
+            )}
 
-          {searchedItemsData.searchedItems.map((item) => (
-            <ListItem
-              key={item.id}
-              item={item}
-              selectedItemID={selectedItemID}
-              setSelectedItemID={setSelectedItemID}
-            />
-          ))}
-        </>
-      )}
+            {searchedItemsData.searchedItems.map((item) => (
+              <ListItem
+                key={item.id}
+                item={item}
+                selectedItemID={selectedItemID}
+                setSelectedItemID={setSelectedItemID}
+              />
+            ))}
+          </>
+        )}
+      </Styled.List>
     </Styled.Container>
   )
 }
