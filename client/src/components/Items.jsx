@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react'
+import React, { useState, useEffect } from 'react'
 import { useQuery, useApolloClient } from '@apollo/react-hooks'
 import { gql } from 'apollo-boost'
 
@@ -8,6 +8,7 @@ import ListItem from './ListItem'
 
 const Items = () => {
   const client = useApolloClient()
+  const [selectedItemID, setSelectedItemID] = useState('182')
   const { data, loading } = useQuery(ITEMS_QUERY)
   const { data: searchedItemsData } = useQuery(SEARCHED_ITEMS_QUERY)
 
@@ -25,7 +26,12 @@ const Items = () => {
           {data && data.items && <Search allItems={data.items} />}
 
           {searchedItemsData.searchedItems.map((item) => (
-            <ListItem key={item.id} name={item.name} />
+            <ListItem
+              key={item.id}
+              item={item}
+              selectedItemID={selectedItemID}
+              setSelectedItemID={setSelectedItemID}
+            />
           ))}
         </>
       )}

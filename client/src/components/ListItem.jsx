@@ -1,13 +1,32 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 import * as Styled from './ListItem.styles'
+import ItemDetails from './ItemDetails'
 
-const ListItem = ({ name }) => {
-  return <Styled.ListItem>{name}</Styled.ListItem>
+const ListItem = ({ item, selectedItemID, setSelectedItemID }) => {
+  const toggleOpen = () => {
+    if (selectedItemID === item.id) {
+      setSelectedItemID('')
+    } else {
+      setSelectedItemID(item.id)
+    }
+  }
+
+  return (
+    <Styled.ListItem onClick={toggleOpen}>
+      <Styled.TitleBar>{item.name}</Styled.TitleBar>
+      {selectedItemID === item.id && <ItemDetails item={item} />}
+    </Styled.ListItem>
+  )
 }
 
 ListItem.propTypes = {
-  name: PropTypes.string.isRequired,
+  item: PropTypes.shape({
+    id: PropTypes.string.isRequired,
+    name: PropTypes.string.isRequired,
+  }).isRequired,
+  selectedItemID: PropTypes.string.isRequired,
+  setSelectedItemID: PropTypes.func.isRequired,
 }
 
 export default ListItem
