@@ -10,12 +10,14 @@ import GlobalStyles from './theme/GlobalStyles'
 
 import Header from './components/Header'
 import Items from './components/Items'
+import Dishes from './components/Dishes'
 
 const cache = new InMemoryCache()
 
 cache.writeData({
   data: {
     searchedItems: [],
+    searchedDishes: [],
   },
 })
 
@@ -33,6 +35,7 @@ const App = () => (
         <Header />
         <Route exact path="/" component={Items} />
         <Route exact path="/items" component={Items} />
+        <Route exact path="/dishes" component={Dishes} />
       </ThemeProvider>
     </BrowserRouter>
   </ApolloProvider>

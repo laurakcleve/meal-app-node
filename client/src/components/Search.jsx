@@ -1,30 +1,28 @@
 import React, { useState, useEffect } from 'react'
 import { useApolloClient } from '@apollo/react-hooks'
-import { gql } from 'apollo-boost'
+import PropTypes from 'prop-types'
 
 import Container from './Search.styles'
 
-const Search = () => {
+const Search = ({ readQuery, writeQuery, listName, cacheListName }) => {
   const client = useApolloClient()
   const [searchText, setSearchText] = useState('')
 
   useEffect(() => {
-    const { items } = client.readQuery({ query: ITEMS_QUERY })
+    const data = client.readQuery({ query: readQuery })
 
-    const searchedItems = items.filter((item) => item.name.includes(searchText))
+    const searchedList = data[listName].filter((item) =>
+      item.name.includes(searchText)
+    )
+
+    const newData = { ...data }
+    newData[cacheListName] = searchedList
 
     client.writeQuery({
-      query: gql`
-        query searchedItems @client {
-          searchedItems {
-            id
-            name
-          }
-        }
-      `,
-      data: { searchedItems },
+      query: writeQuery,
+      data: newData,
     })
-  }, [client, searchText])
+  }, [cacheListName, client, listName, readQuery, searchText, writeQuery])
 
   return (
     <Container>
@@ -38,13 +36,11 @@ const Search = () => {
   )
 }
 
-const ITEMS_QUERY = gql`
-  query items {
-    items {
-      id
-      name
-    }
-  }
-`
+Search.propTypes = {
+  readQuery: PropTypes.shape({}).isRequired,
+  writeQuery: PropTypes.shape({}).isRequired,
+  listName: PropTypes.string.isRequired,
+  cacheListName: PropTypes.string.isRequired,
+}
 
 export default Search
