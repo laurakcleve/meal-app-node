@@ -1,6 +1,6 @@
 import styled from 'styled-components'
 
-const Container = styled.div`
+export const Container = styled.div`
   margin-bottom: 20px;
 
   span {
@@ -10,4 +10,11 @@ const Container = styled.div`
   }
 `
 
-export default Container
+export const Button = styled.button`
+  height: 35px;
+  width: 35px;
+  color: ${({ theme }) => theme.colors.darkGrey};
+  border: none;
+  background-color: transparent;
+  cursor: pointer;
+`

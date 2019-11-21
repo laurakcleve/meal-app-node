@@ -10,5 +10,5 @@ export const Container = styled.div`
 
 export const List = styled.div`
   flex: 1;
-  padding: 20px;
+  padding: 20px 30px;
 `

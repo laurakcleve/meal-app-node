@@ -18,8 +18,11 @@ const cache = new InMemoryCache()
 cache.writeData({
   data: {
     filteredItems: [],
+    searchedItems: [],
     filteredDishes: [],
+    searchedDishes: [],
     filteredInventoryItems: [],
+    searchedInventoryItems: [],
   },
 })
 
