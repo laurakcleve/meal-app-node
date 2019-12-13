@@ -19,7 +19,6 @@ const Items = () => {
 
   useEffect(() => {
     if (data && data.items) {
-      console.log(data.items)
       let newFilteredItems
       if (selectedCategoryName === 'all') {
         newFilteredItems = data.items
