@@ -3,15 +3,23 @@ import { useQuery } from '@apollo/react-hooks'
 import { gql } from 'apollo-boost'
 import PropTypes from 'prop-types'
 
+import SidebarList from './SidebarList'
+
 const ItemCategories = ({ selectedCategoryName, setSelectedCategoryName }) => {
   const { data, loading } = useQuery(ITEM_CATEGORIES_QUERY)
 
-  return <div>Item Categories</div>
-}
-
-ItemCategories.propTypes = {
-  selectedCategoryName: PropTypes.string.isRequired,
-  setSelectedCategoryName: PropTypes.func.isRequired,
+  return (
+    <>
+      {loading && <div>Loading...</div>}
+      {data && data.itemCategories && (
+        <SidebarList
+          items={[{ id: '1000', name: 'all' }].concat(data.itemCategories)}
+          selectedName={selectedCategoryName}
+          setSelectedName={setSelectedCategoryName}
+        />
+      )}
+    </>
+  )
 }
 
 const ITEM_CATEGORIES_QUERY = gql`
@@ -22,5 +30,10 @@ const ITEM_CATEGORIES_QUERY = gql`
     }
   }
 `
+
+ItemCategories.propTypes = {
+  selectedCategoryName: PropTypes.string.isRequired,
+  setSelectedCategoryName: PropTypes.func.isRequired,
+}
 
 export default ItemCategories

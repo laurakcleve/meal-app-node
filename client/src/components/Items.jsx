@@ -19,12 +19,13 @@ const Items = () => {
 
   useEffect(() => {
     if (data && data.items) {
+      console.log(data.items)
       let newFilteredItems
       if (selectedCategoryName === 'all') {
         newFilteredItems = data.items
       } else {
         newFilteredItems = data.items.filter(
-          (item) => item.category.name === selectedCategoryName
+          (item) => item.category && item.category.name === selectedCategoryName
         )
       }
       setFilteredItems(newFilteredItems)
@@ -73,6 +74,10 @@ const ITEMS_QUERY = gql`
     items {
       id
       name
+      category {
+        id
+        name
+      }
     }
   }
 `

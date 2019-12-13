@@ -9,6 +9,7 @@ const resolvers = {
     inventoryItem: (_, { id }, { dataSources }) =>
       dataSources.inventoryItemAPI.getByID({ id }),
     itemLocations: (_, __, { dataSources }) => dataSources.itemLocationAPI.getAll(),
+    itemCategories: (_, __, { dataSources }) => dataSources.itemCategoryAPI.getAll(),
   },
 
   Item: {
