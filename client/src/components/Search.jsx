@@ -1,33 +1,14 @@
 import React, { useState, useEffect } from 'react'
-import { useApolloClient } from '@apollo/react-hooks'
 import PropTypes from 'prop-types'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faTimes } from '@fortawesome/free-solid-svg-icons'
 
 import * as Styled from './Search.styles'
 
-const Search = ({ items, set, readQuery, writeQuery, listName, cacheListName }) => {
-  const client = useApolloClient()
+const Search = ({ items, set }) => {
   const [searchText, setSearchText] = useState('')
 
   useEffect(() => {
-    // const data = client.readQuery({ query: readQuery })
-
-    // const filteredList = data[listName].filter((item) => {
-    //   if (item.name) {
-    //     return item.name.includes(searchText)
-    //   }
-    //   return item.item.name.includes(searchText)
-    // })
-
-    // const newData = { ...data }
-    // newData[cacheListName] = filteredList
-
-    // client.writeQuery({
-    //   query: writeQuery,
-    //   data: newData,
-    // })
-
     const filteredItems = items.filter((item) => {
       if (item.name) {
         return item.name.includes(searchText)
@@ -53,10 +34,22 @@ const Search = ({ items, set, readQuery, writeQuery, listName, cacheListName }) 
 }
 
 Search.propTypes = {
-  readQuery: PropTypes.shape({}).isRequired,
-  writeQuery: PropTypes.shape({}).isRequired,
-  listName: PropTypes.string.isRequired,
-  cacheListName: PropTypes.string.isRequired,
+  items: PropTypes.arrayOf(
+    PropTypes.oneOfType([
+      PropTypes.shape({
+        id: PropTypes.string.isRequired,
+        name: PropTypes.string.isRequired,
+      }),
+      PropTypes.shape({
+        id: PropTypes.string.isRequired,
+        item: PropTypes.shape({
+          id: PropTypes.string.isRequired,
+          name: PropTypes.string.isRequired,
+        }),
+      }),
+    ]).isRequired
+  ).isRequired,
+  set: PropTypes.func.isRequired,
 }
 
 export default Search

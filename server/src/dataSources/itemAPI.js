@@ -20,6 +20,18 @@ class ItemAPI extends DataSource {
     `
     return db.query(queryString, [id]).then((results) => results.rows[0])
   }
+
+  getCategory({ id }) {
+    const queryString = `
+      SELECT item_category.*
+      FROM item_category
+      INNER JOIN item ON item.category_id = item_category.id
+      WHERE item.id = $1
+    `
+    return db
+      .query(queryString, [Number(id)])
+      .then((results) => Promise.resolve(results.rows[0]))
+  }
 }
 
 module.exports = ItemAPI

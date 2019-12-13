@@ -8,17 +8,26 @@ import Search from './Search'
 import ListItem from './ListItem'
 
 const Dishes = () => {
-  const client = useApolloClient()
-  const { data, loading } = useQuery(DISHES_QUERY)
-  const { data: filteredDishesData } = useQuery(FILTERED_DISHES_QUERY)
-
+  const [displayedDishes, setDisplayedDishes] = useState([])
+  const [filteredDishes, setFilteredDishes] = useState([])
+  const [searchedDishes, setSearchedDishes] = useState([])
   const [selectedItemID, setSelectedItemID] = useState('')
+
+  const { data, loading } = useQuery(DISHES_QUERY)
 
   useEffect(() => {
     if (data && data.dishes) {
-      client.writeData({ data: { filteredDishes: data.dishes } })
+      setFilteredDishes(data.dishes)
     }
-  }, [client, data])
+  }, [data])
+
+  useEffect(() => {
+    if (searchedDishes.length > 0) setDisplayedDishes(filteredDishes)
+  }, [searchedDishes.length, filteredDishes])
+
+  useEffect(() => {
+    setDisplayedDishes(searchedDishes)
+  }, [searchedDishes])
 
   return (
     <Styled.Container>
@@ -26,27 +35,20 @@ const Dishes = () => {
       <Styled.List>
         {loading && <p>Loading...</p>}
 
-        {filteredDishesData && filteredDishesData.filteredDishes && (
-          <>
-            {data && data.dishes && (
-              <Search
-                readQuery={DISHES_QUERY}
-                writeQuery={FILTERED_DISHES_QUERY}
-                listName="dishes"
-                cacheListName="filteredDishes"
-              />
-            )}
+        <>
+          {data && data.dishes && (
+            <Search items={filteredDishes} set={setSearchedDishes} />
+          )}
 
-            {filteredDishesData.filteredDishes.map((dish) => (
-              <ListItem
-                key={dish.id}
-                item={dish}
-                selectedItemID={selectedItemID}
-                setSelectedItemID={setSelectedItemID}
-              />
-            ))}
-          </>
-        )}
+          {displayedDishes.map((dish) => (
+            <ListItem
+              key={dish.id}
+              item={dish}
+              selectedItemID={selectedItemID}
+              setSelectedItemID={setSelectedItemID}
+            />
+          ))}
+        </>
       </Styled.List>
     </Styled.Container>
   )
@@ -55,15 +57,6 @@ const Dishes = () => {
 const DISHES_QUERY = gql`
   query dishes {
     dishes {
-      id
-      name
-    }
-  }
-`
-
-const FILTERED_DISHES_QUERY = gql`
-  query filteredDishes {
-    filteredDishes @client {
       id
       name
     }

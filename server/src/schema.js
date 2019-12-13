@@ -9,9 +9,16 @@ const typeDefs = gql`
     inventoryItems: [InventoryItem]!
     inventoryItem(id: ID!): InventoryItem
     itemLocations: [ItemLocation]!
+    itemCategories: [ItemCategory]!
   }
 
   type Item {
+    id: ID!
+    name: String!
+    category: ItemCategory
+  }
+
+  type ItemCategory {
     id: ID!
     name: String!
   }

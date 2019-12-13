@@ -1,51 +1,68 @@
 import React, { useState, useEffect } from 'react'
-import { useQuery, useApolloClient } from '@apollo/react-hooks'
+import { useQuery } from '@apollo/react-hooks'
 import { gql } from 'apollo-boost'
 
 import * as Styled from './Layout.styles'
 import Sidebar from './Sidebar'
+import ItemCategories from './ItemCategories'
 import Search from './Search'
 import ListItem from './ListItem'
 
 const Items = () => {
-  const client = useApolloClient()
-  const [selectedItemID, setSelectedItemID] = useState('182')
+  const [displayedItems, setDisplayedItems] = useState([])
+  const [filteredItems, setFilteredItems] = useState([])
+  const [searchedItems, setSearchedItems] = useState([])
+  const [selectedItemID, setSelectedItemID] = useState('')
+  const [selectedCategoryName, setSelectedCategoryName] = useState('all')
+
   const { data, loading } = useQuery(ITEMS_QUERY)
-  const { data: filteredItemsData } = useQuery(FILTERED_ITEMS_QUERY)
 
   useEffect(() => {
     if (data && data.items) {
-      client.writeData({ data: { filteredItems: data.items } })
+      let newFilteredItems
+      if (selectedCategoryName === 'all') {
+        newFilteredItems = data.items
+      } else {
+        newFilteredItems = data.items.filter(
+          (item) => item.category.name === selectedCategoryName
+        )
+      }
+      setFilteredItems(newFilteredItems)
     }
-  }, [client, data])
+  }, [data, selectedCategoryName])
+
+  useEffect(() => {
+    if (searchedItems.length > 0) setDisplayedItems(filteredItems)
+  }, [filteredItems, searchedItems.length])
+
+  useEffect(() => {
+    setDisplayedItems(searchedItems)
+  }, [searchedItems])
 
   return (
     <Styled.Container>
-      <Sidebar />
+      <Sidebar>
+        <ItemCategories
+          selectedCategoryName={selectedCategoryName}
+          setSelectedCategoryName={setSelectedCategoryName}
+        />
+      </Sidebar>
       <Styled.List>
         {loading && <p>Loading...</p>}
+        <>
+          {data && data.items && (
+            <Search items={filteredItems} set={setSearchedItems} />
+          )}
 
-        {filteredItemsData && filteredItemsData.filteredItems && (
-          <>
-            {data && data.items && (
-              <Search
-                readQuery={ITEMS_QUERY}
-                writeQuery={FILTERED_ITEMS_QUERY}
-                listName="items"
-                cacheListName="filteredItems"
-              />
-            )}
-
-            {filteredItemsData.filteredItems.map((item) => (
-              <ListItem
-                key={item.id}
-                item={item}
-                selectedItemID={selectedItemID}
-                setSelectedItemID={setSelectedItemID}
-              />
-            ))}
-          </>
-        )}
+          {displayedItems.map((item) => (
+            <ListItem
+              key={item.id}
+              item={item}
+              selectedItemID={selectedItemID}
+              setSelectedItemID={setSelectedItemID}
+            />
+          ))}
+        </>
       </Styled.List>
     </Styled.Container>
   )
@@ -54,15 +71,6 @@ const Items = () => {
 const ITEMS_QUERY = gql`
   query items {
     items {
-      id
-      name
-    }
-  }
-`
-
-const FILTERED_ITEMS_QUERY = gql`
-  query filteredItems {
-    filteredItems @client {
       id
       name
     }

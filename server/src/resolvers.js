@@ -11,6 +11,13 @@ const resolvers = {
     itemLocations: (_, __, { dataSources }) => dataSources.itemLocationAPI.getAll(),
   },
 
+  Item: {
+    category: (Item, __, { dataSources }) =>
+      dataSources.itemAPI.getCategory({
+        id: Item.id,
+      }),
+  },
+
   InventoryItem: {
     item: (InventoryItem, __, { dataSources }) =>
       dataSources.inventoryItemAPI.getSubItem({

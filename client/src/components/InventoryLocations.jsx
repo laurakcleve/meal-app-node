@@ -7,6 +7,7 @@ import * as Styled from './InventoryLocations.styles'
 
 const InventoryLocations = ({ selectedLocationName, setSelectedLocationName }) => {
   const { data, loading } = useQuery(LOCATIONS_QUERY)
+
   return (
     <Styled.Container>
       {loading && <div>Loading...</div>}

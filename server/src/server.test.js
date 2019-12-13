@@ -7,6 +7,7 @@ const resolvers = require('./resolvers')
 const ItemAPI = require('./dataSources/itemAPI')
 const DishAPI = require('./dataSources/dishAPI')
 const InventoryItemAPI = require('./dataSources/inventoryItemAPI')
+const ItemLocationAPI = require('./dataSources/itemLocationAPI')
 
 const server = new ApolloServer({
   typeDefs,
@@ -15,6 +16,7 @@ const server = new ApolloServer({
     itemAPI: new ItemAPI(),
     dishAPI: new DishAPI(),
     inventoryItemAPI: new InventoryItemAPI(),
+    itemLocationAPI: new ItemLocationAPI(),
   }),
 })
 
@@ -112,6 +114,21 @@ test('fetches inventory item by id', () => {
   })
 })
 
+test('fetches all item locations', () => {
+  expect.assertions(2)
+  return query({ query: GET_ITEM_LOCATIONS }).then((results) => {
+    expect(results.errors).toBeUndefined()
+    expect(results.data.itemLocations).toEqual(
+      expect.arrayContaining([
+        expect.objectContaining({
+          id: expect.any(String),
+          name: expect.any(String),
+        }),
+      ])
+    )
+  })
+})
+
 const GET_ITEMS = gql`
   query items {
     items {
@@ -176,6 +193,15 @@ const GET_ONE_INVENTORY_ITEM = gql`
         id
         name
       }
+    }
+  }
+`
+
+const GET_ITEM_LOCATIONS = gql`
+  query itemLocations {
+    itemLocations {
+      id
+      name
     }
   }
 `
