@@ -10,6 +10,7 @@ const resolvers = {
       dataSources.inventoryItemAPI.getByID({ id }),
     itemLocations: (_, __, { dataSources }) => dataSources.itemLocationAPI.getAll(),
     itemCategories: (_, __, { dataSources }) => dataSources.itemCategoryAPI.getAll(),
+    dishTags: (_, __, { dataSources }) => dataSources.dishTagAPI.getAll(),
   },
 
   Item: {

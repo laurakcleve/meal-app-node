@@ -10,6 +10,7 @@ const typeDefs = gql`
     inventoryItem(id: ID!): InventoryItem
     itemLocations: [ItemLocation]!
     itemCategories: [ItemCategory]!
+    dishTags: [DishTag]!
   }
 
   type Item {
@@ -24,6 +25,12 @@ const typeDefs = gql`
   }
 
   type Dish {
+    id: ID!
+    name: String!
+    tags: [DishTag]
+  }
+
+  type DishTag {
     id: ID!
     name: String!
   }
