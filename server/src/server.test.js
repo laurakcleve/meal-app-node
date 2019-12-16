@@ -1,24 +1,7 @@
 const { createTestClient } = require('apollo-server-testing')
 const { gql } = require('apollo-server')
-const { ApolloServer } = require('apollo-server')
 
-const typeDefs = require('./schema')
-const resolvers = require('./resolvers')
-const ItemAPI = require('./dataSources/itemAPI')
-const DishAPI = require('./dataSources/dishAPI')
-const InventoryItemAPI = require('./dataSources/inventoryItemAPI')
-const ItemLocationAPI = require('./dataSources/itemLocationAPI')
-
-const server = new ApolloServer({
-  typeDefs,
-  resolvers,
-  dataSources: () => ({
-    itemAPI: new ItemAPI(),
-    dishAPI: new DishAPI(),
-    inventoryItemAPI: new InventoryItemAPI(),
-    itemLocationAPI: new ItemLocationAPI(),
-  }),
-})
+const server = require('./index')
 
 const { query } = createTestClient(server)
 
@@ -129,6 +112,36 @@ test('fetches all item locations', () => {
   })
 })
 
+test('fetches all item categories', () => {
+  expect.assertions(2)
+  return query({ query: GET_ITEM_CATEGORIES }).then((results) => {
+    expect(results.errors).toBeUndefined()
+    expect(results.data.itemCategories).toEqual(
+      expect.arrayContaining([
+        expect.objectContaining({
+          id: expect.any(String),
+          name: expect.any(String),
+        }),
+      ])
+    )
+  })
+})
+
+test('fetches all dish tags', () => {
+  expect.assertions(2)
+  return query({ query: GET_DISH_TAGS }).then((results) => {
+    expect(results.errors).toBeUndefined()
+    expect(results.data.dishTags).toEqual(
+      expect.arrayContaining([
+        expect.objectContaining({
+          id: expect.any(String),
+          name: expect.any(String),
+        }),
+      ])
+    )
+  })
+})
+
 const GET_ITEMS = gql`
   query items {
     items {
@@ -200,6 +213,24 @@ const GET_ONE_INVENTORY_ITEM = gql`
 const GET_ITEM_LOCATIONS = gql`
   query itemLocations {
     itemLocations {
+      id
+      name
+    }
+  }
+`
+
+const GET_ITEM_CATEGORIES = gql`
+  query itemCategories {
+    itemCategories {
+      id
+      name
+    }
+  }
+`
+
+const GET_DISH_TAGS = gql`
+  query dishTags {
+    dishTags {
       id
       name
     }
