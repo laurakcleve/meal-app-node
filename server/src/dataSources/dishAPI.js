@@ -21,6 +21,15 @@ class DishAPI extends DataSource {
     `
     return db.query(queryString, [id]).then((results) => results.rows[0])
   }
+
+  getTags({ id }) {
+    const queryString = `
+      SELECT * FROM dish_tag
+      INNER JOIN item_has_dish_tag ihdt ON ihdt.dish_tag_id = dish_tag.id
+      WHERE ihdt.item_id = $1
+    `
+    return db.query(queryString, [id]).then((results) => results.rows)
+  }
 }
 
 module.exports = DishAPI

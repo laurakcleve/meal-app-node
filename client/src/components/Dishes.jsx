@@ -6,20 +6,31 @@ import * as Styled from './Layout.styles'
 import Sidebar from './Sidebar'
 import Search from './Search'
 import ListItem from './ListItem'
+import DishTags from './DishTags'
 
 const Dishes = () => {
   const [displayedDishes, setDisplayedDishes] = useState([])
   const [filteredDishes, setFilteredDishes] = useState([])
   const [searchedDishes, setSearchedDishes] = useState([])
   const [selectedItemID, setSelectedItemID] = useState('')
+  const [selectedTagName, setSelectedTagName] = useState('all')
 
   const { data, loading } = useQuery(DISHES_QUERY)
 
   useEffect(() => {
     if (data && data.dishes) {
-      setFilteredDishes(data.dishes)
+      let newFilteredDishes
+      if (selectedTagName === 'all') {
+        newFilteredDishes = data.dishes
+      } else {
+        newFilteredDishes = data.dishes.filter(
+          (dish) =>
+            dish.tags && dish.tags.map((tag) => tag.name).includes(selectedTagName)
+        )
+      }
+      setFilteredDishes(newFilteredDishes)
     }
-  }, [data])
+  }, [data, selectedTagName])
 
   useEffect(() => {
     if (searchedDishes.length > 0) setDisplayedDishes(filteredDishes)
@@ -31,7 +42,12 @@ const Dishes = () => {
 
   return (
     <Styled.Container>
-      <Sidebar />
+      <Sidebar>
+        <DishTags
+          selectedTagName={selectedTagName}
+          setSelectedTagName={setSelectedTagName}
+        />
+      </Sidebar>
       <Styled.List>
         {loading && <p>Loading...</p>}
 
@@ -59,6 +75,10 @@ const DISHES_QUERY = gql`
     dishes {
       id
       name
+      tags {
+        id
+        name
+      }
     }
   }
 `

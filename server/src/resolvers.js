@@ -30,6 +30,11 @@ const resolvers = {
         id: InventoryItem.id,
       }),
   },
+
+  Dish: {
+    tags: (Dish, __, { dataSources }) =>
+      dataSources.dishAPI.getTags({ id: Dish.id }),
+  },
 }
 
 module.exports = resolvers
