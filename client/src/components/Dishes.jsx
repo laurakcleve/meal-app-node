@@ -14,6 +14,7 @@ const Dishes = () => {
   const [searchedDishes, setSearchedDishes] = useState([])
   const [selectedItemID, setSelectedItemID] = useState('')
   const [selectedTagNames, setSelectedTagNames] = useState(['all'])
+  const [match, setMatch] = useState('all')
 
   const { data, loading } = useQuery(DISHES_QUERY)
 
@@ -23,17 +24,24 @@ const Dishes = () => {
       if (selectedTagNames.includes('all')) {
         newFilteredDishes = data.dishes
       } else {
-        newFilteredDishes = data.dishes.filter(
-          (dish) =>
-            dish.tags &&
-            dish.tags
+        newFilteredDishes = data.dishes.filter((dish) => {
+          if (dish.tags && dish.tags.length <= 0) return false
+          if (match === 'all') {
+            return selectedTagNames.every((tagName) =>
+              dish.tags.map((tag) => tag.name).includes(tagName)
+            )
+          }
+          if (match === 'any') {
+            return dish.tags
               .map((tag) => tag.name)
               .some((tagName) => selectedTagNames.includes(tagName))
-        )
+          }
+          return false
+        })
       }
       setFilteredDishes(newFilteredDishes)
     }
-  }, [data, selectedTagNames])
+  }, [data, match, selectedTagNames])
 
   useEffect(() => {
     if (searchedDishes.length > 0) setDisplayedDishes(filteredDishes)
@@ -49,6 +57,7 @@ const Dishes = () => {
         <DishTags
           selectedTagNames={selectedTagNames}
           setSelectedTagNames={setSelectedTagNames}
+          setMatch={setMatch}
         />
       </Sidebar>
       <Styled.List>
