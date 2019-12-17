@@ -13,24 +13,27 @@ const Dishes = () => {
   const [filteredDishes, setFilteredDishes] = useState([])
   const [searchedDishes, setSearchedDishes] = useState([])
   const [selectedItemID, setSelectedItemID] = useState('')
-  const [selectedTagName, setSelectedTagName] = useState('all')
+  const [selectedTagNames, setSelectedTagNames] = useState(['all'])
 
   const { data, loading } = useQuery(DISHES_QUERY)
 
   useEffect(() => {
     if (data && data.dishes) {
       let newFilteredDishes
-      if (selectedTagName === 'all') {
+      if (selectedTagNames.includes('all')) {
         newFilteredDishes = data.dishes
       } else {
         newFilteredDishes = data.dishes.filter(
           (dish) =>
-            dish.tags && dish.tags.map((tag) => tag.name).includes(selectedTagName)
+            dish.tags &&
+            dish.tags
+              .map((tag) => tag.name)
+              .some((tagName) => selectedTagNames.includes(tagName))
         )
       }
       setFilteredDishes(newFilteredDishes)
     }
-  }, [data, selectedTagName])
+  }, [data, selectedTagNames])
 
   useEffect(() => {
     if (searchedDishes.length > 0) setDisplayedDishes(filteredDishes)
@@ -44,8 +47,8 @@ const Dishes = () => {
     <Styled.Container>
       <Sidebar>
         <DishTags
-          selectedTagName={selectedTagName}
-          setSelectedTagName={setSelectedTagName}
+          selectedTagNames={selectedTagNames}
+          setSelectedTagNames={setSelectedTagNames}
         />
       </Sidebar>
       <Styled.List>
