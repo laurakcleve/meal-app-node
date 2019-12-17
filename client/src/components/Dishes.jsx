@@ -57,6 +57,7 @@ const Dishes = () => {
         <DishTags
           selectedTagNames={selectedTagNames}
           setSelectedTagNames={setSelectedTagNames}
+          match={match}
           setMatch={setMatch}
         />
       </Sidebar>

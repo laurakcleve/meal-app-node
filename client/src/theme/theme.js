@@ -7,6 +7,7 @@ export default {
     darkGrey: '#6e6e6e',
     lightGrey: '#e6e6e6',
     inputBackground: '#d2d0ce',
+    yellow: '#f9e07f',
   },
   containerWidth: '800px',
 }

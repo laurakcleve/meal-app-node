@@ -3,9 +3,10 @@ import { useQuery } from '@apollo/react-hooks'
 import { gql } from 'apollo-boost'
 import PropTypes from 'prop-types'
 
+import * as Styled from './DishTags.styles'
 import SidebarListMulti from './SidebarListMulti'
 
-const DishTags = ({ selectedTagNames, setSelectedTagNames, setMatch }) => {
+const DishTags = ({ selectedTagNames, setSelectedTagNames, match, setMatch }) => {
   const { data, loading } = useQuery(DISH_TAGS_QUERY)
 
   return (
@@ -18,12 +19,24 @@ const DishTags = ({ selectedTagNames, setSelectedTagNames, setMatch }) => {
             selectedNames={selectedTagNames}
             setSelectedNames={setSelectedTagNames}
           />
-          <button type="button" onClick={() => setMatch('all')}>
-            Match all
-          </button>
-          <button type="button" onClick={() => setMatch('any')}>
-            Match any
-          </button>
+          <Styled.Container>
+            <Styled.Button
+              match={match}
+              data-match="all"
+              type="button"
+              onClick={() => setMatch('all')}
+            >
+              Match all
+            </Styled.Button>
+            <Styled.Button
+              match={match}
+              data-match="any"
+              type="button"
+              onClick={() => setMatch('any')}
+            >
+              Match any
+            </Styled.Button>
+          </Styled.Container>
         </>
       )}
     </>
@@ -42,6 +55,7 @@ const DISH_TAGS_QUERY = gql`
 DishTags.propTypes = {
   selectedTagNames: PropTypes.arrayOf(PropTypes.string.isRequired).isRequired,
   setSelectedTagNames: PropTypes.func.isRequired,
+  match: PropTypes.string.isRequired,
   setMatch: PropTypes.func.isRequired,
 }
 
