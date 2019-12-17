@@ -12,6 +12,7 @@ export const ListItem = styled.div`
 
 export const TitleBar = styled.div`
   padding: 15px;
+  cursor: default;
 
   &:first-letter {
     text-transform: uppercase;
