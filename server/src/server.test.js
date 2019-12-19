@@ -73,6 +73,7 @@ test('fetches all inventory items', () => {
             id: expect.any(String),
             name: expect.any(String),
           }),
+          expiration: expect.any(String),
         }),
       ])
     )
@@ -93,6 +94,7 @@ test('fetches inventory item by id', () => {
         id: expect.any(String),
         name: expect.any(String),
       }),
+      expiration: expect.any(String),
     })
   })
 })
@@ -190,13 +192,14 @@ const GET_INVENTORY_ITEMS = gql`
         id
         name
       }
+      expiration
     }
   }
 `
 
 const GET_ONE_INVENTORY_ITEM = gql`
   query inventoryItem {
-    inventoryItem(id: 697) {
+    inventoryItem(id: 1092) {
       id
       item {
         id
@@ -206,6 +209,7 @@ const GET_ONE_INVENTORY_ITEM = gql`
         id
         name
       }
+      expiration
     }
   }
 `
