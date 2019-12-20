@@ -6,7 +6,7 @@ import * as Styled from './Layout.styles'
 import Sidebar from './Sidebar'
 import ItemCategories from './ItemCategories'
 import Search from './Search'
-import ListItem from './ListItem'
+import { ListItem, TitleBar, TitleName, ItemDetails } from './ListItem'
 
 const Items = () => {
   const [displayedItems, setDisplayedItems] = useState([])
@@ -16,6 +16,14 @@ const Items = () => {
   const [selectedCategoryName, setSelectedCategoryName] = useState('all')
 
   const { data, loading } = useQuery(ITEMS_QUERY)
+
+  const toggleItemOpen = (id) => {
+    if (selectedItemID === id) {
+      setSelectedItemID('')
+    } else {
+      setSelectedItemID(id)
+    }
+  }
 
   useEffect(() => {
     if (data && data.items) {
@@ -55,12 +63,12 @@ const Items = () => {
           )}
 
           {displayedItems.map((item) => (
-            <ListItem
-              key={item.id}
-              item={item}
-              selectedItemID={selectedItemID}
-              setSelectedItemID={setSelectedItemID}
-            />
+            <ListItem key={item.id} onClick={() => toggleItemOpen(item.id)}>
+              <TitleBar>
+                <TitleName name={item.name} />
+              </TitleBar>
+              {selectedItemID === item.id && <ItemDetails item={item} />}
+            </ListItem>
           ))}
         </>
       </Styled.List>

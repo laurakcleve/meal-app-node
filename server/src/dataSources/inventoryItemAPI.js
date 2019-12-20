@@ -8,7 +8,7 @@ class inventoryItemAPI extends DataSource {
 
   getAll() {
     const queryString = `
-    SELECT * FROM inventory_item 
+    SELECT * FROM inventory_item ORDER BY expiration ASC
     `
     return db.query(queryString).then((results) => results.rows)
   }

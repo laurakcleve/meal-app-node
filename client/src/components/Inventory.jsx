@@ -6,7 +6,8 @@ import * as Styled from './Layout.styles'
 import Sidebar from './Sidebar'
 import InventoryLocations from './InventoryLocations'
 import Search from './Search'
-import ListItem from './ListItem'
+import { ListItem, TitleBar, TitleName, ItemDetails } from './ListItem'
+import Expiration from './ListItem/Expiration'
 
 const Inventory = () => {
   const [displayedItems, setDisplayedItems] = useState([])
@@ -16,6 +17,14 @@ const Inventory = () => {
   const [selectedLocationName, setSelectedLocationName] = useState('all')
 
   const { data, loading } = useQuery(INVENTORY_ITEMS_QUERY)
+
+  const toggleItemOpen = (id) => {
+    if (selectedItemID === id) {
+      setSelectedItemID('')
+    } else {
+      setSelectedItemID(id)
+    }
+  }
 
   useEffect(() => {
     if (data && data.inventoryItems) {
@@ -56,12 +65,13 @@ const Inventory = () => {
           )}
 
           {displayedItems.map((item) => (
-            <ListItem
-              key={item.id}
-              item={{ id: item.id, name: item.item.name }}
-              selectedItemID={selectedItemID}
-              setSelectedItemID={setSelectedItemID}
-            />
+            <ListItem key={item.id} onClick={() => toggleItemOpen(item.id)}>
+              <TitleBar>
+                <TitleName name={item.item.name} />
+                <Expiration date={item.expiration} />
+              </TitleBar>
+              {selectedItemID === item.id && <ItemDetails item={item} />}
+            </ListItem>
           ))}
         </>
       </Styled.List>
@@ -81,6 +91,7 @@ const INVENTORY_ITEMS_QUERY = gql`
         id
         name
       }
+      expiration
     }
   }
 `

@@ -5,7 +5,7 @@ import { gql } from 'apollo-boost'
 import * as Styled from './Layout.styles'
 import Sidebar from './Sidebar'
 import Search from './Search'
-import ListItem from './ListItem'
+import { ListItem, TitleBar, TitleName, ItemDetails } from './ListItem'
 import DishTags from './DishTags'
 
 const Dishes = () => {
@@ -17,6 +17,14 @@ const Dishes = () => {
   const [match, setMatch] = useState('all')
 
   const { data, loading } = useQuery(DISHES_QUERY)
+
+  const toggleItemOpen = (id) => {
+    if (selectedItemID === id) {
+      setSelectedItemID('')
+    } else {
+      setSelectedItemID(id)
+    }
+  }
 
   useEffect(() => {
     if (data && data.dishes) {
@@ -70,12 +78,12 @@ const Dishes = () => {
           )}
 
           {displayedDishes.map((dish) => (
-            <ListItem
-              key={dish.id}
-              item={dish}
-              selectedItemID={selectedItemID}
-              setSelectedItemID={setSelectedItemID}
-            />
+            <ListItem key={dish.id} onClick={() => toggleItemOpen(dish.id)}>
+              <TitleBar>
+                <TitleName name={dish.name} />
+              </TitleBar>
+              {selectedItemID === dish.id && <ItemDetails item={dish} />}
+            </ListItem>
           ))}
         </>
       </Styled.List>
