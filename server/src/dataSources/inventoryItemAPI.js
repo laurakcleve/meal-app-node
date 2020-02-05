@@ -8,14 +8,17 @@ class inventoryItemAPI extends DataSource {
 
   getAll() {
     const queryString = `
-    SELECT * FROM inventory_item ORDER BY expiration ASC
+    SELECT id, item_id AS "itemID", add_date AS "addDate", expiration, amount, location_id AS "locationID"
+    FROM inventory_item 
+    ORDER BY expiration ASC
     `
     return db.query(queryString).then((results) => results.rows)
   }
 
   getByID({ id }) {
     const queryString = `
-      SELECT * FROM inventory_item
+      SELECT id, item_id AS "itemID", add_date AS "addDate", expiration, amount, location_id AS "locationID" 
+      FROM inventory_item
       WHERE id = $1
     `
     return db.query(queryString, [id]).then((results) => results.rows[0])

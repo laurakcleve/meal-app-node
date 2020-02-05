@@ -8,6 +8,7 @@ import InventoryLocations from './InventoryLocations'
 import Search from './Search'
 import { ListItem, TitleBar, TitleName, ItemDetails } from './ListItem'
 import Expiration from './ListItem/Expiration'
+import Location from './ListItem/Location'
 
 const Inventory = () => {
   const [displayedItems, setDisplayedItems] = useState([])
@@ -68,6 +69,7 @@ const Inventory = () => {
             <ListItem key={item.id} onClick={() => toggleItemOpen(item.id)}>
               <TitleBar>
                 <TitleName name={item.item.name} />
+                <Location name={item.location.name} />
                 <Expiration date={item.expiration} />
               </TitleBar>
               {selectedItemID === item.id && <ItemDetails item={item} />}
@@ -92,6 +94,8 @@ const INVENTORY_ITEMS_QUERY = gql`
         name
       }
       expiration
+      addDate
+      amount
     }
   }
 `

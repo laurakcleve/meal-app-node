@@ -40,6 +40,8 @@ const typeDefs = gql`
     item: Item!
     location: ItemLocation!
     expiration: String
+    addDate: String
+    amount: String
   }
 
   type ItemLocation {

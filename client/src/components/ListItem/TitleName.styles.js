@@ -1,7 +1,7 @@
 import styled from 'styled-components'
 
 const TitleName = styled.div`
-  flex: 1;
+  flex: 2;
 `
 
 export default TitleName
