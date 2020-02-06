@@ -2,8 +2,8 @@ import React from 'react'
 import PropTypes from 'prop-types'
 import StyledListItem from './ListItem.styles'
 
-const ListItem = ({ children, refProp }) => {
-  return <StyledListItem ref={refProp}>{children}</StyledListItem>
+const ListItem = ({ children }) => {
+  return <StyledListItem>{children}</StyledListItem>
 }
 
 ListItem.propTypes = {

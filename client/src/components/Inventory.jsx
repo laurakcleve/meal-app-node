@@ -13,26 +13,16 @@ import Expiration from './ListItem/Expiration'
 import Location from './ListItem/Location'
 
 const Inventory = () => {
-  const selectedItemRef = useRef(null)
-  // const scrollToSelectedItem = (ref) => {
-  //   if (ref.current) window.scrollTo(0, ref.current.offsetTop - 100)
-  // }
-
   const [displayedItems, setDisplayedItems] = useState([])
   const [filteredItems, setFilteredItems] = useState([])
   const [searchedItems, setSearchedItems] = useState([])
   const [selectedItemID, setSelectedItemID] = useState('')
-  const [selectedItemYPos, setSelectedItemYPos] = useState()
   const [selectedElement, setSelectedElement] = useState()
   const [selectedLocationName, setSelectedLocationName] = useState('all')
 
   const { data, loading } = useQuery(INVENTORY_ITEMS_QUERY)
 
   const toggleItemOpen = (event, id) => {
-    // setSelectedItemYPos(event.target.getBoundingClientRect().y)
-
-    // window.scrollTo({ top: event.target.offsetTop, behavior: 'smooth' })
-
     setSelectedElement(event.target)
 
     if (selectedItemID === id) {
@@ -65,14 +55,6 @@ const Inventory = () => {
   }, [searchedItems])
 
   useEffect(() => {
-    // scrollToSelectedItem(selectedItemRef)
-    // const scrollY = selectedItemYPos
-    // if (selectedItemRef.current)
-    //   window.scrollTo(0, selectedItemRef.current.offsetTop - scrollY)
-    // if (selectedItemRef.current) {
-    //   console.log('scrolling to', scrollY)
-    // }
-
     if (selectedElement)
       window.scrollTo({ top: selectedElement.offsetTop - 100, behavior: 'smooth' })
   }, [selectedElement])
@@ -94,10 +76,7 @@ const Inventory = () => {
           )}
 
           {displayedItems.map((item) => (
-            <ListItem
-              key={item.id}
-              refProp={item.id === selectedItemID ? selectedItemRef : null}
-            >
+            <ListItem key={item.id}>
               <TitleBar onClick={(e) => toggleItemOpen(e, item.id)}>
                 <TitleName name={item.item.name} />
                 <Location name={item.location.name} />
