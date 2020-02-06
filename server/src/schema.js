@@ -17,6 +17,7 @@ const typeDefs = gql`
     id: ID!
     name: String!
     category: ItemCategory
+    dishes: [Dish]
   }
 
   type ItemCategory {

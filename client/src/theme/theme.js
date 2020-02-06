@@ -8,6 +8,7 @@ export default {
     lightGrey: '#e6e6e6',
     inputBackground: '#d2d0ce',
     yellow: '#f9e07f',
+    lightBlue: '#ebf0f2',
   },
   containerWidth: '800px',
 }

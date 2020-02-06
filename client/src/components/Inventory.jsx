@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useRef } from 'react'
 import { useQuery } from '@apollo/react-hooks'
 import { gql } from 'apollo-boost'
 
@@ -6,20 +6,35 @@ import * as Styled from './Layout.styles'
 import Sidebar from './Sidebar'
 import InventoryLocations from './InventoryLocations'
 import Search from './Search'
-import { ListItem, TitleBar, TitleName, ItemDetails } from './ListItem'
+import { ListItem, TitleBar, TitleName } from './ListItem'
+// import { ItemDetails } from './ListItem/Details'
+import ItemDetails from './ListItem/Details/ItemDetails'
 import Expiration from './ListItem/Expiration'
 import Location from './ListItem/Location'
 
 const Inventory = () => {
+  const selectedItemRef = useRef(null)
+  // const scrollToSelectedItem = (ref) => {
+  //   if (ref.current) window.scrollTo(0, ref.current.offsetTop - 100)
+  // }
+
   const [displayedItems, setDisplayedItems] = useState([])
   const [filteredItems, setFilteredItems] = useState([])
   const [searchedItems, setSearchedItems] = useState([])
   const [selectedItemID, setSelectedItemID] = useState('')
+  const [selectedItemYPos, setSelectedItemYPos] = useState()
+  const [selectedElement, setSelectedElement] = useState()
   const [selectedLocationName, setSelectedLocationName] = useState('all')
 
   const { data, loading } = useQuery(INVENTORY_ITEMS_QUERY)
 
-  const toggleItemOpen = (id) => {
+  const toggleItemOpen = (event, id) => {
+    // setSelectedItemYPos(event.target.getBoundingClientRect().y)
+
+    // window.scrollTo({ top: event.target.offsetTop, behavior: 'smooth' })
+
+    setSelectedElement(event.target)
+
     if (selectedItemID === id) {
       setSelectedItemID('')
     } else {
@@ -49,6 +64,19 @@ const Inventory = () => {
     setDisplayedItems(searchedItems)
   }, [searchedItems])
 
+  useEffect(() => {
+    // scrollToSelectedItem(selectedItemRef)
+    // const scrollY = selectedItemYPos
+    // if (selectedItemRef.current)
+    //   window.scrollTo(0, selectedItemRef.current.offsetTop - scrollY)
+    // if (selectedItemRef.current) {
+    //   console.log('scrolling to', scrollY)
+    // }
+
+    if (selectedElement)
+      window.scrollTo({ top: selectedElement.offsetTop - 100, behavior: 'smooth' })
+  }, [selectedElement])
+
   return (
     <Styled.Container>
       <Sidebar>
@@ -66,8 +94,11 @@ const Inventory = () => {
           )}
 
           {displayedItems.map((item) => (
-            <ListItem key={item.id} onClick={() => toggleItemOpen(item.id)}>
-              <TitleBar>
+            <ListItem
+              key={item.id}
+              refProp={item.id === selectedItemID ? selectedItemRef : null}
+            >
+              <TitleBar onClick={(e) => toggleItemOpen(e, item.id)}>
                 <TitleName name={item.item.name} />
                 <Location name={item.location.name} />
                 <Expiration date={item.expiration} />
@@ -88,6 +119,10 @@ const INVENTORY_ITEMS_QUERY = gql`
       item {
         id
         name
+        dishes {
+          id
+          name
+        }
       }
       location {
         id

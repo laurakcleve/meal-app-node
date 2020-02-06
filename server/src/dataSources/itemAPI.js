@@ -32,6 +32,26 @@ class ItemAPI extends DataSource {
       .query(queryString, [Number(id)])
       .then((results) => Promise.resolve(results.rows[0]))
   }
+
+  getDishes({ id }) {
+    const queryString = `
+      WITH generic_items AS (
+        SELECT gi.id AS itemID  
+        FROM item gi
+        INNER JOIN item_counts_as ica on ica.generic_item_id = gi.id
+        WHERE ica.specific_item_id = $1
+      )
+      SELECT DISTINCT dish.*
+      FROM item dish
+      INNER JOIN ingredient_set ings ON ings.parent_item_id = dish.id
+      INNER JOIN ingredient ing ON ing.ingredient_set_id = ings.id
+      INNER JOIN item i ON i.id = ing.item_id
+      WHERE i.id IN ((SELECT itemID FROM generic_items), $1)
+    `
+    return db
+      .query(queryString, [Number(id)])
+      .then((results) => Promise.resolve(results.rows))
+  }
 }
 
 module.exports = ItemAPI

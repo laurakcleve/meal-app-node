@@ -5,7 +5,8 @@ import { gql } from 'apollo-boost'
 import * as Styled from './Layout.styles'
 import Sidebar from './Sidebar'
 import Search from './Search'
-import { ListItem, TitleBar, TitleName, ItemDetails } from './ListItem'
+import { ListItem, TitleBar, TitleName } from './ListItem'
+import { ItemDetails } from './ListItem/Details'
 import DishTags from './DishTags'
 
 const Dishes = () => {

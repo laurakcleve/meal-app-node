@@ -3,6 +3,7 @@ import PropTypes from 'prop-types'
 import moment from 'moment'
 
 import * as Styled from './ItemDetails.styles'
+import UsedIn from './UsedIn'
 
 const ItemDetails = ({ item }) => {
   return (
@@ -24,7 +25,9 @@ const ItemDetails = ({ item }) => {
           )}
         </div>
       </div>
-      <div className="lists">Lists</div>
+      <div className="lists">
+        <div>{<UsedIn dishes={item.item.dishes} />}</div>
+      </div>
     </Styled.Details>
   )
 }
@@ -35,6 +38,10 @@ ItemDetails.propTypes = {
     addDate: PropTypes.string.isRequired,
     amount: PropTypes.string,
     location: PropTypes.shape({
+      id: PropTypes.string.isRequired,
+      name: PropTypes.string.isRequired,
+    }),
+    item: PropTypes.shape({
       id: PropTypes.string.isRequired,
       name: PropTypes.string.isRequired,
     }),

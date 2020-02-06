@@ -18,6 +18,8 @@ const resolvers = {
       dataSources.itemAPI.getCategory({
         id: Item.id,
       }),
+    dishes: (Item, __, { dataSources }) =>
+      dataSources.itemAPI.getDishes({ id: Item.id }),
   },
 
   InventoryItem: {
