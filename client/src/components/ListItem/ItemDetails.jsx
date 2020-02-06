@@ -5,12 +5,26 @@ import moment from 'moment'
 import * as Styled from './ItemDetails.styles'
 
 const ItemDetails = ({ item }) => {
-  console.log(item.amount)
   return (
     <Styled.Details>
-      <div>Add date: {moment(Number(item.addDate)).format('M/D/YY')}</div>
-      {item.amount && <div>Amount: {item.amount}</div>}
-      <div>Location: {item.location.name}</div>
+      <div className="details">
+        <div>
+          <h3>ADDED</h3>
+          <p>
+            {moment(Number(item.addDate)).format('M/D/YY')} (
+            {moment(Number(item.addDate)).fromNow()})
+          </p>
+        </div>
+        <div>
+          {item.amount && (
+            <>
+              <h3>AMOUNT</h3>
+              <p>{item.amount}</p>
+            </>
+          )}
+        </div>
+      </div>
+      <div className="lists">Lists</div>
     </Styled.Details>
   )
 }
