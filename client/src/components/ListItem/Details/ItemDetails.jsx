@@ -26,7 +26,9 @@ const ItemDetails = ({ item }) => {
         </div>
       </div>
       <div className="lists">
-        <div>{<UsedIn dishes={item.item.dishes} />}</div>
+        <div>
+          <UsedIn dishes={item.item.dishes} />
+        </div>
       </div>
     </Styled.Details>
   )
@@ -44,7 +46,13 @@ ItemDetails.propTypes = {
     item: PropTypes.shape({
       id: PropTypes.string.isRequired,
       name: PropTypes.string.isRequired,
-    }),
+      dishes: PropTypes.arrayOf(
+        PropTypes.shape({
+          id: PropTypes.string.isRequired,
+          name: PropTypes.string.isRequired,
+        })
+      ),
+    }).isRequired,
   }).isRequired,
 }
 

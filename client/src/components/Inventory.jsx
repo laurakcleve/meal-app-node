@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react'
+import React, { useState, useEffect } from 'react'
 import { useQuery } from '@apollo/react-hooks'
 import { gql } from 'apollo-boost'
 
@@ -11,6 +11,7 @@ import { ListItem, TitleBar, TitleName } from './ListItem'
 import ItemDetails from './ListItem/Details/ItemDetails'
 import Expiration from './ListItem/Expiration'
 import Location from './ListItem/Location'
+import TopBar from './TopBar'
 
 const Inventory = () => {
   const [displayedItems, setDisplayedItems] = useState([])
@@ -71,9 +72,15 @@ const Inventory = () => {
         {loading && <p>Loading...</p>}
 
         <>
-          {data && data.inventoryItems && (
-            <Search items={filteredItems} set={setSearchedItems} />
-          )}
+          <TopBar>
+            {data && data.inventoryItems && (
+              <Search items={filteredItems} set={setSearchedItems} />
+            )}
+
+            <button className="add" type="button">
+              <span>+</span>
+            </button>
+          </TopBar>
 
           {displayedItems.map((item) => (
             <ListItem key={item.id}>

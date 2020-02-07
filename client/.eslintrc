@@ -41,5 +41,15 @@
       "never"
     ],
     "react/prop-types": 1
-  }
+  },
+  "overrides": [
+    {
+      "files": [
+        "*.styles.js"
+      ],
+      "rules": {
+        "import/prefer-default-export": "off"
+      }
+    }
+  ]
 }

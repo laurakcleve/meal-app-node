@@ -1,7 +1,7 @@
 import styled from 'styled-components'
 
 export const Container = styled.div`
-  margin-bottom: 20px;
+  flex: 1;
 
   span {
     margin-right: 7px;
