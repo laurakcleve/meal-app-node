@@ -11,6 +11,9 @@ const typeDefs = gql`
     itemLocations: [ItemLocation]!
     itemCategories: [ItemCategory]!
     dishTags: [DishTag]!
+    purchases: [Purchase]!
+    purchase(id: ID!): Purchase
+    purchaseLocations: [PurchaseLocation]
   }
 
   type Item {
@@ -46,6 +49,17 @@ const typeDefs = gql`
   }
 
   type ItemLocation {
+    id: ID!
+    name: String!
+  }
+
+  type Purchase {
+    id: ID!
+    date: String!
+    location: PurchaseLocation
+  }
+
+  type PurchaseLocation {
     id: ID!
     name: String!
   }

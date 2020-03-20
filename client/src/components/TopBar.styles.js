@@ -1,6 +1,7 @@
 import styled from 'styled-components'
 
-export const TopBar = styled.div`
+// export const TopBar = styled.div`
+export default styled.div`
   display: flex;
   padding-bottom: 20px;
 
@@ -17,8 +18,21 @@ export const TopBar = styled.div`
 
     span {
       position: absolute;
+      width: 20px;
+      height: 20px;
       top: 17px;
       right: 26px;
+
+      &.open {
+        transition: transform 0.5s ease;
+        transform-origin: 50% 10%;
+      }
+
+      &.close {
+        transform: rotate(225deg);
+        transform-origin: 50% 10%;
+        transition: transform 0.5s ease;
+      }
     }
   }
 `

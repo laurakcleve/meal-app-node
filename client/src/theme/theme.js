@@ -6,9 +6,11 @@ export default {
     grey: '#a5a5a5',
     darkGrey: '#6e6e6e',
     lightGrey: '#e6e6e6',
+    lighterGrey: '#ebebeb',
     inputBackground: '#d2d0ce',
     yellow: '#f9e07f',
     lightBlue: '#ebf0f2',
+    green: '#8fcaa2',
   },
-  containerWidth: '800px',
+  containerWidth: '900px',
 }

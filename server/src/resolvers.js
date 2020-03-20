@@ -11,6 +11,11 @@ const resolvers = {
     itemLocations: (_, __, { dataSources }) => dataSources.itemLocationAPI.getAll(),
     itemCategories: (_, __, { dataSources }) => dataSources.itemCategoryAPI.getAll(),
     dishTags: (_, __, { dataSources }) => dataSources.dishTagAPI.getAll(),
+    purchases: (_, __, { dataSources }) => dataSources.purchaseAPI.getAll(),
+    purchase: (_, { id }, { dataSources }) =>
+      dataSources.purchaseAPI.getByID({ id }),
+    purchaseLocations: (_, __, { dataSources }) =>
+      dataSources.purchaseLocationAPI.getAll(),
   },
 
   Item: {
@@ -36,6 +41,11 @@ const resolvers = {
   Dish: {
     tags: (Dish, __, { dataSources }) =>
       dataSources.dishAPI.getTags({ id: Dish.id }),
+  },
+
+  Purchase: {
+    location: (Purchase, __, { dataSources }) =>
+      dataSources.purchaseAPI.getLocation({ id: Purchase.id }),
   },
 }
 

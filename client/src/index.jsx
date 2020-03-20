@@ -12,6 +12,7 @@ import Header from './components/Header'
 import Items from './components/Items'
 import Dishes from './components/Dishes'
 import Inventory from './components/Inventory'
+import Purchases from './components/Purchases'
 
 const cache = new InMemoryCache()
 
@@ -42,6 +43,7 @@ const App = () => (
         <Route exact path="/items" component={Items} />
         <Route exact path="/dishes" component={Dishes} />
         <Route exact path="/inventory" component={Inventory} />
+        <Route exact path="/purchases" component={Purchases} />
       </ThemeProvider>
     </BrowserRouter>
   </ApolloProvider>

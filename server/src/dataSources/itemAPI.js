@@ -8,7 +8,7 @@ class ItemAPI extends DataSource {
 
   getAll() {
     const queryString = `
-    SELECT * FROM item 
+      SELECT * FROM item 
     `
     return db.query(queryString).then((results) => results.rows)
   }

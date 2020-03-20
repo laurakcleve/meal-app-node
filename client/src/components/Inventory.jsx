@@ -12,6 +12,7 @@ import ItemDetails from './ListItem/Details/ItemDetails'
 import Expiration from './ListItem/Expiration'
 import Location from './ListItem/Location'
 import TopBar from './TopBar'
+import AddItem from './AddItem'
 
 const Inventory = () => {
   const [displayedItems, setDisplayedItems] = useState([])
@@ -20,6 +21,7 @@ const Inventory = () => {
   const [selectedItemID, setSelectedItemID] = useState('')
   const [selectedElement, setSelectedElement] = useState()
   const [selectedLocationName, setSelectedLocationName] = useState('all')
+  const [adding, setAdding] = useState(true)
 
   const { data, loading } = useQuery(INVENTORY_ITEMS_QUERY)
 
@@ -77,10 +79,12 @@ const Inventory = () => {
               <Search items={filteredItems} set={setSearchedItems} />
             )}
 
-            <button className="add" type="button">
-              <span>+</span>
+            <button className="add" type="button" onClick={() => setAdding(!adding)}>
+              <span className={adding ? 'close' : 'open'}>+</span>
             </button>
           </TopBar>
+
+          {adding && <AddItem />}
 
           {displayedItems.map((item) => (
             <ListItem key={item.id}>

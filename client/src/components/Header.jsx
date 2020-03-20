@@ -16,6 +16,9 @@ const Header = ({ location }) => (
       <Styled.CustomLink to="/inventory" pathname={location.pathname}>
         Inventory
       </Styled.CustomLink>
+      <Styled.CustomLink to="/purchases" pathname={location.pathname}>
+        Purchases
+      </Styled.CustomLink>
     </Styled.Container>
   </Styled.Header>
 )

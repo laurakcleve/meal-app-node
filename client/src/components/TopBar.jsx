@@ -1,10 +1,10 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 
-import * as Styled from './TopBar.styles'
+import StyledTopBar from './TopBar.styles'
 
 const TopBar = ({ children }) => {
-  return <Styled.TopBar>{children}</Styled.TopBar>
+  return <StyledTopBar>{children}</StyledTopBar>
 }
 
 TopBar.propTypes = {

@@ -64,8 +64,8 @@ const Items = () => {
           )}
 
           {displayedItems.map((item) => (
-            <ListItem key={item.id} onClick={() => toggleItemOpen(item.id)}>
-              <TitleBar>
+            <ListItem key={item.id}>
+              <TitleBar onClick={() => toggleItemOpen(item.id)}>
                 <TitleName name={item.name} />
               </TitleBar>
               {selectedItemID === item.id && <ItemDetails item={item} />}
@@ -77,7 +77,7 @@ const Items = () => {
   )
 }
 
-const ITEMS_QUERY = gql`
+export const ITEMS_QUERY = gql`
   query items {
     items {
       id

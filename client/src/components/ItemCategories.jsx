@@ -22,7 +22,7 @@ const ItemCategories = ({ selectedCategoryName, setSelectedCategoryName }) => {
   )
 }
 
-const ITEM_CATEGORIES_QUERY = gql`
+export const ITEM_CATEGORIES_QUERY = gql`
   query itemCategories {
     itemCategories {
       id
