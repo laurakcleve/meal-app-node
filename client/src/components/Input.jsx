@@ -4,7 +4,6 @@ import PropTypes from 'prop-types'
 import * as Styled from './Input.styles'
 
 const Input = ({ id, label, type, list }) => {
-  console.log(list)
   return (
     <>
       <Styled.Label htmlFor={id}>
