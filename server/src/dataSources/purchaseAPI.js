@@ -9,6 +9,7 @@ class PurchaseAPI extends DataSource {
   getAll() {
     const queryString = `
       SELECT * FROM purchase
+      ORDER BY date DESC
     `
     return db.query(queryString).then((results) => results.rows)
   }
@@ -29,6 +30,20 @@ class PurchaseAPI extends DataSource {
       WHERE purchase.id = $1
     `
     return db.query(queryString, [Number(id)]).then((results) => results.rows[0])
+  }
+
+  add({ date, location }) {
+    const queryString = `
+      WITH retrieved_purchase_location_id AS (
+        SELECT purchase_location_id_for_insert($2)
+      )
+      INSERT INTO purchase(date, location_id)
+      SELECT 
+        $1 AS date, 
+        (SELECT * FROM retrieved_purchase_location_id) AS location_id
+      RETURNING *
+    `
+    return db.query(queryString, [date, location]).then((results) => results.rows[0])
   }
 }
 

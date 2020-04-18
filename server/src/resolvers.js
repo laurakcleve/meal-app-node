@@ -18,6 +18,11 @@ const resolvers = {
       dataSources.purchaseLocationAPI.getAll(),
   },
 
+  Mutation: {
+    addPurchase: (_, { date, location }, { dataSources }) =>
+      dataSources.purchaseAPI.add({ date, location }),
+  },
+
   Item: {
     category: (Item, __, { dataSources }) =>
       dataSources.itemAPI.getCategory({

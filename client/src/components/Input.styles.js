@@ -13,6 +13,8 @@ export const Label = styled.label`
 `
 export const Input = styled.input`
   background-color: ${({ theme }) => theme.colors.lighterGrey};
+  width: 100%;
+  box-sizing: border-box;
 
   &[type='date'] {
     text-transform: uppercase;

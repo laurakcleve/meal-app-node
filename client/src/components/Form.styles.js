@@ -8,4 +8,13 @@ export default styled.form`
   border-radius: 3px;
   display: grid;
   grid-template-columns: 1fr 1fr 1fr;
+  grid-gap: 20px;
+  align-items: center;
+
+  button {
+    height: 35px;
+    margin-top: 4px;
+    width: 120px;
+    margin-left: 60px;
+  }
 `

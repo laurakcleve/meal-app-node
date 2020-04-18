@@ -16,6 +16,10 @@ const typeDefs = gql`
     purchaseLocations: [PurchaseLocation]
   }
 
+  type Mutation {
+    addPurchase(date: String!, location: String!): Purchase!
+  }
+
   type Item {
     id: ID!
     name: String!

@@ -1,5 +1,5 @@
-import React, { useEffect } from 'react'
-import { useQuery } from '@apollo/react-hooks'
+import React, { useState } from 'react'
+import { useQuery, useMutation } from '@apollo/react-hooks'
 import { gql } from 'apollo-boost'
 import moment from 'moment'
 
@@ -14,19 +14,52 @@ import TitleName from './ListItem/TitleName'
 const Purchases = () => {
   const { data: locationsData, loading, error } = useQuery(PURCHASE_LOCATIONS_QUERY)
   const { data: purchasesData } = useQuery(PURCHASES_QUERY)
+  const [addPurchase] = useMutation(ADD_PURCHASE_MUTATION, {
+    onCompleted: () => {
+      setDate('')
+      setLocation('')
+    },
+  })
+
+  const [date, setDate] = useState('')
+  const [location, setLocation] = useState('')
+
+  const submit = (event) => {
+    event.preventDefault()
+    if (date && location) {
+      addPurchase({
+        variables: {
+          date,
+          location,
+        },
+        refetchQueries: [{ query: PURCHASES_QUERY }],
+      })
+    }
+  }
 
   return (
     <Styled.Container>
       <Sidebar />
       <Styled.List>
         <Form>
-          <Input id="date" label="Date" type="date" />
+          <Input
+            id="date"
+            label="Date"
+            type="date"
+            value={date}
+            onChange={(e) => setDate(e.target.value)}
+          />
           <Input
             id="location"
             label="Location"
             type="text"
+            value={location}
+            onChange={(e) => setLocation(e.target.value)}
             list={locationsData && locationsData.purchaseLocations}
           />
+          <button type="submit" onClick={(e) => submit(e)}>
+            SAVE
+          </button>
         </Form>
 
         {purchasesData &&
@@ -62,6 +95,19 @@ const PURCHASE_LOCATIONS_QUERY = gql`
     purchaseLocations {
       id
       name
+    }
+  }
+`
+
+const ADD_PURCHASE_MUTATION = gql`
+  mutation addPurchase($date: String!, $location: String!) {
+    addPurchase(date: $date, location: $location) {
+      id
+      date
+      location {
+        id
+        name
+      }
     }
   }
 `
