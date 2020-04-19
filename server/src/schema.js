@@ -18,6 +18,7 @@ const typeDefs = gql`
 
   type Mutation {
     addPurchase(date: String!, location: String!): Purchase!
+    deletePurchase(id: ID!): Int
   }
 
   type Item {

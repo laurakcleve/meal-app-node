@@ -2,6 +2,7 @@ import React, { useState } from 'react'
 import { useQuery, useMutation } from '@apollo/react-hooks'
 import { gql } from 'apollo-boost'
 import moment from 'moment'
+import { Link } from 'react-router-dom'
 
 import * as Styled from './Layout.styles'
 import Sidebar from './Sidebar'
@@ -13,7 +14,11 @@ import TitleName from './ListItem/TitleName'
 
 const Purchases = () => {
   const { data: locationsData, loading, error } = useQuery(PURCHASE_LOCATIONS_QUERY)
-  const { data: purchasesData } = useQuery(PURCHASES_QUERY)
+
+  const { data: purchasesData } = useQuery(PURCHASES_QUERY, {
+    fetchPolicy: 'network-only',
+  })
+
   const [addPurchase] = useMutation(ADD_PURCHASE_MUTATION, {
     onCompleted: () => {
       setDate('')
@@ -65,12 +70,14 @@ const Purchases = () => {
         {purchasesData &&
           purchasesData.purchases &&
           purchasesData.purchases.map((purchase) => (
-            <ListItem>
-              <TitleBar>
-                <TitleName name={purchase.location.name} />
-                {moment(Number(purchase.date)).format('M/D/YY')}
-              </TitleBar>
-            </ListItem>
+            <Link to={`/purchase/${purchase.id}`}>
+              <ListItem>
+                <TitleBar>
+                  <TitleName name={purchase.location.name} />
+                  {moment(Number(purchase.date)).format('M/D/YY')}
+                </TitleBar>
+              </ListItem>
+            </Link>
           ))}
       </Styled.List>
     </Styled.Container>

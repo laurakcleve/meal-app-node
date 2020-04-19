@@ -45,6 +45,14 @@ class PurchaseAPI extends DataSource {
     `
     return db.query(queryString, [date, location]).then((results) => results.rows[0])
   }
+
+  delete({ id }) {
+    const queryString = `
+       DELETE FROM purchase
+       WHERE id = $1
+    `
+    return db.query(queryString, [Number(id)]).then((results) => results.rowCount)
+  }
 }
 
 module.exports = PurchaseAPI
