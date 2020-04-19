@@ -27,6 +27,8 @@ const Purchase = ({ match, history }) => {
     <Styled.Container>
       <Sidebar>Sidebar</Sidebar>
       <Styled.List>
+        {loading && <h2>Loading...</h2>}
+        {error && <h2>Error</h2>}
         {data && data.purchase && (
           <>
             <h2>

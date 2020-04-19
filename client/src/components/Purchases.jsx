@@ -44,7 +44,7 @@ const Purchases = () => {
 
   return (
     <Styled.Container>
-      <Sidebar />
+      <Sidebar>Sidebar</Sidebar>
       <Styled.List>
         <Form>
           <Input
@@ -67,10 +67,12 @@ const Purchases = () => {
           </button>
         </Form>
 
+        {loading && <p>Loading...</p>}
+        {error && <p>Error</p>}
         {purchasesData &&
           purchasesData.purchases &&
           purchasesData.purchases.map((purchase) => (
-            <Link to={`/purchase/${purchase.id}`}>
+            <Link key={purchase.id} to={`/purchase/${purchase.id}`}>
               <ListItem>
                 <TitleBar>
                   <TitleName name={purchase.location.name} />

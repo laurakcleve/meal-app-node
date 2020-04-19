@@ -10,7 +10,11 @@ const TitleBar = ({ children, onClick }) => {
 TitleBar.propTypes = {
   children: PropTypes.oneOfType([PropTypes.arrayOf(PropTypes.node), PropTypes.node])
     .isRequired,
-  onClick: PropTypes.func.isRequired,
+  onClick: PropTypes.func,
+}
+
+TitleBar.defaultProps = {
+  onClick: null,
 }
 
 export default TitleBar
