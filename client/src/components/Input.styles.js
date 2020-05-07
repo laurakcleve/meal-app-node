@@ -11,12 +11,14 @@ export const Label = styled.label`
     color: ${({ theme }) => theme.colors.grey};
   }
 `
-export const Input = styled.input`
+export const InputEl = styled.input`
   background-color: ${({ theme }) => theme.colors.lighterGrey};
   width: 100%;
   box-sizing: border-box;
 
   &[type='date'] {
     text-transform: uppercase;
+  }
+
   }
 `

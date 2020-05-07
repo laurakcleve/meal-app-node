@@ -19,6 +19,16 @@ const typeDefs = gql`
   type Mutation {
     addPurchase(date: String!, location: String!): Purchase!
     deletePurchase(id: ID!): Int
+    addPurchaseItem(
+      purchaseId: ID!
+      name: String!
+      price: Float
+      weightAmount: Float
+      weightUnit: String
+      quantityAmount: Float
+      quantityUnit: String
+      number: Int!
+    ): PurchaseItem!
   }
 
   type Item {
@@ -62,11 +72,22 @@ const typeDefs = gql`
     id: ID!
     date: String!
     location: PurchaseLocation
+    items: [PurchaseItem]!
   }
 
   type PurchaseLocation {
     id: ID!
     name: String!
+  }
+
+  type PurchaseItem {
+    id: ID!
+    item: Item!
+    price: Float
+    weightAmount: Float
+    weightUnit: String
+    quantityAmount: Float
+    quantityUnit: String
   }
 `
 

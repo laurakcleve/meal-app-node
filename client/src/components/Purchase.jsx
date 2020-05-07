@@ -4,8 +4,11 @@ import { gql } from 'apollo-boost'
 import PropTypes from 'prop-types'
 import moment from 'moment'
 
-import * as Styled from './Layout.styles'
-import Sidebar from './Sidebar'
+import * as Layout from './Layout.styles'
+import * as Styled from './Purchase.styles'
+import ListItem from './ListItem/ListItem'
+import PurchaseItemAddForm from './PurchaseItemAddForm'
+import unitPrice from '../utils'
 
 const Purchase = ({ match, history }) => {
   const { data, loading, error } = useQuery(PURCHASE_QUERY, {
@@ -24,25 +27,62 @@ const Purchase = ({ match, history }) => {
   }
 
   return (
-    <Styled.Container>
-      <Sidebar>Sidebar</Sidebar>
-      <Styled.List>
+    <Layout.Container>
+      <Layout.List>
         {loading && <h2>Loading...</h2>}
         {error && <h2>Error</h2>}
+
         {data && data.purchase && (
           <>
-            <h2>
-              {`${moment(Number(data.purchase.date)).format('M/D/YY')} - ${
-                data.purchase.location.name
+            <Styled.Header>
+              <h2>
+                {`${moment(Number(data.purchase.date)).format('M/D/YY')} - ${
+                  data.purchase.location.name
                 }`}
-            </h2>
-            <button type="button" onClick={(event) => submitDelete(event)}>
-              Delete
-            </button>
+              </h2>
+
+              <button type="button" onClick={(event) => submitDelete(event)}>
+                Delete
+              </button>
+            </Styled.Header>
+
+            <PurchaseItemAddForm
+              purchaseId={match.params.id}
+              PURCHASE_QUERY={PURCHASE_QUERY}
+            />
+
+            {data.purchase.items.map((purchaseItem) => (
+              <ListItem key={purchaseItem.id}>
+                <Styled.Name>{purchaseItem.item.name}</Styled.Name>
+                <Styled.Weight>
+                  {purchaseItem.weightAmount} {purchaseItem.weightUnit}
+                </Styled.Weight>
+                <Styled.Quantity>
+                  {purchaseItem.quantityAmount} {purchaseItem.quantityUnit}
+                </Styled.Quantity>
+                <Styled.Price>
+                  {purchaseItem.price && `$${purchaseItem.price.toFixed(2)}`}
+                </Styled.Price>
+                <Styled.WeightPrice>
+                  {unitPrice(
+                    purchaseItem.price,
+                    purchaseItem.weightAmount,
+                    purchaseItem.weightUnit
+                  )}
+                </Styled.WeightPrice>
+                <Styled.QuantityPrice>
+                  {unitPrice(
+                    purchaseItem.price,
+                    purchaseItem.quantityAmount,
+                    purchaseItem.quantityUnit
+                  )}
+                </Styled.QuantityPrice>
+              </ListItem>
+            ))}
           </>
         )}
-      </Styled.List>
-    </Styled.Container>
+      </Layout.List>
+    </Layout.Container>
   )
 }
 
@@ -54,6 +94,18 @@ const PURCHASE_QUERY = gql`
       location {
         id
         name
+      }
+      items {
+        id
+        item {
+          id
+          name
+        }
+        price
+        weightAmount
+        weightUnit
+        quantityAmount
+        quantityUnit
       }
     }
   }

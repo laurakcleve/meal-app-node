@@ -2,7 +2,10 @@ import styled from 'styled-components'
 
 const TitleName = styled.div`
   flex: 2;
-  text-transform: capitalize;
+
+  &:first-letter {
+    text-transform: uppercase;
+  }
 `
 
 export default TitleName

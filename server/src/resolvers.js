@@ -23,6 +23,30 @@ const resolvers = {
       dataSources.purchaseAPI.add({ date, location }),
     deletePurchase: (_, { id }, { dataSources }) =>
       dataSources.purchaseAPI.delete({ id }),
+    addPurchaseItem: (
+      _,
+      {
+        purchaseId,
+        name,
+        price,
+        weightAmount,
+        weightUnit,
+        quantityAmount,
+        quantityUnit,
+        number,
+      },
+      { dataSources }
+    ) =>
+      dataSources.purchaseAPI.addPurchaseItem({
+        purchaseId,
+        name,
+        price,
+        weightAmount,
+        weightUnit,
+        quantityAmount,
+        quantityUnit,
+        number,
+      }),
   },
 
   Item: {
@@ -53,6 +77,14 @@ const resolvers = {
   Purchase: {
     location: (Purchase, __, { dataSources }) =>
       dataSources.purchaseAPI.getLocation({ id: Purchase.id }),
+    items: (Purchase, __, { dataSources }) =>
+      dataSources.purchaseAPI.getItems({ id: Purchase.id }),
+  },
+
+  PurchaseItem: {
+    item: (PurchaseItem, __, { dataSources }) =>
+      console.log({ PurchaseItem }) ||
+      dataSources.purchaseAPI.getPurchaseItemSubItem({ id: PurchaseItem.itemId }),
   },
 }
 

@@ -32,6 +32,33 @@ class PurchaseAPI extends DataSource {
     return db.query(queryString, [Number(id)]).then((results) => results.rows[0])
   }
 
+  getItems({ id }) {
+    const queryString = `
+      SELECT 
+        id, 
+        purchase_id AS "purchaseId",  
+        item_id AS "itemId",
+        price, 
+        weight_amount AS "weightAmount",
+        weight_unit AS "weightUnit",
+        quantity_amount AS "quantityAmount",
+        quantity_unit AS "quantityUnit"
+      FROM purchase_item
+      WHERE purchase_id = $1
+      ORDER BY id DESC
+    `
+    return db.query(queryString, [Number(id)]).then((results) => results.rows)
+  }
+
+  getPurchaseItemSubItem({ id }) {
+    const queryString = `
+      SELECT *
+      FROM item
+      WHERE id = $1 
+    `
+    return db.query(queryString, [Number(id)]).then((results) => results.rows[0])
+  }
+
   add({ date, location }) {
     const queryString = `
       WITH retrieved_purchase_location_id AS (
@@ -52,6 +79,53 @@ class PurchaseAPI extends DataSource {
        WHERE id = $1
     `
     return db.query(queryString, [Number(id)]).then((results) => results.rowCount)
+  }
+
+  addPurchaseItem({
+    purchaseId,
+    name,
+    price,
+    weightAmount,
+    weightUnit,
+    quantityAmount,
+    quantityUnit,
+    number,
+  }) {
+    const queryString = `
+      WITH retrieved_item_id AS (
+        SELECT item_id_for_insert($2) 
+      )
+      INSERT INTO purchase_item(
+        purchase_id,
+        item_id, 
+        price, 
+        weight_amount, 
+        weight_unit, 
+        quantity_amount, 
+        quantity_unit)
+      SELECT
+        $1 AS purchase_id,
+        (SELECT * FROM retrieved_item_id),
+        $3 AS price,
+        $4 AS weight_amount,
+        $5 AS weight_unit,
+        $6 AS quantity_amount,
+        $7 AS quantity_unit
+      FROM GENERATE_SERIES(1, $8)
+      RETURNING *
+    `
+    return db
+      .query(queryString, [
+        purchaseId,
+        name,
+        price,
+        weightAmount,
+        weightUnit,
+        quantityAmount,
+        quantityUnit,
+        number,
+      ])
+      .then((results) => results.rows[0])
   }
 }
 

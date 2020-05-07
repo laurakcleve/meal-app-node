@@ -27,7 +27,7 @@
     "prettier/prettier": [
       "warn",
       {
-        "printWidth": 85,
+        "printWidth": 80,
         "trailingComma": "es5",
         "singleQuote": true,
         "arrowParens": "always",

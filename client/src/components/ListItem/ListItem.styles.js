@@ -8,6 +8,14 @@ const ListItem = styled.div`
   font-family: 'Roboto';
   font-size: 13px;
   font-weight: 500;
+  padding: 15px;
+  cursor: default;
+  display: flex;
+  grid-gap: 10px;
+
+  &:first-letter {
+    text-transform: uppercase;
+  }
 `
 
 export default ListItem
