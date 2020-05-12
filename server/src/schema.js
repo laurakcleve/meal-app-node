@@ -28,6 +28,7 @@ const typeDefs = gql`
       quantityAmount: Float
       quantityUnit: String
       number: Int!
+      itemType: String!
     ): PurchaseItem!
   }
 

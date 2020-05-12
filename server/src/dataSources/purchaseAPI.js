@@ -90,10 +90,11 @@ class PurchaseAPI extends DataSource {
     quantityAmount,
     quantityUnit,
     number,
+    itemType,
   }) {
     const queryString = `
       WITH retrieved_item_id AS (
-        SELECT item_id_for_insert($2) 
+        SELECT item_id_for_insert($2, CAST($9 AS itemtype)) 
       )
       INSERT INTO purchase_item(
         purchase_id,
@@ -124,6 +125,7 @@ class PurchaseAPI extends DataSource {
         quantityAmount,
         quantityUnit,
         number,
+        itemType,
       ])
       .then((results) => results.rows[0])
   }

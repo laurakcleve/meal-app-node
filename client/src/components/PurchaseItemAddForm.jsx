@@ -47,6 +47,7 @@ const PurchaseItemAddForm = ({ purchaseId, PURCHASE_QUERY }) => {
           quantityAmount: Number(quantityAmount) || null,
           quantityUnit: quantityUnit || null,
           number: Number(number) || 1,
+          itemType: isNonFoodItem ? 'nonFoodItem' : 'baseItem',
         },
       })
     }
@@ -60,6 +61,8 @@ const PurchaseItemAddForm = ({ purchaseId, PURCHASE_QUERY }) => {
     setQuantityAmount('')
     setQuantityUnit('')
     setNumber('1')
+    setIsNonFoodItem(false)
+    setDoNotInventory(false)
   }
 
   return (
@@ -130,7 +133,14 @@ const PurchaseItemAddForm = ({ purchaseId, PURCHASE_QUERY }) => {
           type="checkbox"
           name="isNonFoodItem"
           checked={isNonFoodItem}
-          onChange={() => setIsNonFoodItem(!isNonFoodItem)}
+          onChange={() => {
+            if (!isNonFoodItem) {
+              setDoNotInventory(true)
+            } else {
+              setDoNotInventory(false)
+            }
+            setIsNonFoodItem(!isNonFoodItem)
+          }}
         />
         <Styled.Label className="labelText">Non food item</Styled.Label>
       </label>
@@ -171,6 +181,7 @@ const ADD_PURCHASE_ITEM_MUTATION = gql`
     $quantityAmount: Float
     $quantityUnit: String
     $number: Int!
+    $itemType: String!
   ) {
     addPurchaseItem(
       purchaseId: $purchaseId
@@ -181,6 +192,7 @@ const ADD_PURCHASE_ITEM_MUTATION = gql`
       quantityAmount: $quantityAmount
       quantityUnit: $quantityUnit
       number: $number
+      itemType: $itemType
     ) {
       id
     }

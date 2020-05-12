@@ -34,6 +34,7 @@ const resolvers = {
         quantityAmount,
         quantityUnit,
         number,
+        itemType,
       },
       { dataSources }
     ) =>
@@ -46,6 +47,7 @@ const resolvers = {
         quantityAmount,
         quantityUnit,
         number,
+        itemType,
       }),
   },
 
