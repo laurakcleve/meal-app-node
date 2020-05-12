@@ -125,14 +125,24 @@ const PurchaseItemAddForm = ({ purchaseId, PURCHASE_QUERY }) => {
         />
       </div>
 
-      <label htmlFor="isNonFoodItem">
-        <Styled.Label>Non food item</Styled.Label>
-        <Styled.Checkbox name="isNonFoodItem" />
+      <label htmlFor="isNonFoodItem" className="checkbox">
+        <input
+          type="checkbox"
+          name="isNonFoodItem"
+          checked={isNonFoodItem}
+          onChange={() => setIsNonFoodItem(!isNonFoodItem)}
+        />
+        <Styled.Label className="labelText">Non food item</Styled.Label>
       </label>
 
-      <label htmlFor="doNotInventory">
-        <Styled.Label>Do not inventory</Styled.Label>
-        <Styled.Checkbox name="doNotInventory" />
+      <label htmlFor="doNotInventory" className="checkbox">
+        <input
+          type="checkbox"
+          name="doNotInventory"
+          checked={doNotInventory}
+          onChange={() => setDoNotInventory(!doNotInventory)}
+        />
+        <Styled.Label className="labelText">Do not inventory</Styled.Label>
       </label>
 
       <button type="submit" onClick={(event) => saveItem(event)}>

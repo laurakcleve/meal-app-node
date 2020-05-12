@@ -69,12 +69,3 @@ export const Unit = styled(Input)`
 export const Multiple = styled(Input)`
   max-width: 50px;
 `
-
-export const Checkbox = styled.input.attrs({
-  type: 'checkbox',
-  name: (props) => props.name,
-})`
-  &:focus {
-    border: 1px solid red;
-  }
-`
