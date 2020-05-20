@@ -8,7 +8,7 @@ class ItemAPI extends DataSource {
 
   getAll() {
     const queryString = `
-      SELECT *, default_shelflife AS "defaultShelflife"
+      SELECT *, default_shelflife AS "defaultShelflife", item_type AS "itemType"
       FROM item 
     `
     return db.query(queryString).then((results) => results.rows)
@@ -16,7 +16,8 @@ class ItemAPI extends DataSource {
 
   getByID({ id }) {
     const queryString = `
-      SELECT *, default_shelflife AS "defaultShelflife" FROM item
+      SELECT *, default_shelflife AS "defaultShelflife", item_type AS "itemType" 
+      FROM item
       WHERE id = $1
     `
     return db.query(queryString, [id]).then((results) => results.rows[0])
@@ -24,7 +25,8 @@ class ItemAPI extends DataSource {
 
   getByName({ name }) {
     const queryString = `
-      SELECT *, default_shelflife AS "defaultShelflife" FROM item
+      SELECT *, default_shelflife AS "defaultShelflife", item_type AS "itemType" 
+      FROM item
       WHERE name = $1
     `
     return db.query(queryString, [name]).then((results) => results.rows[0])

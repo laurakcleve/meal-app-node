@@ -39,9 +39,15 @@ export const inventoryAmountString = (
     }
   }
   if (quantityAmount) {
+    if (weightAmount) {
+      result += '('
+    }
     result += `${quantityAmount}`
     if (quantityUnit) {
       result += ` ${quantityUnit}`
+    }
+    if (weightAmount) {
+      result += ')'
     }
   }
 

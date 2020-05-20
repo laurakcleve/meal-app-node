@@ -50,6 +50,7 @@ const typeDefs = gql`
     dishes: [Dish]
     defaultLocation: ItemLocation
     defaultShelflife: Int
+    itemType: String!
   }
 
   type ItemCategory {

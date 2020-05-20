@@ -85,16 +85,16 @@ export const Unit = styled(Input)`
   }
 `
 
-export const DaysLeft = styled(Input)`
-  max-width: 60px;
-`
-
 export const Category = styled(Input)`
   width: 100%;
 `
 
 export const Location = styled(Input)`
   width: 100%;
+`
+
+export const DaysLeft = styled(Input)`
+  max-width: 60px;
 `
 
 export const Multiple = styled(Input)`

@@ -20,5 +20,7 @@ export const InputEl = styled.input`
     text-transform: uppercase;
   }
 
+  &:disabled {
+    color: #b4b4b4;
   }
 `

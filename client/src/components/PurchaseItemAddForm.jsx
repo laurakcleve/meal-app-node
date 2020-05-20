@@ -36,27 +36,38 @@ const PurchaseItemAddForm = ({ purchaseId, PURCHASE_QUERY }) => {
   const { data: locationsData } = useQuery(LOCATIONS_QUERY)
 
   const setItemDetails = () => {
-    if (itemData.itemByName.category) {
-      setCategory(itemData.itemByName.category.name)
-    } else {
-      setCategory('')
-    }
+    if (itemData.itemByName) {
+      if (itemData.itemByName.category) {
+        setCategory(itemData.itemByName.category.name)
+      } else {
+        setCategory('')
+      }
 
-    if (itemData.itemByName.defaultLocation) {
-      setLocation(itemData.itemByName.defaultLocation.name)
-    } else {
-      setLocation('')
-    }
+      if (itemData.itemByName.defaultLocation) {
+        setLocation(itemData.itemByName.defaultLocation.name)
+      } else {
+        setLocation('')
+      }
 
-    if (itemData.itemByName.defaultShelflife) {
-      setDaysLeft(itemData.itemByName.defaultShelflife.toString())
-    } else {
-      setDaysLeft(0)
+      if (itemData.itemByName.defaultShelflife) {
+        setDaysLeft(itemData.itemByName.defaultShelflife.toString())
+      } else {
+        setDaysLeft(0)
+      }
+
+      if (itemData.itemByName.itemType === 'nonFoodItem') {
+        setIsNonFoodItem(true)
+        setDoNotInventory(true)
+      } else {
+        setIsNonFoodItem(false)
+        setDoNotInventory(false)
+      }
     }
   }
 
   const [getItem, { data: itemData }] = useLazyQuery(ITEM_QUERY, {
     onCompleted: setItemDetails,
+    fetchPolicy: 'network-only',
   })
 
   const [addPurchaseItem] = useMutation(ADD_PURCHASE_ITEM_MUTATION, {
@@ -130,6 +141,8 @@ const PurchaseItemAddForm = ({ purchaseId, PURCHASE_QUERY }) => {
             itemType: isNonFoodItem ? 'nonFoodItem' : 'baseItem',
           },
         })
+      } else {
+        setIsAddInventoryItemDone(true)
       }
     }
   }
@@ -261,6 +274,7 @@ const PurchaseItemAddForm = ({ purchaseId, PURCHASE_QUERY }) => {
               ? categoriesData.itemCategories
               : []
           }
+          disabled={!!doNotInventory}
         ></Styled.Category>
 
         <Styled.Location
@@ -273,6 +287,7 @@ const PurchaseItemAddForm = ({ purchaseId, PURCHASE_QUERY }) => {
               ? locationsData.itemLocations
               : []
           }
+          disabled={!!doNotInventory}
         ></Styled.Location>
 
         <Styled.DaysLeft
@@ -280,6 +295,7 @@ const PurchaseItemAddForm = ({ purchaseId, PURCHASE_QUERY }) => {
           label="Days Left"
           value={daysLeft}
           onChange={(event) => setDaysLeft(event.target.value)}
+          disabled={!!doNotInventory}
         ></Styled.DaysLeft>
       </Styled.InventorySection>
 
@@ -295,6 +311,16 @@ const ITEMS_QUERY = gql`
     items {
       id
       name
+      category {
+        id
+        name
+      }
+      defaultLocation {
+        id
+        name
+      }
+      defaultShelflife
+      itemType
     }
   }
 `
@@ -338,6 +364,7 @@ const ITEM_QUERY = gql`
         name
       }
       defaultShelflife
+      itemType
     }
   }
 `
