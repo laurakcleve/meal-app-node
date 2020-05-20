@@ -1,6 +1,7 @@
 import pluralize from 'pluralize'
+import moment from 'moment'
 
-const unitPrice = (price, amount, unit) => {
+export const unitPrice = (price, amount, unit) => {
   if (Number(amount) <= 0) {
     return null
   }
@@ -11,4 +12,38 @@ const unitPrice = (price, amount, unit) => {
   return `$${formattedAmount}/${formattedUnit}`
 }
 
-export default unitPrice
+export const millisecondsToPgFormat = (milliseconds) => {
+  return moment(Number(milliseconds)).format('YYYY-MM-DD')
+}
+
+export const getExpiration = (addDate, daysLeft) => {
+  return moment(Number(addDate))
+    .add(daysLeft, 'days')
+    .valueOf()
+}
+
+export const inventoryAmountString = (
+  weightAmount,
+  weightUnit,
+  quantityAmount,
+  quantityUnit
+) => {
+  if (!weightAmount && !quantityAmount) return ''
+
+  let result = ''
+
+  if (weightAmount) {
+    result += `${weightAmount} ${weightUnit}`
+    if (quantityAmount) {
+      result += ' '
+    }
+  }
+  if (quantityAmount) {
+    result += `${quantityAmount}`
+    if (quantityUnit) {
+      result += ` ${quantityUnit}`
+    }
+  }
+
+  return result
+}

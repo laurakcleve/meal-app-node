@@ -8,7 +8,7 @@ import * as Layout from './Layout.styles'
 import * as Styled from './Purchase.styles'
 import ListItem from './ListItem/ListItem'
 import PurchaseItemAddForm from './PurchaseItemAddForm'
-import unitPrice from '../utils'
+import { unitPrice } from '../utils'
 
 const Purchase = ({ match, history }) => {
   const { data, loading, error } = useQuery(PURCHASE_QUERY, {

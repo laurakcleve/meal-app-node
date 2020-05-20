@@ -30,6 +30,16 @@ const typeDefs = gql`
       number: Int!
       itemType: String!
     ): PurchaseItem!
+    addInventoryItem(
+      name: String!
+      addDate: String
+      expiration: String
+      amount: String
+      defaultShelflife: String
+      category: String
+      location: String
+      itemType: String!
+    ): InventoryItem!
   }
 
   type Item {

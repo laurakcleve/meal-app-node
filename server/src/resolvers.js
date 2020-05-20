@@ -49,6 +49,30 @@ const resolvers = {
         number,
         itemType,
       }),
+    addInventoryItem: (
+      _,
+      {
+        name,
+        addDate,
+        expiration,
+        amount,
+        defaultShelflife,
+        category,
+        location,
+        itemType,
+      },
+      { dataSources }
+    ) =>
+      dataSources.inventoryItemAPI.add({
+        name,
+        addDate,
+        expiration,
+        amount,
+        defaultShelflife,
+        category,
+        location,
+        itemType,
+      }),
   },
 
   Item: {
@@ -85,7 +109,6 @@ const resolvers = {
 
   PurchaseItem: {
     item: (PurchaseItem, __, { dataSources }) =>
-      console.log({ PurchaseItem }) ||
       dataSources.purchaseAPI.getPurchaseItemSubItem({ id: PurchaseItem.itemId }),
   },
 }

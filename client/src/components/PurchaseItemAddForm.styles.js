@@ -4,13 +4,32 @@ import Form from './Form'
 import Input from './Input'
 
 export const AddForm = styled(Form)`
-  max-width: 512px;
+  max-width: 900px;
   margin-left: auto;
   margin-right: auto;
+  display: grid;
+  grid-template-columns: 3fr 2fr;
+`
+
+export const PurchaseSection = styled.div`
+  flex: 0 0 60%;
+  display: flex;
+  align-self: start;
+  flex-wrap: wrap;
+  grid-gap: 15px;
+`
+
+export const InventorySection = styled.div`
+  flex: 0 0 30%;
+  display: flex;
+  align-self: start;
+  flex-wrap: wrap;
+  grid-gap: 15px;
 `
 
 export const Item = styled(Input)`
-  min-width: 350px;
+  width: 300px;
+  margin-right: 10px;
 `
 
 export const Price = styled(Input)`
@@ -64,6 +83,18 @@ export const Unit = styled(Input)`
     border-top-left-radius: 0;
     border-bottom-left-radius: 0;
   }
+`
+
+export const DaysLeft = styled(Input)`
+  max-width: 60px;
+`
+
+export const Category = styled(Input)`
+  width: 100%;
+`
+
+export const Location = styled(Input)`
+  width: 100%;
 `
 
 export const Multiple = styled(Input)`

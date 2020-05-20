@@ -91,6 +91,7 @@ class PurchaseAPI extends DataSource {
     quantityUnit,
     number,
     itemType,
+    doNotInventory,
   }) {
     const queryString = `
       WITH retrieved_item_id AS (

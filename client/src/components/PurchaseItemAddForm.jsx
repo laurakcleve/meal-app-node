@@ -1,9 +1,14 @@
-import React, { useState, useRef } from 'react'
+import React, { useEffect, useState, useRef } from 'react'
 import { gql } from 'apollo-boost'
 import { useQuery, useMutation } from '@apollo/react-hooks'
 import PropTypes from 'prop-types'
 
 import * as Styled from './PurchaseItemAddForm.styles'
+import {
+  millisecondsToPgFormat,
+  getExpiration,
+  inventoryAmountString,
+} from '../utils'
 
 const PurchaseItemAddForm = ({ purchaseId, PURCHASE_QUERY }) => {
   const [itemName, setItemName] = useState('')
@@ -16,17 +21,41 @@ const PurchaseItemAddForm = ({ purchaseId, PURCHASE_QUERY }) => {
   const [isNonFoodItem, setIsNonFoodItem] = useState(false)
   const [doNotInventory, setDoNotInventory] = useState(false)
 
-  const { data } = useQuery(ITEMS_QUERY)
+  const [daysLeft, setDaysLeft] = useState('0')
+  const [category, setCategory] = useState('')
+  const [location, setLocation] = useState('')
+
+  const [isAddPurchaseItemDone, setIsAddPurchaseItemDone] = useState(false)
+  const [isAddInventoryItemDone, setIsAddInventoryItemDone] = useState(false)
+
+  const { data: itemsData } = useQuery(ITEMS_QUERY)
+  const { data: purchaseData } = useQuery(PURCHASE_DATE_QUERY, {
+    variables: { id: purchaseId },
+  })
 
   const [addPurchaseItem] = useMutation(ADD_PURCHASE_ITEM_MUTATION, {
     refetchQueries: [{ query: PURCHASE_QUERY, variables: { id: purchaseId } }],
     onCompleted: () => {
-      resetInputs()
-      focusItemNameInput()
+      setIsAddPurchaseItemDone(true)
     },
   })
 
-  const list = data && data.items ? data.items : []
+  const [addInventoryItem] = useMutation(ADD_INVENTORY_ITEM_MUTATION, {
+    onCompleted: () => {
+      setIsAddInventoryItemDone(true)
+    },
+  })
+
+  useEffect(() => {
+    if (isAddInventoryItemDone && isAddPurchaseItemDone) {
+      resetInputs()
+      focusItemNameInput()
+      setIsAddInventoryItemDone(false)
+      setIsAddPurchaseItemDone(false)
+    }
+  }, [isAddInventoryItemDone, isAddPurchaseItemDone])
+
+  const list = itemsData && itemsData.items ? itemsData.items : []
 
   const itemNameInput = useRef(null)
 
@@ -36,6 +65,7 @@ const PurchaseItemAddForm = ({ purchaseId, PURCHASE_QUERY }) => {
 
   const saveItem = (event) => {
     event.preventDefault()
+
     if (itemName) {
       addPurchaseItem({
         variables: {
@@ -50,6 +80,33 @@ const PurchaseItemAddForm = ({ purchaseId, PURCHASE_QUERY }) => {
           itemType: isNonFoodItem ? 'nonFoodItem' : 'baseItem',
         },
       })
+
+      if (!doNotInventory) {
+        addInventoryItem({
+          variables: {
+            name: itemName,
+            addDate: purchaseData
+              ? millisecondsToPgFormat(purchaseData.purchase.date)
+              : null,
+            expiration: purchaseData
+              ? millisecondsToPgFormat(
+                  getExpiration(purchaseData.purchase.date, daysLeft)
+                )
+              : null,
+            amount:
+              inventoryAmountString(
+                weightAmount,
+                weightUnit,
+                quantityAmount,
+                quantityUnit
+              ) || null,
+            defaultShelflife: daysLeft || null,
+            category: category || null,
+            location: location || null,
+            itemType: isNonFoodItem ? 'nonFoodItem' : 'baseItem',
+          },
+        })
+      }
     }
   }
 
@@ -67,93 +124,118 @@ const PurchaseItemAddForm = ({ purchaseId, PURCHASE_QUERY }) => {
 
   return (
     <Styled.AddForm>
-      <Styled.Item
-        id="itemName"
-        label="Item"
-        value={itemName}
-        onChange={(event) => setItemName(event.target.value)}
-        list={list}
-        forwardRef={itemNameInput}
-      />
+      <Styled.PurchaseSection>
+        <Styled.Item
+          id="itemName"
+          label="Item"
+          value={itemName}
+          onChange={(event) => setItemName(event.target.value)}
+          list={list}
+          forwardRef={itemNameInput}
+        />
 
-      <Styled.Price
-        id="price"
-        label="Price"
-        value={price}
-        onChange={(event) => setPrice(event.target.value)}
-      />
+        <Styled.Price
+          id="price"
+          label="Price"
+          value={price}
+          onChange={(event) => setPrice(event.target.value)}
+        />
 
-      <Styled.Combo>
-        <Styled.Label>Weight</Styled.Label>
-        <Styled.Amount
-          className="input"
-          id="weightAmount"
-          value={weightAmount}
-          onChange={(event) => setWeightAmount(event.target.value)}
-          placeholder="1.23"
-        />
-        <Styled.Unit
-          className="input"
-          id="weightUnit"
-          value={weightUnit}
-          onChange={(event) => setWeightUnit(event.target.value)}
-          placeholder="oz"
-        />
-      </Styled.Combo>
+        <Styled.Combo>
+          <Styled.Label>Weight</Styled.Label>
+          <Styled.Amount
+            className="input"
+            id="weightAmount"
+            value={weightAmount}
+            onChange={(event) => setWeightAmount(event.target.value)}
+            placeholder="1.23"
+          />
+          <Styled.Unit
+            className="input"
+            id="weightUnit"
+            value={weightUnit}
+            onChange={(event) => setWeightUnit(event.target.value)}
+            placeholder="oz"
+          />
+        </Styled.Combo>
 
-      <Styled.Combo>
-        <Styled.Label>Quantity</Styled.Label>
-        <Styled.Amount
-          className="input"
-          id="quantityAmount"
-          value={quantityAmount}
-          onChange={(event) => setQuantityAmount(event.target.value)}
-          placeholder="12"
-        />
-        <Styled.Unit
-          className="input"
-          id="quantityUnit"
-          value={quantityUnit}
-          onChange={(event) => setQuantityUnit(event.target.value)}
-          placeholder="units"
-        />
-      </Styled.Combo>
+        <Styled.Combo>
+          <Styled.Label>Quantity</Styled.Label>
+          <Styled.Amount
+            className="input"
+            id="quantityAmount"
+            value={quantityAmount}
+            onChange={(event) => setQuantityAmount(event.target.value)}
+            placeholder="12"
+          />
+          <Styled.Unit
+            className="input"
+            id="quantityUnit"
+            value={quantityUnit}
+            onChange={(event) => setQuantityUnit(event.target.value)}
+            placeholder="units"
+          />
+        </Styled.Combo>
 
-      <div>
-        <Styled.Label>Add multiple?</Styled.Label>
-        <Styled.Multiple
-          id="number"
-          value={number}
-          onChange={(event) => setNumber(event.target.value)}
-        />
-      </div>
+        <div>
+          <Styled.Label>Add multiple?</Styled.Label>
+          <Styled.Multiple
+            id="number"
+            value={number}
+            onChange={(event) => setNumber(event.target.value)}
+          />
+        </div>
 
-      <label htmlFor="isNonFoodItem" className="checkbox">
-        <input
-          type="checkbox"
-          name="isNonFoodItem"
-          checked={isNonFoodItem}
-          onChange={() => {
-            if (!isNonFoodItem) {
-              setDoNotInventory(true)
-            } else {
-              setDoNotInventory(false)
-            }
-            setIsNonFoodItem(!isNonFoodItem)
-          }}
-        />
-        <Styled.Label className="labelText">Non food item</Styled.Label>
-      </label>
+        <label htmlFor="isNonFoodItem" className="checkbox">
+          <input
+            type="checkbox"
+            name="isNonFoodItem"
+            checked={isNonFoodItem}
+            onChange={() => {
+              if (!isNonFoodItem) {
+                setDoNotInventory(true)
+              } else {
+                setDoNotInventory(false)
+              }
+              setIsNonFoodItem(!isNonFoodItem)
+            }}
+          />
+          <Styled.Label className="labelText">Non food item</Styled.Label>
+        </label>
 
-      <label htmlFor="doNotInventory" className="checkbox">
-        <input
-          type="checkbox"
-          name="doNotInventory"
-          checked={doNotInventory}
-          onChange={() => setDoNotInventory(!doNotInventory)}
-        />
-        <Styled.Label className="labelText">Do not inventory</Styled.Label>
-      </label>
+        <label htmlFor="doNotInventory" className="checkbox">
+          <input
+            type="checkbox"
+            name="doNotInventory"
+            checked={doNotInventory}
+            onChange={() => setDoNotInventory(!doNotInventory)}
+          />
+          <Styled.Label className="labelText">Do not inventory</Styled.Label>
+        </label>
+      </Styled.PurchaseSection>
+
+      <Styled.InventorySection>
+        <Styled.Category
+          id="category"
+          label="Category"
+          value={category}
+          onChange={(event) => setCategory(event.target.value)}
+        ></Styled.Category>
+
+        <Styled.Location
+          id="location"
+          label="Location"
+          value={location}
+          onChange={(event) => setLocation(event.target.value)}
+        ></Styled.Location>
+
+        <Styled.DaysLeft
+          id="daysLeft"
+          label="Days Left"
+          value={daysLeft}
+          onChange={(event) => setDaysLeft(event.target.value)}
+        ></Styled.DaysLeft>
+      </Styled.InventorySection>
 
       <button type="submit" onClick={(event) => saveItem(event)}>
         Save
@@ -167,6 +249,14 @@ const ITEMS_QUERY = gql`
     items {
       id
       name
+    }
+  }
+`
+
+const PURCHASE_DATE_QUERY = gql`
+  query purchaseDate($id: ID!) {
+    purchase(id: $id) {
+      date
     }
   }
 `
@@ -192,6 +282,32 @@ const ADD_PURCHASE_ITEM_MUTATION = gql`
       quantityAmount: $quantityAmount
       quantityUnit: $quantityUnit
       number: $number
+      itemType: $itemType
+    ) {
+      id
+    }
+  }
+`
+
+const ADD_INVENTORY_ITEM_MUTATION = gql`
+  mutation addInventoryItem(
+    $name: String!
+    $addDate: String
+    $expiration: String
+    $amount: String
+    $defaultShelflife: String
+    $category: String
+    $location: String
+    $itemType: String!
+  ) {
+    addInventoryItem(
+      name: $name
+      addDate: $addDate
+      expiration: $expiration
+      amount: $amount
+      defaultShelflife: $defaultShelflife
+      category: $category
+      location: $location
       itemType: $itemType
     ) {
       id
