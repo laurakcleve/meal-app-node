@@ -1,6 +1,6 @@
 import React, { useEffect, useState, useRef } from 'react'
 import { gql } from 'apollo-boost'
-import { useQuery, useMutation } from '@apollo/react-hooks'
+import { useQuery, useLazyQuery, useMutation } from '@apollo/react-hooks'
 import PropTypes from 'prop-types'
 
 import * as Styled from './PurchaseItemAddForm.styles'
@@ -32,6 +32,23 @@ const PurchaseItemAddForm = ({ purchaseId, PURCHASE_QUERY }) => {
   const { data: purchaseData } = useQuery(PURCHASE_DATE_QUERY, {
     variables: { id: purchaseId },
   })
+  const { data: categoriesData } = useQuery(CATEGORIES_QUERY)
+  const { data: locationsData } = useQuery(LOCATIONS_QUERY)
+
+  const [getItem, { data: itemData }] = useLazyQuery(ITEM_QUERY, {
+    onCompleted: () => {
+      if (itemData.itemByName.category) {
+        setCategory(itemData.itemByName.category.name)
+      } else {
+        setCategory('')
+      }
+      if (itemData.itemByName.defaultLocation) {
+        setLocation(itemData.itemByName.defaultLocation.name)
+      } else {
+        setLocation('')
+      }
+    },
+  })
 
   const [addPurchaseItem] = useMutation(ADD_PURCHASE_ITEM_MUTATION, {
     refetchQueries: [{ query: PURCHASE_QUERY, variables: { id: purchaseId } }],
@@ -54,8 +71,6 @@ const PurchaseItemAddForm = ({ purchaseId, PURCHASE_QUERY }) => {
       setIsAddPurchaseItemDone(false)
     }
   }, [isAddInventoryItemDone, isAddPurchaseItemDone])
-
-  const list = itemsData && itemsData.items ? itemsData.items : []
 
   const itemNameInput = useRef(null)
 
@@ -122,6 +137,16 @@ const PurchaseItemAddForm = ({ purchaseId, PURCHASE_QUERY }) => {
     setDoNotInventory(false)
   }
 
+  const loadItemDetails = () => {
+    console.log('loading item details')
+
+    getItem({
+      variables: {
+        name: itemName,
+      },
+    })
+  }
+
   return (
     <Styled.AddForm>
       <Styled.PurchaseSection>
@@ -130,8 +155,9 @@ const PurchaseItemAddForm = ({ purchaseId, PURCHASE_QUERY }) => {
           label="Item"
           value={itemName}
           onChange={(event) => setItemName(event.target.value)}
-          list={list}
+          list={itemsData && itemsData.items ? itemsData.items : []}
           forwardRef={itemNameInput}
+          onBlur={loadItemDetails}
         />
 
         <Styled.Price
@@ -220,6 +246,11 @@ const PurchaseItemAddForm = ({ purchaseId, PURCHASE_QUERY }) => {
           label="Category"
           value={category}
           onChange={(event) => setCategory(event.target.value)}
+          list={
+            categoriesData && categoriesData.itemCategories
+              ? categoriesData.itemCategories
+              : []
+          }
         ></Styled.Category>
 
         <Styled.Location
@@ -227,6 +258,11 @@ const PurchaseItemAddForm = ({ purchaseId, PURCHASE_QUERY }) => {
           label="Location"
           value={location}
           onChange={(event) => setLocation(event.target.value)}
+          list={
+            locationsData && locationsData.itemLocations
+              ? locationsData.itemLocations
+              : []
+          }
         ></Styled.Location>
 
         <Styled.DaysLeft
@@ -257,6 +293,40 @@ const PURCHASE_DATE_QUERY = gql`
   query purchaseDate($id: ID!) {
     purchase(id: $id) {
       date
+    }
+  }
+`
+
+const CATEGORIES_QUERY = gql`
+  query itemCategories {
+    itemCategories {
+      id
+      name
+    }
+  }
+`
+
+const LOCATIONS_QUERY = gql`
+  query itemLocations {
+    itemLocations {
+      id
+      name
+    }
+  }
+`
+
+const ITEM_QUERY = gql`
+  query itemByName($name: String!) {
+    itemByName(name: $name) {
+      id
+      category {
+        id
+        name
+      }
+      defaultLocation {
+        id
+        name
+      }
     }
   }
 `

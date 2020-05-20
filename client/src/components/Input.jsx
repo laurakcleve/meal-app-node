@@ -22,13 +22,13 @@ const Input = ({
           type={type}
           value={value}
           onChange={onChange}
-          list={list.length > 0 ? 'list' : null}
+          list={list.length > 0 ? `${id}List` : null}
           ref={forwardRef}
           {...rest}
         />
       </Styled.Label>
       {list.length > 0 && (
-        <datalist id="list">
+        <datalist id={`${id}List`}>
           {list.map((item) => (
             <option style={{ textTransform: 'capitalize' }} key={item.id}>
               {item.name}

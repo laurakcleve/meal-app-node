@@ -1,7 +1,9 @@
 const resolvers = {
   Query: {
     items: (_, __, { dataSources }) => dataSources.itemAPI.getAll(),
-    item: (_, { id }, { dataSources }) => dataSources.itemAPI.getByID({ id }),
+    itemById: (_, { id }, { dataSources }) => dataSources.itemAPI.getByID({ id }),
+    itemByName: (_, { name }, { dataSources }) =>
+      dataSources.itemAPI.getByName({ name }),
     dishes: (_, __, { dataSources }) => dataSources.dishAPI.getAll(),
     dish: (_, { id }, { dataSources }) => dataSources.dishAPI.getByID({ id }),
     inventoryItems: (_, __, { dataSources }) =>
@@ -82,6 +84,8 @@ const resolvers = {
       }),
     dishes: (Item, __, { dataSources }) =>
       dataSources.itemAPI.getDishes({ id: Item.id }),
+    defaultLocation: (Item, __, { dataSources }) =>
+      dataSources.itemAPI.getDefaultLocation({ id: Item.id }),
   },
 
   InventoryItem: {

@@ -3,7 +3,8 @@ const { gql } = require('apollo-server')
 const typeDefs = gql`
   type Query {
     items: [Item]!
-    item(id: ID!): Item
+    itemById(id: ID!): Item
+    itemByName(name: String!): Item
     dishes: [Dish]!
     dish(id: ID!): Dish
     inventoryItems: [InventoryItem]!
@@ -47,6 +48,7 @@ const typeDefs = gql`
     name: String!
     category: ItemCategory
     dishes: [Dish]
+    defaultLocation: ItemLocation
   }
 
   type ItemCategory {
