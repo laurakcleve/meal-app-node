@@ -35,19 +35,28 @@ const PurchaseItemAddForm = ({ purchaseId, PURCHASE_QUERY }) => {
   const { data: categoriesData } = useQuery(CATEGORIES_QUERY)
   const { data: locationsData } = useQuery(LOCATIONS_QUERY)
 
+  const setItemDetails = () => {
+    if (itemData.itemByName.category) {
+      setCategory(itemData.itemByName.category.name)
+    } else {
+      setCategory('')
+    }
+
+    if (itemData.itemByName.defaultLocation) {
+      setLocation(itemData.itemByName.defaultLocation.name)
+    } else {
+      setLocation('')
+    }
+
+    if (itemData.itemByName.defaultShelflife) {
+      setDaysLeft(itemData.itemByName.defaultShelflife.toString())
+    } else {
+      setDaysLeft(0)
+    }
+  }
+
   const [getItem, { data: itemData }] = useLazyQuery(ITEM_QUERY, {
-    onCompleted: () => {
-      if (itemData.itemByName.category) {
-        setCategory(itemData.itemByName.category.name)
-      } else {
-        setCategory('')
-      }
-      if (itemData.itemByName.defaultLocation) {
-        setLocation(itemData.itemByName.defaultLocation.name)
-      } else {
-        setLocation('')
-      }
-    },
+    onCompleted: setItemDetails,
   })
 
   const [addPurchaseItem] = useMutation(ADD_PURCHASE_ITEM_MUTATION, {
@@ -135,11 +144,12 @@ const PurchaseItemAddForm = ({ purchaseId, PURCHASE_QUERY }) => {
     setNumber('1')
     setIsNonFoodItem(false)
     setDoNotInventory(false)
+    setCategory('')
+    setLocation('')
+    setDaysLeft(0)
   }
 
-  const loadItemDetails = () => {
-    console.log('loading item details')
-
+  const queryItemDetails = () => {
     getItem({
       variables: {
         name: itemName,
@@ -157,7 +167,7 @@ const PurchaseItemAddForm = ({ purchaseId, PURCHASE_QUERY }) => {
           onChange={(event) => setItemName(event.target.value)}
           list={itemsData && itemsData.items ? itemsData.items : []}
           forwardRef={itemNameInput}
-          onBlur={loadItemDetails}
+          onBlur={queryItemDetails}
         />
 
         <Styled.Price
@@ -327,6 +337,7 @@ const ITEM_QUERY = gql`
         id
         name
       }
+      defaultShelflife
     }
   }
 `
