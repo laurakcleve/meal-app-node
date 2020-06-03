@@ -10,6 +10,7 @@ import GlobalStyles from './theme/GlobalStyles'
 
 import Header from './components/Header'
 import Items from './components/Items'
+import Item from './components/Item'
 import Dishes from './components/Dishes'
 import Inventory from './components/Inventory'
 import Purchases from './components/Purchases'
@@ -42,6 +43,7 @@ const App = () => (
         <Header />
         <Route exact path="/" component={Items} />
         <Route exact path="/items" component={Items} />
+        <Route exact path="/item/:id" component={Item} />
         <Route exact path="/dishes" component={Dishes} />
         <Route exact path="/inventory" component={Inventory} />
         <Route exact path="/purchases" component={Purchases} />

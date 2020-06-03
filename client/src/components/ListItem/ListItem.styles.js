@@ -9,7 +9,7 @@ const ListItem = styled.div`
   font-size: 13px;
   font-weight: 500;
   padding: 15px;
-  cursor: default;
+  cursor: pointer;
   display: flex;
   grid-gap: 10px;
 

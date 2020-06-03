@@ -2,29 +2,20 @@ import React, { useState, useEffect } from 'react'
 import { useQuery } from '@apollo/react-hooks'
 import { gql } from 'apollo-boost'
 
-import * as Styled from './Layout.styles'
+import * as Layout from './Layout.styles'
+import * as Styled from './Items.styles'
 import Sidebar from './Sidebar'
 import ItemCategories from './ItemCategories'
 import Search from './Search'
-import { ListItem, TitleBar, TitleName } from './ListItem'
-import { ItemDetails } from './ListItem/Details'
+import { ListItem } from './ListItem'
 
 const Items = () => {
   const [displayedItems, setDisplayedItems] = useState([])
   const [filteredItems, setFilteredItems] = useState([])
   const [searchedItems, setSearchedItems] = useState([])
-  const [selectedItemID, setSelectedItemID] = useState('')
   const [selectedCategoryName, setSelectedCategoryName] = useState('all')
 
   const { data, loading } = useQuery(ITEMS_QUERY)
-
-  const toggleItemOpen = (id) => {
-    if (selectedItemID === id) {
-      setSelectedItemID('')
-    } else {
-      setSelectedItemID(id)
-    }
-  }
 
   useEffect(() => {
     if (data && data.items) {
@@ -49,31 +40,31 @@ const Items = () => {
   }, [searchedItems])
 
   return (
-    <Styled.Container>
+    <Layout.Container>
       <Sidebar>
         <ItemCategories
           selectedCategoryName={selectedCategoryName}
           setSelectedCategoryName={setSelectedCategoryName}
         />
       </Sidebar>
-      <Styled.List>
+      <Layout.List>
         {loading && <p>Loading...</p>}
+
         <>
           {data && data.items && (
             <Search items={filteredItems} set={setSearchedItems} />
           )}
 
           {displayedItems.map((item) => (
-            <ListItem key={item.id}>
-              <TitleBar onClick={() => toggleItemOpen(item.id)}>
-                <TitleName name={item.name} />
-              </TitleBar>
-              {selectedItemID === item.id && <ItemDetails item={item} />}
-            </ListItem>
+            <Styled.CustomLink to={`/item/${item.id}`} key={item.id}>
+              <ListItem>
+                <Styled.Name>{item.name}</Styled.Name>
+              </ListItem>
+            </Styled.CustomLink>
           ))}
         </>
-      </Styled.List>
-    </Styled.Container>
+      </Layout.List>
+    </Layout.Container>
   )
 }
 
