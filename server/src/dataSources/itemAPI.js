@@ -32,6 +32,14 @@ class ItemAPI extends DataSource {
     return db.query(queryString, [name]).then((results) => results.rows[0])
   }
 
+  delete({ id }) {
+    const queryString = `
+      DELETE FROM item
+      WHERE id = $1
+    `
+    return db.query(queryString, [Number(id)]).then((results) => results.rowCount)
+  }
+
   getCategory({ id }) {
     const queryString = `
       SELECT item_category.*

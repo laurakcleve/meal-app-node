@@ -21,6 +21,7 @@ const resolvers = {
   },
 
   Mutation: {
+    deleteItem: (_, { id }, { dataSources }) => dataSources.itemAPI.delete({ id }),
     addPurchase: (_, { date, location }, { dataSources }) =>
       dataSources.purchaseAPI.add({ date, location }),
     deletePurchase: (_, { id }, { dataSources }) =>

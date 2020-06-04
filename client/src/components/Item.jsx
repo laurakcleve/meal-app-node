@@ -1,5 +1,5 @@
 import React from 'react'
-import { useQuery } from '@apollo/react-hooks'
+import { useQuery, useMutation } from '@apollo/react-hooks'
 import { gql } from 'apollo-boost'
 import PropTypes from 'prop-types'
 import moment from 'moment'
@@ -9,10 +9,21 @@ import * as Styled from './Item.styles'
 import { ListItem } from './ListItem'
 import { unitPrice, inventoryAmountString } from '../utils'
 
-const Item = ({ match }) => {
+const Item = ({ match, history }) => {
   const { data, loading, error } = useQuery(ITEM_QUERY, {
     variables: { id: match.params.id },
   })
+
+  const [deleteItem] = useMutation(DELETE_ITEM_MUTATION, {
+    onCompleted: () => history.push('/items'),
+  })
+
+  const submitDelete = (event) => {
+    event.preventDefault()
+    if (window.confirm('Delete item?')) {
+      deleteItem({ variables: { id: match.params.id } })
+    }
+  }
 
   return (
     <Layout.Container>
@@ -20,44 +31,54 @@ const Item = ({ match }) => {
         {loading && <h2>Loading...</h2>}
         {error && <h2>Error</h2>}
 
-        {data && data.itemById && <h1>{data.itemById.name}</h1>}
+        {data && data.itemById && (
+          <>
+            <Styled.Header>
+              <h1>{data.itemById.name}</h1>
+              <button type="button" onClick={(event) => submitDelete(event)}>
+                Delete
+              </button>
+            </Styled.Header>
+
+            {data.itemById.category && (
+              <p>Category: {data.itemById.category.name}</p>
+            )}
+          </>
+        )}
 
         <Layout.List>
           {data &&
-            data.itemById.purchases.map((purchaseInstance) => (
-              <ListItem key={purchaseInstance.id}>
+            data.itemById.purchases.map((purchase) => (
+              <ListItem key={purchase.id}>
                 <Styled.Date>
-                  {moment(Number(purchaseInstance.purchase.date)).format(
-                    'M/D/YY'
-                  )}
+                  {moment(Number(purchase.purchase.date)).format('M/D/YY')}
                 </Styled.Date>
                 <Styled.Location>
-                  {purchaseInstance.purchase.location.name}
+                  {purchase.purchase.location.name}
                 </Styled.Location>
                 <Styled.Price>
-                  {purchaseInstance.price &&
-                    `$${Number(purchaseInstance.price).toFixed(2)}`}
+                  {purchase.price && `$${Number(purchase.price).toFixed(2)}`}
                 </Styled.Price>
                 <Styled.Amount>
                   {inventoryAmountString(
-                    purchaseInstance.weightAmount,
-                    purchaseInstance.weightUnit,
-                    purchaseInstance.quantityAmount,
-                    purchaseInstance.quantityUnit
+                    purchase.weightAmount,
+                    purchase.weightUnit,
+                    purchase.quantityAmount,
+                    purchase.quantityUnit
                   )}
                 </Styled.Amount>
                 <Styled.UnitPrice>
                   {unitPrice(
-                    purchaseInstance.price,
-                    purchaseInstance.weightAmount,
-                    purchaseInstance.weightUnit
+                    purchase.price,
+                    purchase.weightAmount,
+                    purchase.weightUnit
                   )}
                 </Styled.UnitPrice>
                 <Styled.UnitPrice>
                   {unitPrice(
-                    purchaseInstance.price,
-                    purchaseInstance.quantityAmount,
-                    purchaseInstance.quantityUnit
+                    purchase.price,
+                    purchase.quantityAmount,
+                    purchase.quantityUnit
                   )}
                 </Styled.UnitPrice>
               </ListItem>
@@ -73,6 +94,10 @@ const ITEM_QUERY = gql`
     itemById(id: $id) {
       id
       name
+      category {
+        id
+        name
+      }
       purchases {
         id
         price
@@ -92,11 +117,20 @@ const ITEM_QUERY = gql`
   }
 `
 
+const DELETE_ITEM_MUTATION = gql`
+  mutation deleteItem($id: ID!) {
+    deleteItem(id: $id)
+  }
+`
+
 Item.propTypes = {
   match: PropTypes.shape({
     params: PropTypes.shape({
       id: PropTypes.string.isRequired,
     }).isRequired,
+  }).isRequired,
+  history: PropTypes.shape({
+    push: PropTypes.func.isRequired,
   }).isRequired,
 }
 
