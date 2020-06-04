@@ -2,16 +2,14 @@ import React, { useState, useEffect } from 'react'
 import { useQuery } from '@apollo/react-hooks'
 import { gql } from 'apollo-boost'
 
-import * as Styled from './Layout.styles'
+import * as Layout from './Layout.styles'
+import * as Styled from './Inventory.styles'
 import Sidebar from './Sidebar'
 import InventoryLocations from './InventoryLocations'
 import Search from './Search'
-import { ListItem, TitleBar, TitleName } from './ListItem'
+import { ListItem } from './ListItem'
 // import { ItemDetails } from './ListItem/Details'
 import ItemDetails from './ListItem/Details/ItemDetails'
-import Expiration from './ListItem/Expiration'
-import Location from './ListItem/Location'
-import TopBar from './TopBar'
 import AddItem from './AddItem'
 
 const Inventory = () => {
@@ -59,46 +57,49 @@ const Inventory = () => {
 
   useEffect(() => {
     if (selectedElement)
-      window.scrollTo({ top: selectedElement.offsetTop - 100, behavior: 'smooth' })
+      window.scrollTo({
+        top: selectedElement.offsetTop - 100,
+        behavior: 'smooth',
+      })
   }, [selectedElement])
 
   return (
-    <Styled.Container>
+    <Layout.Container>
       <Sidebar>
         <InventoryLocations
           selectedLocationName={selectedLocationName}
           setSelectedLocationName={setSelectedLocationName}
         />
       </Sidebar>
-      <Styled.List>
+      <Layout.List>
         {loading && <p>Loading...</p>}
 
         <>
-          <TopBar>
-            {data && data.inventoryItems && (
-              <Search items={filteredItems} set={setSearchedItems} />
-            )}
+          {data && data.inventoryItems && (
+            <Search items={filteredItems} set={setSearchedItems} />
+          )}
 
-            <button className="add" type="button" onClick={() => setAdding(!adding)}>
-              <span className={adding ? 'close' : 'open'}>+</span>
-            </button>
-          </TopBar>
+          <button
+            className="add"
+            type="button"
+            onClick={() => setAdding(!adding)}
+          >
+            <span className={adding ? 'close' : 'open'}>+</span>
+          </button>
 
           {adding && <AddItem />}
 
           {displayedItems.map((item) => (
-            <ListItem key={item.id}>
-              <TitleBar onClick={(e) => toggleItemOpen(e, item.id)}>
-                <TitleName name={item.item.name} />
-                <Location name={item.location.name} />
-                <Expiration date={item.expiration} />
-              </TitleBar>
+            <ListItem key={item.id} onClick={(e) => toggleItemOpen(e, item.id)}>
+              <Styled.Name>{item.item.name}</Styled.Name>
+              <Styled.Location>{item.location.name}</Styled.Location>
+              <Styled.Expiration>{item.expiration}</Styled.Expiration>
               {selectedItemID === item.id && <ItemDetails item={item} />}
             </ListItem>
           ))}
         </>
-      </Styled.List>
-    </Styled.Container>
+      </Layout.List>
+    </Layout.Container>
   )
 }
 
