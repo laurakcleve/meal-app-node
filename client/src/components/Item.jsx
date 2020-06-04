@@ -41,7 +41,29 @@ const Item = ({ match, history }) => {
             </Styled.Header>
 
             {data.itemById.category && (
-              <p>Category: {data.itemById.category.name}</p>
+              <Styled.Detail>
+                <h2>Category</h2>
+                <p>{data.itemById.category.name}</p>
+              </Styled.Detail>
+            )}
+
+            <Styled.Detail>
+              <h2>Type</h2>
+              <p>{data.itemById.itemType}</p>
+            </Styled.Detail>
+
+            {data.itemById.defaultShelflife && (
+              <Styled.Detail>
+                <h2>Default shelflife</h2>
+                <p>{data.itemById.defaultShelflife}</p>
+              </Styled.Detail>
+            )}
+
+            {data.itemById.defaultLocation && (
+              <Styled.Detail>
+                <h2>Default location</h2>
+                <p>{data.itemById.defaultLocation.name}</p>
+              </Styled.Detail>
             )}
           </>
         )}
@@ -94,6 +116,12 @@ const ITEM_QUERY = gql`
     itemById(id: $id) {
       id
       name
+      itemType
+      defaultShelflife
+      defaultLocation {
+        id
+        name
+      }
       category {
         id
         name

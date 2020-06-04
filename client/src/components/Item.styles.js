@@ -26,6 +26,20 @@ export const Header = styled.div`
   }
 `
 
+export const Detail = styled.div`
+  h2 {
+    font-size: 14px;
+    margin-bottom: 0;
+    color: ${({ theme }) => theme.colors.grey};
+  }
+
+  p {
+    margin-top: 0;
+    text-transform: capitalize;
+    font-size: 18px;
+  }
+`
+
 export const Date = styled.div`
   flex: 1;
 `

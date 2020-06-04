@@ -10,6 +10,7 @@ class ItemAPI extends DataSource {
     const queryString = `
       SELECT *, default_shelflife AS "defaultShelflife", item_type AS "itemType"
       FROM item 
+      ORDER BY name
     `
     return db.query(queryString).then((results) => results.rows)
   }
