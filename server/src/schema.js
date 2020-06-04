@@ -51,6 +51,7 @@ const typeDefs = gql`
     defaultLocation: ItemLocation
     defaultShelflife: Int
     itemType: String!
+    purchases: [PurchaseItem]
   }
 
   type ItemCategory {
@@ -103,6 +104,8 @@ const typeDefs = gql`
     weightUnit: String
     quantityAmount: Float
     quantityUnit: String
+    purchaseId: Int
+    purchase: Purchase
   }
 `
 

@@ -69,6 +69,21 @@ class ItemAPI extends DataSource {
     `
     return db.query(queryString, [Number(id)]).then((results) => results.rows[0])
   }
+
+  getPurchases({ id }) {
+    const queryString = `
+      SELECT *, 
+        purchase_id AS "purchaseId", 
+        item_id AS "itemId", 
+        weight_amount AS "weightAmount", 
+        weight_unit AS "weightUnit",
+        quantity_amount AS "quantityAmount",
+        quantity_unit AS "quantityUnit"
+      FROM purchase_item
+      WHERE item_id = $1
+    `
+    return db.query(queryString, [Number(id)]).then((results) => results.rows)
+  }
 }
 
 module.exports = ItemAPI

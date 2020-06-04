@@ -86,6 +86,8 @@ const resolvers = {
       dataSources.itemAPI.getDishes({ id: Item.id }),
     defaultLocation: (Item, __, { dataSources }) =>
       dataSources.itemAPI.getDefaultLocation({ id: Item.id }),
+    purchases: (Item, __, { dataSources }) =>
+      dataSources.itemAPI.getPurchases({ id: Item.id }),
   },
 
   InventoryItem: {
@@ -114,6 +116,8 @@ const resolvers = {
   PurchaseItem: {
     item: (PurchaseItem, __, { dataSources }) =>
       dataSources.purchaseAPI.getPurchaseItemSubItem({ id: PurchaseItem.itemId }),
+    purchase: (PurchaseItem, __, { dataSources }) =>
+      dataSources.purchaseAPI.getByID({ id: PurchaseItem.purchaseId }),
   },
 }
 
