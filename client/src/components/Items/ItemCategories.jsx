@@ -3,7 +3,7 @@ import { useQuery } from '@apollo/react-hooks'
 import { gql } from 'apollo-boost'
 import PropTypes from 'prop-types'
 
-import SidebarList from './SidebarList'
+import SidebarList from '../SidebarList'
 
 const ItemCategories = ({ selectedCategoryName, setSelectedCategoryName }) => {
   const { data, loading } = useQuery(ITEM_CATEGORIES_QUERY)

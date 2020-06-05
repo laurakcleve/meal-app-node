@@ -3,9 +3,12 @@ import { useQuery } from '@apollo/react-hooks'
 import { gql } from 'apollo-boost'
 import PropTypes from 'prop-types'
 
-import SidebarList from './SidebarList'
+import SidebarList from '../SidebarList'
 
-const InventoryLocations = ({ selectedLocationName, setSelectedLocationName }) => {
+const InventoryLocations = ({
+  selectedLocationName,
+  setSelectedLocationName,
+}) => {
   const { data, loading } = useQuery(LOCATIONS_QUERY)
 
   return (

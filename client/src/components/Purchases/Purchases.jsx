@@ -4,13 +4,13 @@ import { gql } from 'apollo-boost'
 import moment from 'moment'
 import { Link } from 'react-router-dom'
 
-import * as Styled from './Layout.styles'
-import Sidebar from './Sidebar'
-import Input from './Input'
-import Form from './Form'
-import ListItem from './ListItem/ListItem'
-import TitleBar from './ListItem/TitleBar'
-import TitleName from './ListItem/TitleName'
+import * as Styled from '../Layout.styles'
+import Sidebar from '../Sidebar'
+import Input from '../Input'
+import Form from '../Form'
+import ListItem from '../ListItem/ListItem'
+import TitleBar from '../ListItem/TitleBar'
+import TitleName from '../ListItem/TitleName'
 
 const Purchases = () => {
   const { data: locationsData, loading, error } = useQuery(

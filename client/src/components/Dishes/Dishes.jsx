@@ -2,12 +2,12 @@ import React, { useState, useEffect } from 'react'
 import { useQuery } from '@apollo/react-hooks'
 import { gql } from 'apollo-boost'
 
-import * as Layout from './Layout.styles'
+import * as Layout from '../Layout.styles'
 import * as Styled from './Dishes.styles'
-import Sidebar from './Sidebar'
-import Search from './Search'
-import { ListItem } from './ListItem'
-import DishDetails from './DishDetails'
+import Sidebar from '../Sidebar'
+import Search from '../Search'
+import { ListItem } from '../ListItem'
+import DishDetails from '../DishDetails'
 import DishTags from './DishTags'
 
 const Dishes = () => {

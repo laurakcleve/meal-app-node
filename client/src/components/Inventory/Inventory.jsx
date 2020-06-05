@@ -2,15 +2,15 @@ import React, { useState, useEffect } from 'react'
 import { useQuery } from '@apollo/react-hooks'
 import { gql } from 'apollo-boost'
 
-import * as Layout from './Layout.styles'
+import * as Layout from '../Layout.styles'
 import * as Styled from './Inventory.styles'
-import Sidebar from './Sidebar'
+import Sidebar from '../Sidebar'
 import InventoryLocations from './InventoryLocations'
-import Search from './Search'
-import { ListItem } from './ListItem'
+import Search from '../Search'
+import { ListItem } from '../ListItem'
 // import { ItemDetails } from './ListItem/Details'
-import ItemDetails from './ListItem/Details/ItemDetails'
-import AddItem from './AddItem'
+import ItemDetails from '../ListItem/Details/ItemDetails'
+import AddItem from '../AddItem'
 
 const Inventory = () => {
   const [displayedItems, setDisplayedItems] = useState([])

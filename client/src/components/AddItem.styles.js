@@ -1,7 +1,6 @@
 import styled from 'styled-components'
 
-// export const AddItem = styled.div`
-export default styled.div`
+export const AddItem = styled.div`
   margin: 20px 0 40px;
   padding: 20px;
   background-color: #fff;

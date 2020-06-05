@@ -8,7 +8,7 @@ import {
   millisecondsToPgFormat,
   getExpiration,
   inventoryAmountString,
-} from '../utils'
+} from '../../utils'
 
 const PurchaseItemAddForm = ({ purchaseId, PURCHASE_QUERY }) => {
   const [itemName, setItemName] = useState('')

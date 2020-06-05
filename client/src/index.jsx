@@ -9,12 +9,12 @@ import theme from './theme/theme'
 import GlobalStyles from './theme/GlobalStyles'
 
 import Header from './components/Header'
-import Items from './components/Items'
-import Item from './components/Item'
-import Dishes from './components/Dishes'
-import Inventory from './components/Inventory'
-import Purchases from './components/Purchases'
-import Purchase from './components/Purchase'
+import Items from './components/Items/Items'
+import Item from './components/Items/Item'
+import Dishes from './components/Dishes/Dishes'
+import Inventory from './components/Inventory/Inventory'
+import Purchases from './components/Purchases/Purchases'
+import Purchase from './components/Purchases/Purchase'
 
 const cache = new InMemoryCache()
 

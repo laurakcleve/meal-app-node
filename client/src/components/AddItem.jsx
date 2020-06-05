@@ -2,15 +2,17 @@ import React from 'react'
 import { useQuery } from '@apollo/react-hooks'
 import { gql } from 'apollo-boost'
 
-import StyledAddItem from './AddItem.styles'
+import * as Styled from './AddItem.styles'
 
 const AddItem = () => {
-  const { data: itemsData, loading: itemsLoading, error: itemsError } = useQuery(
-    ITEMS_QUERY
-  )
+  const {
+    data: itemsData,
+    loading: itemsLoading,
+    error: itemsError,
+  } = useQuery(ITEMS_QUERY)
 
   return (
-    <StyledAddItem>
+    <Styled.AddItem>
       <form action="">
         <label htmlFor="item" className="item">
           <div className="label">ITEM</div>
@@ -56,7 +58,7 @@ const AddItem = () => {
 
         <button type="submit">SAVE</button>
       </form>
-    </StyledAddItem>
+    </Styled.AddItem>
   )
 }
 

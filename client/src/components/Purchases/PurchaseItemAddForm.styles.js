@@ -1,7 +1,7 @@
 import styled from 'styled-components'
 
-import Form from './Form'
-import Input from './Input'
+import Form from '../Form'
+import Input from '../Input'
 
 export const AddForm = styled(Form)`
   max-width: 900px;

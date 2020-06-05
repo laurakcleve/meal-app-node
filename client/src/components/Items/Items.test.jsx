@@ -8,7 +8,7 @@ import { act } from 'react-dom/test-utils'
 
 import Items, { ITEMS_QUERY } from './Items'
 import { ITEM_CATEGORIES_QUERY } from './ItemCategories'
-import theme from '../theme/theme'
+import theme from '../../theme/theme'
 
 const mocks = [
   {

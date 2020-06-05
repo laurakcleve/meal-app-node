@@ -1,7 +1,6 @@
 import styled from 'styled-components'
 
-// export const TopBar = styled.div`
-export default styled.div`
+export const TopBar = styled.div`
   display: flex;
   padding-bottom: 20px;
 

@@ -4,10 +4,10 @@ import { gql } from 'apollo-boost'
 import PropTypes from 'prop-types'
 import moment from 'moment'
 
-import * as Layout from './Layout.styles'
+import * as Layout from '../Layout.styles'
 import * as Styled from './Item.styles'
-import { ListItem } from './ListItem'
-import { unitPrice, inventoryAmountString } from '../utils'
+import { ListItem } from '../ListItem'
+import { unitPrice, inventoryAmountString } from '../../utils'
 
 const Item = ({ match, history }) => {
   const { data, loading, error } = useQuery(ITEM_QUERY, {

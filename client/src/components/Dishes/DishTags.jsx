@@ -4,7 +4,7 @@ import { gql } from 'apollo-boost'
 import PropTypes from 'prop-types'
 
 import * as Styled from './DishTags.styles'
-import SidebarListMulti from './SidebarListMulti'
+import SidebarListMulti from '../SidebarListMulti'
 
 const DishTags = ({
   selectedTagNames,

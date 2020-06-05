@@ -2,12 +2,12 @@ import React, { useState, useEffect } from 'react'
 import { useQuery } from '@apollo/react-hooks'
 import { gql } from 'apollo-boost'
 
-import * as Layout from './Layout.styles'
+import * as Layout from '../Layout.styles'
 import * as Styled from './Items.styles'
-import Sidebar from './Sidebar'
+import Sidebar from '../Sidebar'
 import ItemCategories from './ItemCategories'
-import Search from './Search'
-import { ListItem } from './ListItem'
+import Search from '../Search'
+import { ListItem } from '../ListItem'
 
 const Items = () => {
   const [displayedItems, setDisplayedItems] = useState([])
