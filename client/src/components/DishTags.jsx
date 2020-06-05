@@ -6,7 +6,12 @@ import PropTypes from 'prop-types'
 import * as Styled from './DishTags.styles'
 import SidebarListMulti from './SidebarListMulti'
 
-const DishTags = ({ selectedTagNames, setSelectedTagNames, match, setMatch }) => {
+const DishTags = ({
+  selectedTagNames,
+  setSelectedTagNames,
+  match,
+  setMatch,
+}) => {
   const { data, loading } = useQuery(DISH_TAGS_QUERY)
 
   return (

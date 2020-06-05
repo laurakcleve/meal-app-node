@@ -8,12 +8,14 @@ import * as Styled from './Layout.styles'
 import Sidebar from './Sidebar'
 import Input from './Input'
 import Form from './Form'
-import ListItem from './ListItem/ListItem.styles'
+import ListItem from './ListItem/ListItem'
 import TitleBar from './ListItem/TitleBar'
 import TitleName from './ListItem/TitleName'
 
 const Purchases = () => {
-  const { data: locationsData, loading, error } = useQuery(PURCHASE_LOCATIONS_QUERY)
+  const { data: locationsData, loading, error } = useQuery(
+    PURCHASE_LOCATIONS_QUERY
+  )
 
   const { data: purchasesData } = useQuery(PURCHASES_QUERY, {
     fetchPolicy: 'network-only',

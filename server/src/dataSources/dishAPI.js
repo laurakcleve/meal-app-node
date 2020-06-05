@@ -10,6 +10,7 @@ class DishAPI extends DataSource {
     const queryString = `
       SELECT * FROM item 
       WHERE item_type = 'dish'
+      ORDER BY name
     `
     return db.query(queryString).then((results) => results.rows)
   }

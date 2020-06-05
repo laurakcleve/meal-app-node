@@ -2,11 +2,12 @@ import React, { useState, useEffect } from 'react'
 import { useQuery } from '@apollo/react-hooks'
 import { gql } from 'apollo-boost'
 
-import * as Styled from './Layout.styles'
+import * as Layout from './Layout.styles'
+import * as Styled from './Dishes.styles'
 import Sidebar from './Sidebar'
 import Search from './Search'
-import { ListItem, TitleBar, TitleName } from './ListItem'
-import { ItemDetails } from './ListItem/Details'
+import { ListItem } from './ListItem'
+import DishDetails from './DishDetails'
 import DishTags from './DishTags'
 
 const Dishes = () => {
@@ -16,6 +17,7 @@ const Dishes = () => {
   const [selectedItemID, setSelectedItemID] = useState('')
   const [selectedTagNames, setSelectedTagNames] = useState(['all'])
   const [match, setMatch] = useState('all')
+  const [isActive, setIsActive] = useState(true)
 
   const { data, loading } = useQuery(DISHES_QUERY)
 
@@ -61,8 +63,18 @@ const Dishes = () => {
   }, [searchedDishes])
 
   return (
-    <Styled.Container>
+    <Layout.Container>
       <Sidebar>
+        <label htmlFor="isActive" className="checkbox">
+          <input
+            type="checkbox"
+            name="isActive"
+            checked={isActive}
+            onChange={() => setIsActive(!isActive)}
+          />
+          <div className="labelText">Active rotation</div>
+        </label>
+
         <DishTags
           selectedTagNames={selectedTagNames}
           setSelectedTagNames={setSelectedTagNames}
@@ -70,7 +82,8 @@ const Dishes = () => {
           setMatch={setMatch}
         />
       </Sidebar>
-      <Styled.List>
+
+      <Layout.List>
         {loading && <p>Loading...</p>}
 
         <>
@@ -79,16 +92,19 @@ const Dishes = () => {
           )}
 
           {displayedDishes.map((dish) => (
-            <ListItem key={dish.id} onClick={() => toggleItemOpen(dish.id)}>
-              <TitleBar>
-                <TitleName name={dish.name} />
-              </TitleBar>
-              {selectedItemID === dish.id && <ItemDetails item={dish} />}
+            <ListItem
+              key={dish.id}
+              onClick={() => toggleItemOpen(dish.id)}
+              expander={
+                selectedItemID === dish.id && <DishDetails dish={dish} />
+              }
+            >
+              <Styled.Name>{dish.name}</Styled.Name>
             </ListItem>
           ))}
         </>
-      </Styled.List>
-    </Styled.Container>
+      </Layout.List>
+    </Layout.Container>
   )
 }
 

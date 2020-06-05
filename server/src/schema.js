@@ -64,6 +64,7 @@ const typeDefs = gql`
     id: ID!
     name: String!
     tags: [DishTag]
+    isActive: Boolean
   }
 
   type DishTag {

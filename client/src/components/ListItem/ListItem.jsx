@@ -1,9 +1,15 @@
 import React from 'react'
 import PropTypes from 'prop-types'
-import StyledListItem from './ListItem.styles'
 
-const ListItem = ({ onClick, children }) => {
-  return <StyledListItem onClick={onClick}>{children}</StyledListItem>
+import * as Styled from './ListItem.styles'
+
+const ListItem = ({ onClick, children, expander }) => {
+  return (
+    <Styled.ListItem onClick={onClick}>
+      <Styled.FlexBar>{children}</Styled.FlexBar>
+      {expander}
+    </Styled.ListItem>
+  )
 }
 
 ListItem.propTypes = {
