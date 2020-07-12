@@ -65,11 +65,29 @@ const typeDefs = gql`
     name: String!
     tags: [DishTag]
     isActive: Boolean
+    dates: [DishDate]
+    ingredientSets: [IngredientSet]
   }
 
   type DishTag {
     id: ID!
     name: String!
+  }
+
+  type DishDate {
+    id: ID!
+    date: String!
+  }
+
+  type IngredientSet {
+    id: ID!
+    optional: Boolean
+    ingredients: [Ingredient]
+  }
+
+  type Ingredient {
+    id: ID!
+    item: Item!
   }
 
   type InventoryItem {

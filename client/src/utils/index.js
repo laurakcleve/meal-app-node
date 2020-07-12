@@ -53,3 +53,7 @@ export const inventoryAmountString = (
 
   return result
 }
+
+export const formatDate = (milliseconds) => {
+  return moment(Number(milliseconds)).format('M/D/YY')
+}

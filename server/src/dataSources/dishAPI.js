@@ -31,6 +31,40 @@ class DishAPI extends DataSource {
     `
     return db.query(queryString, [id]).then((results) => results.rows)
   }
+
+  getDates({ id }) {
+    const queryString = `
+      SELECT * FROM dish_date 
+      WHERE dish_id = $1
+      ORDER BY date DESC
+    `
+    return db.query(queryString, [id]).then((results) => results.rows)
+  }
+
+  getIngredientSets({ id }) {
+    const queryString = `
+      SELECT * FROM ingredient_set 
+      WHERE parent_item_id = $1
+    `
+    return db.query(queryString, [id]).then((results) => results.rows)
+  }
+
+  getIngredientSetIngredients({ id }) {
+    const queryString = `
+      SELECT * FROM ingredient 
+      WHERE ingredient_set_id = $1
+    `
+    return db.query(queryString, [id]).then((results) => results.rows)
+  }
+
+  getIngredientItem({ id }) {
+    const queryString = `
+      SELECT * FROM item 
+      INNER JOIN ingredient ON ingredient.item_id = item.id
+      WHERE ingredient.id = $1
+    `
+    return db.query(queryString, [id]).then((results) => results.rows[[0]])
+  }
 }
 
 module.exports = DishAPI

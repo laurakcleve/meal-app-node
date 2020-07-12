@@ -5,8 +5,8 @@ import * as Styled from './ListItem.styles'
 
 const ListItem = ({ onClick, children, expander }) => {
   return (
-    <Styled.ListItem onClick={onClick}>
-      <Styled.FlexBar>{children}</Styled.FlexBar>
+    <Styled.ListItem>
+      <Styled.FlexBar onClick={onClick}>{children}</Styled.FlexBar>
       {expander}
     </Styled.ListItem>
   )

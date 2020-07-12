@@ -7,8 +7,10 @@ import * as Styled from './Dishes.styles'
 import Sidebar from '../Sidebar'
 import Search from '../Search'
 import { ListItem } from '../ListItem'
-import DishDetails from '../DishDetails'
+import DishDetails from './DishDetails'
 import DishTags from './DishTags'
+import Expander from '../Expander'
+import { formatDate } from '../../utils'
 
 const Dishes = () => {
   const [displayedDishes, setDisplayedDishes] = useState([])
@@ -96,10 +98,17 @@ const Dishes = () => {
               key={dish.id}
               onClick={() => toggleItemOpen(dish.id)}
               expander={
-                selectedItemID === dish.id && <DishDetails dish={dish} />
+                selectedItemID === dish.id && (
+                  <Expander>
+                    <DishDetails dish={dish} />
+                  </Expander>
+                )
               }
             >
               <Styled.Name>{dish.name}</Styled.Name>
+              {dish.dates.length > 0 && (
+                <Styled.Date>{formatDate(dish.dates[0].date)}</Styled.Date>
+              )}
             </ListItem>
           ))}
         </>
@@ -116,6 +125,20 @@ const DISHES_QUERY = gql`
       tags {
         id
         name
+      }
+      dates {
+        id
+        date
+      }
+      ingredientSets {
+        id
+        ingredients {
+          id
+          item {
+            id
+            name
+          }
+        }
       }
     }
   }

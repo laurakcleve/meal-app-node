@@ -105,6 +105,20 @@ const resolvers = {
   Dish: {
     tags: (Dish, __, { dataSources }) =>
       dataSources.dishAPI.getTags({ id: Dish.id }),
+    dates: (Dish, __, { dataSources }) =>
+      dataSources.dishAPI.getDates({ id: Dish.id }),
+    ingredientSets: (Dish, __, { dataSources }) =>
+      dataSources.dishAPI.getIngredientSets({ id: Dish.id }),
+  },
+
+  IngredientSet: {
+    ingredients: (IngredientSet, __, { dataSources }) =>
+      dataSources.dishAPI.getIngredientSetIngredients({ id: IngredientSet.id }),
+  },
+
+  Ingredient: {
+    item: (Ingredient, __, { dataSources }) =>
+      dataSources.dishAPI.getIngredientItem({ id: Ingredient.id }),
   },
 
   Purchase: {
