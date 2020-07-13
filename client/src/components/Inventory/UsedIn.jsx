@@ -2,7 +2,7 @@ import React, { useState } from 'react'
 import PropTypes from 'prop-types'
 
 import * as Styled from './UsedIn.styles'
-import DetailListItem from './DetailListItem'
+import DetailListItem from '../ListItem/Details/DetailListItem'
 
 const UsedIn = ({ dishes }) => {
   const [expanded, setExpanded] = useState(false)

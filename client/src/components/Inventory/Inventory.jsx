@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import { useQuery } from '@apollo/react-hooks'
 import { gql } from 'apollo-boost'
+import moment from 'moment'
 
 import * as Layout from '../Layout.styles'
 import * as Styled from './Inventory.styles'
@@ -8,9 +9,9 @@ import Sidebar from '../Sidebar'
 import InventoryLocations from './InventoryLocations'
 import Search from '../Search'
 import { ListItem } from '../ListItem'
-// import { ItemDetails } from './ListItem/Details'
-import ItemDetails from '../ListItem/Details/ItemDetails'
+import InventoryItemDetails from './InventoryItemDetails'
 import AddItem from '../AddItem'
+import Expander from '../Expander'
 
 const Inventory = () => {
   const [displayedItems, setDisplayedItems] = useState([])
@@ -71,6 +72,7 @@ const Inventory = () => {
           setSelectedLocationName={setSelectedLocationName}
         />
       </Sidebar>
+
       <Layout.List>
         {loading && <p>Loading...</p>}
 
@@ -90,11 +92,22 @@ const Inventory = () => {
           {adding && <AddItem />}
 
           {displayedItems.map((item) => (
-            <ListItem key={item.id} onClick={(e) => toggleItemOpen(e, item.id)}>
+            <ListItem
+              key={item.id}
+              onClick={(e) => toggleItemOpen(e, item.id)}
+              expander={
+                selectedItemID === item.id && (
+                  <Expander>
+                    <InventoryItemDetails inventoryItem={item} />
+                  </Expander>
+                )
+              }
+            >
               <Styled.Name>{item.item.name}</Styled.Name>
               <Styled.Location>{item.location.name}</Styled.Location>
-              <Styled.Expiration>{item.expiration}</Styled.Expiration>
-              {selectedItemID === item.id && <ItemDetails item={item} />}
+              <Styled.Expiration>
+                {moment(Number(item.expiration)).fromNow()}
+              </Styled.Expiration>
             </ListItem>
           ))}
         </>

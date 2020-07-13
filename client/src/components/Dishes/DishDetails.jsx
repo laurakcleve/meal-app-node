@@ -10,26 +10,30 @@ const DishDetails = ({ dish }) => {
     <Styled.Container>
       {dish.tags && (
         <Styled.Tags>
-          <p>Tags</p>
-          {dish.tags.map((tag) => (
-            <p>{tag.name}</p>
-          ))}
+          <h3>Tags</h3>
+          <ul>
+            {dish.tags.map((tag) => (
+              <li>{tag.name}</li>
+            ))}
+          </ul>
         </Styled.Tags>
       )}
 
       {dish.ingredientSets.length > 0 && (
         <Styled.Ingredients>
-          <p>Ingredients</p>
-          {dish.ingredientSets.map((ingredientSet) => (
-            <p>
-              {ingredientSet.ingredients.map(
-                (ingredient, index) =>
-                  `${ingredient.item.name}${
-                    index < ingredientSet.ingredients.length - 1 ? '/' : ''
-                  }`
-              )}
-            </p>
-          ))}
+          <h3>Ingredients</h3>
+          <ul>
+            {dish.ingredientSets.map((ingredientSet) => (
+              <li>
+                {ingredientSet.ingredients.map(
+                  (ingredient, index) =>
+                    `${ingredient.item.name}${
+                      index < ingredientSet.ingredients.length - 1 ? '/' : ''
+                    }`
+                )}
+              </li>
+            ))}
+          </ul>
         </Styled.Ingredients>
       )}
 
