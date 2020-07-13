@@ -7,7 +7,7 @@ import * as Styled from './Items.styles'
 import Sidebar from '../Sidebar'
 import ItemCategories from './ItemCategories'
 import Search from '../Search'
-import { ListItem } from '../ListItem'
+import ListItem from '../ListItem'
 
 const Items = () => {
   const [displayedItems, setDisplayedItems] = useState([])

@@ -8,13 +8,13 @@ export const ListItem = styled.div`
   font-family: 'Roboto';
   font-size: 13px;
   font-weight: 500;
-  cursor: pointer;
 `
 
 export const FlexBar = styled.div`
   display: flex;
   grid-gap: 10px;
   padding: 15px;
+  cursor: pointer;
 
   div:first-letter {
     text-transform: uppercase;

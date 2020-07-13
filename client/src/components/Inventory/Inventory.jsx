@@ -8,9 +8,9 @@ import * as Styled from './Inventory.styles'
 import Sidebar from '../Sidebar'
 import InventoryLocations from './InventoryLocations'
 import Search from '../Search'
-import { ListItem } from '../ListItem'
+import ListItem from '../ListItem'
 import InventoryItemDetails from './InventoryItemDetails'
-import AddItem from '../AddItem'
+import AddItem from './AddItem'
 import Expander from '../Expander'
 
 const Inventory = () => {

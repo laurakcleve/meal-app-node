@@ -6,7 +6,7 @@ import moment from 'moment'
 
 import * as Layout from '../Layout.styles'
 import * as Styled from './Purchase.styles'
-import ListItem from '../ListItem/ListItem'
+import ListItem from '../ListItem'
 import PurchaseItemAddForm from './PurchaseItemAddForm'
 import { unitPrice } from '../../utils'
 

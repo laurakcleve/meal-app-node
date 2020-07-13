@@ -1,16 +1,15 @@
 import React, { useState } from 'react'
 import { useQuery, useMutation } from '@apollo/react-hooks'
 import { gql } from 'apollo-boost'
-import moment from 'moment'
 import { Link } from 'react-router-dom'
 
-import * as Styled from '../Layout.styles'
+import * as Layout from '../Layout.styles'
+import * as Styled from './Purchases.styles'
 import Sidebar from '../Sidebar'
 import Input from '../Input'
 import Form from '../Form'
-import ListItem from '../ListItem/ListItem'
-import TitleBar from '../ListItem/TitleBar'
-import TitleName from '../ListItem/TitleName'
+import ListItem from '../ListItem'
+import { formatDate } from '../../utils'
 
 const Purchases = () => {
   const { data: locationsData, loading, error } = useQuery(
@@ -45,9 +44,9 @@ const Purchases = () => {
   }
 
   return (
-    <Styled.Container>
+    <Layout.Container>
       <Sidebar>Sidebar</Sidebar>
-      <Styled.List>
+      <Layout.List>
         <Form>
           <Input
             id="date"
@@ -76,15 +75,14 @@ const Purchases = () => {
           purchasesData.purchases.map((purchase) => (
             <Link key={purchase.id} to={`/purchase/${purchase.id}`}>
               <ListItem>
-                <TitleBar>
-                  <TitleName name={purchase.location.name} />
-                  {moment(Number(purchase.date)).format('M/D/YY')}
-                </TitleBar>
+                <Styled.Title>
+                  {`${purchase.location.name} - ${formatDate(purchase.date)}`}
+                </Styled.Title>
               </ListItem>
             </Link>
           ))}
-      </Styled.List>
-    </Styled.Container>
+      </Layout.List>
+    </Layout.Container>
   )
 }
 

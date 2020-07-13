@@ -6,7 +6,7 @@ import moment from 'moment'
 
 import * as Layout from '../Layout.styles'
 import * as Styled from './Item.styles'
-import { ListItem } from '../ListItem'
+import ListItem from '../ListItem'
 import { unitPrice, inventoryAmountString } from '../../utils'
 
 const Item = ({ match, history }) => {
