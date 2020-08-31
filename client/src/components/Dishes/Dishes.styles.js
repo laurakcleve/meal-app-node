@@ -5,3 +5,15 @@ export const Name = styled.div`
 `
 
 export const Date = styled.div``
+
+export const CheckboxLabel = styled.label`
+  cursor: pointer;
+
+  .labelText:before {
+    top: 4px;
+  }
+
+  .labelText:after {
+    top: 8px;
+  }
+`

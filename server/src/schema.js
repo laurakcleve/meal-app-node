@@ -64,7 +64,7 @@ const typeDefs = gql`
     id: ID!
     name: String!
     tags: [DishTag]
-    isActive: Boolean
+    isActiveDish: Boolean
     dates: [DishDate]
     ingredientSets: [IngredientSet]
   }

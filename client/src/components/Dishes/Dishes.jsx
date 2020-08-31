@@ -14,12 +14,17 @@ import { formatDate } from '../../utils'
 
 const Dishes = () => {
   const [displayedDishes, setDisplayedDishes] = useState([])
+
+  // Deals with 'Match any' and 'Match all' for tags
   const [filteredDishes, setFilteredDishes] = useState([])
+
+  // Deals with the search bar
   const [searchedDishes, setSearchedDishes] = useState([])
+
   const [selectedItemID, setSelectedItemID] = useState('')
   const [selectedTagNames, setSelectedTagNames] = useState(['all'])
   const [match, setMatch] = useState('all')
-  const [isActive, setIsActive] = useState(true)
+  const [isActiveRotation, setIsActiveRotation] = useState(true)
 
   const { data, loading } = useQuery(DISHES_QUERY)
 
@@ -33,49 +38,70 @@ const Dishes = () => {
 
   useEffect(() => {
     if (data && data.dishes) {
-      let newFilteredDishes
-      if (selectedTagNames.includes('all')) {
-        newFilteredDishes = data.dishes
-      } else {
-        newFilteredDishes = data.dishes.filter((dish) => {
-          if (dish.tags && dish.tags.length <= 0) return false
-          if (match === 'all') {
-            return selectedTagNames.every((tagName) =>
-              dish.tags.map((tag) => tag.name).includes(tagName)
-            )
-          }
-          if (match === 'any') {
-            return dish.tags
-              .map((tag) => tag.name)
-              .some((tagName) => selectedTagNames.includes(tagName))
-          }
-          return false
-        })
+      const matchesActive = (dish) => {
+        return (
+          (isActiveRotation && dish.isActiveDish) ||
+          (!isActiveRotation && !dish.isActiveDish)
+        )
       }
-      setFilteredDishes(newFilteredDishes)
+
+      const matchesTags = (dish) => {
+        if (selectedTagNames.includes('all')) {
+          return true
+        }
+        if (match === 'all') {
+          return selectedTagNames.every((tagName) =>
+            dish.tags.map((tag) => tag.name).includes(tagName)
+          )
+        }
+        if (match === 'any') {
+          return dish.tags
+            .map((tag) => tag.name)
+            .some((tagName) => selectedTagNames.includes(tagName))
+        }
+        return false
+      }
+
+      const newDisplayedDishes = data.dishes.filter((dish) => {
+        return matchesActive(dish) && matchesTags(dish)
+      })
+
+      setDisplayedDishes(newDisplayedDishes)
     }
-  }, [data, match, selectedTagNames])
+  }, [data, isActiveRotation, match, selectedTagNames])
 
-  useEffect(() => {
-    if (searchedDishes.length > 0) setDisplayedDishes(filteredDishes)
-  }, [searchedDishes.length, filteredDishes])
+  // useEffect(() => {
+  //   if (data && data.dishes) {
+  //     let newFilteredDishes = data.dishes
 
-  useEffect(() => {
-    setDisplayedDishes(searchedDishes)
-  }, [searchedDishes])
+  //     // Filter based on 'Active rotation'
+  //     if (isActiveRotation) {
+  //       newFilteredDishes = data.dishes.filter((dish) => dish.isActiveDish)
+  //     }
+  //     setFilteredDishes(newFilteredDishes)
+  //   }
+  // }, [data, isActiveRotation])
+
+  // useEffect(() => {
+  //   if (searchedDishes.length > 0) setDisplayedDishes(filteredDishes)
+  // }, [searchedDishes.length, filteredDishes])
+
+  // useEffect(() => {
+  //   setDisplayedDishes(searchedDishes)
+  // }, [searchedDishes])
 
   return (
     <Layout.Container>
       <Sidebar>
-        <label htmlFor="isActive" className="checkbox">
+        <Styled.CheckboxLabel htmlFor="isActiveRotation" className="checkbox">
           <input
+            id="isActiveRotation"
             type="checkbox"
-            name="isActive"
-            checked={isActive}
-            onChange={() => setIsActive(!isActive)}
+            checked={isActiveRotation}
+            onChange={() => setIsActiveRotation(!isActiveRotation)}
           />
           <div className="labelText">Active rotation</div>
-        </label>
+        </Styled.CheckboxLabel>
 
         <DishTags
           selectedTagNames={selectedTagNames}
@@ -94,6 +120,7 @@ const Dishes = () => {
           )}
 
           {displayedDishes.map((dish) => (
+            // (isActiveRotation && dish.isActiveDish) || (!isActiveRotation && !dish.isActiveDish) && (
             <ListItem
               key={dish.id}
               onClick={() => toggleItemOpen(dish.id)}
@@ -122,6 +149,7 @@ const DISHES_QUERY = gql`
     dishes {
       id
       name
+      isActiveDish
       tags {
         id
         name

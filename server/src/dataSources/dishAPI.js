@@ -8,7 +8,7 @@ class DishAPI extends DataSource {
 
   getAll() {
     const queryString = `
-      SELECT * FROM item 
+      SELECT *, is_active_dish AS "isActiveDish" FROM item 
       WHERE item_type = 'dish'
       ORDER BY name
     `
@@ -17,7 +17,7 @@ class DishAPI extends DataSource {
 
   getByID({ id }) {
     const queryString = `
-      SELECT * FROM item
+      SELECT *, is_active_dish AS "isActiveDish" FROM item
       WHERE id = $1
     `
     return db.query(queryString, [id]).then((results) => results.rows[0])
