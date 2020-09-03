@@ -14,17 +14,11 @@ import { formatDate } from '../../utils'
 
 const Dishes = () => {
   const [displayedDishes, setDisplayedDishes] = useState([])
-
-  // Deals with 'Match any' and 'Match all' for tags
-  const [filteredDishes, setFilteredDishes] = useState([])
-
-  // Deals with the search bar
-  const [searchedDishes, setSearchedDishes] = useState([])
-
   const [selectedItemID, setSelectedItemID] = useState('')
   const [selectedTagNames, setSelectedTagNames] = useState(['all'])
   const [match, setMatch] = useState('all')
   const [isActiveRotation, setIsActiveRotation] = useState(true)
+  const [searchQuery, setSearchQuery] = useState('')
 
   const { data, loading } = useQuery(DISHES_QUERY)
 
@@ -62,33 +56,26 @@ const Dishes = () => {
         return false
       }
 
-      const newDisplayedDishes = data.dishes.filter((dish) => {
+      let newDisplayedDishes = data.dishes.filter((dish) => {
         return matchesActive(dish) && matchesTags(dish)
       })
 
+      // Search
+      if (searchQuery.length > 0)
+        newDisplayedDishes = newDisplayedDishes.filter((dish) => {
+          return dish.name.includes(searchQuery)
+        })
+
       setDisplayedDishes(newDisplayedDishes)
     }
-  }, [data, isActiveRotation, match, selectedTagNames])
-
-  // useEffect(() => {
-  //   if (data && data.dishes) {
-  //     let newFilteredDishes = data.dishes
-
-  //     // Filter based on 'Active rotation'
-  //     if (isActiveRotation) {
-  //       newFilteredDishes = data.dishes.filter((dish) => dish.isActiveDish)
-  //     }
-  //     setFilteredDishes(newFilteredDishes)
-  //   }
-  // }, [data, isActiveRotation])
-
-  // useEffect(() => {
-  //   if (searchedDishes.length > 0) setDisplayedDishes(filteredDishes)
-  // }, [searchedDishes.length, filteredDishes])
-
-  // useEffect(() => {
-  //   setDisplayedDishes(searchedDishes)
-  // }, [searchedDishes])
+  }, [
+    data,
+    isActiveRotation,
+    match,
+    searchQuery,
+    searchQuery.length,
+    selectedTagNames,
+  ])
 
   return (
     <Layout.Container>
@@ -116,11 +103,10 @@ const Dishes = () => {
 
         <>
           {data && data.dishes && (
-            <Search items={filteredDishes} set={setSearchedDishes} />
+            <Search setSearchText={setSearchQuery} searchText={searchQuery} />
           )}
 
           {displayedDishes.map((dish) => (
-            // (isActiveRotation && dish.isActiveDish) || (!isActiveRotation && !dish.isActiveDish) && (
             <ListItem
               key={dish.id}
               onClick={() => toggleItemOpen(dish.id)}
