@@ -2,7 +2,10 @@ import styled from 'styled-components'
 
 export const Main = styled.div`
   width: 100%;
-  padding: 20px 0;
+  margin: 20px 0;
+  padding: 10px 30px;
+  background-color: #fff;
+  border-radius: 10px;
 `
 
 export const Header = styled.div`
