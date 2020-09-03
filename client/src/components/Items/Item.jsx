@@ -65,6 +65,17 @@ const Item = ({ match, history }) => {
                 <p>{data.itemById.defaultLocation.name}</p>
               </Styled.Detail>
             )}
+
+            {data.itemById.dishes && (
+              <Styled.Detail>
+                <h2>Used in</h2>
+                <ul>
+                  {data.itemById.dishes.map((dish) => (
+                    <li>{dish.name}</li>
+                  ))}
+                </ul>
+              </Styled.Detail>
+            )}
           </>
         )}
 
@@ -140,6 +151,10 @@ const ITEM_QUERY = gql`
             name
           }
         }
+      }
+      dishes {
+        id
+        name
       }
     }
   }
