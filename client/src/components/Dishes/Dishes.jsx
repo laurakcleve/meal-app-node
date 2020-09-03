@@ -18,7 +18,7 @@ const Dishes = () => {
   const [selectedTagNames, setSelectedTagNames] = useState(['all'])
   const [match, setMatch] = useState('all')
   const [isActiveRotation, setIsActiveRotation] = useState(true)
-  const [searchQuery, setSearchQuery] = useState('')
+  const [searchText, setSearchText] = useState('')
 
   const { data, loading } = useQuery(DISHES_QUERY)
 
@@ -61,9 +61,9 @@ const Dishes = () => {
       })
 
       // Search
-      if (searchQuery.length > 0)
+      if (searchText.length > 0)
         newDisplayedDishes = newDisplayedDishes.filter((dish) => {
-          return dish.name.includes(searchQuery)
+          return dish.name.includes(searchText)
         })
 
       setDisplayedDishes(newDisplayedDishes)
@@ -72,8 +72,8 @@ const Dishes = () => {
     data,
     isActiveRotation,
     match,
-    searchQuery,
-    searchQuery.length,
+    searchText,
+    searchText.length,
     selectedTagNames,
   ])
 
@@ -103,7 +103,7 @@ const Dishes = () => {
 
         <>
           {data && data.dishes && (
-            <Search setSearchText={setSearchQuery} searchText={searchQuery} />
+            <Search setSearchText={setSearchText} searchText={searchText} />
           )}
 
           {displayedDishes.map((dish) => (

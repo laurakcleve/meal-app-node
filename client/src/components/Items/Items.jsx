@@ -11,33 +11,29 @@ import ListItem from '../ListItem'
 
 const Items = () => {
   const [displayedItems, setDisplayedItems] = useState([])
-  const [filteredItems, setFilteredItems] = useState([])
-  const [searchedItems, setSearchedItems] = useState([])
+  const [searchText, setSearchText] = useState('')
   const [selectedCategoryName, setSelectedCategoryName] = useState('all')
 
   const { data, loading } = useQuery(ITEMS_QUERY)
 
   useEffect(() => {
     if (data && data.items) {
-      let newFilteredItems
-      if (selectedCategoryName === 'all') {
-        newFilteredItems = data.items
-      } else {
-        newFilteredItems = data.items.filter(
-          (item) => item.category && item.category.name === selectedCategoryName
+      let newDisplayedItems = data.items.filter((item) => {
+        return (
+          selectedCategoryName === 'all' ||
+          (item.category && item.category.name === selectedCategoryName)
         )
-      }
-      setFilteredItems(newFilteredItems)
+      })
+
+      // Search
+      if (searchText.length > 0)
+        newDisplayedItems = newDisplayedItems.filter((item) => {
+          return item.name.includes(searchText)
+        })
+
+      setDisplayedItems(newDisplayedItems)
     }
-  }, [data, selectedCategoryName])
-
-  useEffect(() => {
-    if (searchedItems.length > 0) setDisplayedItems(filteredItems)
-  }, [filteredItems, searchedItems.length])
-
-  useEffect(() => {
-    setDisplayedItems(searchedItems)
-  }, [searchedItems])
+  }, [data, searchText, selectedCategoryName])
 
   return (
     <Layout.Container>
@@ -52,7 +48,7 @@ const Items = () => {
 
         <>
           {data && data.items && (
-            <Search items={filteredItems} set={setSearchedItems} />
+            <Search searchText={searchText} setSearchText={setSearchText} />
           )}
 
           {displayedItems.map((item) => (
