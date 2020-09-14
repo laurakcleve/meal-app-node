@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { useQuery, useMutation } from '@apollo/react-hooks'
 import { gql } from 'apollo-boost'
 import PropTypes from 'prop-types'
@@ -7,6 +7,7 @@ import moment from 'moment'
 import * as Layout from '../Layout.styles'
 import * as Styled from './Item.styles'
 import ListItem from '../ListItem'
+import EditForm from './EditForm'
 import { unitPrice, inventoryAmountString } from '../../utils'
 
 const Item = ({ match, history }) => {
@@ -14,16 +15,7 @@ const Item = ({ match, history }) => {
     variables: { id: match.params.id },
   })
 
-  const [deleteItem] = useMutation(DELETE_ITEM_MUTATION, {
-    onCompleted: () => history.push('/items'),
-  })
-
-  const submitDelete = (event) => {
-    event.preventDefault()
-    if (window.confirm('Delete item?')) {
-      deleteItem({ variables: { id: match.params.id } })
-    }
-  }
+  const [isEditing, setIsEditing] = useState(true)
 
   return (
     <Layout.Container>
@@ -33,90 +25,105 @@ const Item = ({ match, history }) => {
 
         {data && data.itemById && (
           <>
-            <Styled.Header>
-              <h1>{data.itemById.name}</h1>
-              <button type="button" onClick={(event) => submitDelete(event)}>
-                Delete
-              </button>
-            </Styled.Header>
+            <Styled.Details>
+              {isEditing ? (
+                <div className="main">
+                  <EditForm
+                    item={data.itemById}
+                    setIsEditing={setIsEditing}
+                    history={history}
+                  />
+                </div>
+              ) : (
+                <div className="main">
+                  <Styled.Header>
+                    <h1>{data.itemById.name}</h1>
 
-            {data.itemById.category && (
-              <Styled.Detail>
-                <h2>Category</h2>
-                <p>{data.itemById.category.name}</p>
-              </Styled.Detail>
-            )}
+                    <button type="button" onClick={() => setIsEditing(true)}>
+                      Edit
+                    </button>
+                  </Styled.Header>
 
-            <Styled.Detail>
-              <h2>Type</h2>
-              <p>{data.itemById.itemType}</p>
-            </Styled.Detail>
+                  {data.itemById.category && (
+                    <Styled.Detail>
+                      <h2>Category</h2>
+                      <p>{data.itemById.category.name}</p>
+                    </Styled.Detail>
+                  )}
 
-            {data.itemById.defaultShelflife && (
-              <Styled.Detail>
-                <h2>Default shelflife</h2>
-                <p>{data.itemById.defaultShelflife}</p>
-              </Styled.Detail>
-            )}
+                  <Styled.Detail>
+                    <h2>Item Type</h2>
+                    <p>{data.itemById.itemType}</p>
+                  </Styled.Detail>
 
-            {data.itemById.defaultLocation && (
-              <Styled.Detail>
-                <h2>Default location</h2>
-                <p>{data.itemById.defaultLocation.name}</p>
-              </Styled.Detail>
-            )}
+                  {data.itemById.defaultShelflife && (
+                    <Styled.Detail>
+                      <h2>Default shelflife</h2>
+                      <p>{data.itemById.defaultShelflife} days</p>
+                    </Styled.Detail>
+                  )}
+
+                  {data.itemById.defaultLocation && (
+                    <Styled.Detail>
+                      <h2>Default location</h2>
+                      <p>{data.itemById.defaultLocation.name}</p>
+                    </Styled.Detail>
+                  )}
+                </div>
+              )}
+            </Styled.Details>
 
             {data.itemById.dishes && (
               <Styled.Detail>
                 <h2>Used in</h2>
                 <ul>
                   {data.itemById.dishes.map((dish) => (
-                    <li>{dish.name}</li>
+                    <li key={dish.id}>{dish.name}</li>
                   ))}
                 </ul>
               </Styled.Detail>
             )}
+            <Layout.List>
+              {data &&
+                data.itemById.purchases.map((purchase) => (
+                  <ListItem key={purchase.id}>
+                    <Styled.Date>
+                      {moment(Number(purchase.purchase.date)).format('M/D/YY')}
+                    </Styled.Date>
+                    <Styled.Location>
+                      {purchase.purchase.location.name}
+                    </Styled.Location>
+                    <Styled.Price>
+                      {purchase.price &&
+                        `$${Number(purchase.price).toFixed(2)}`}
+                    </Styled.Price>
+                    <Styled.Amount>
+                      {inventoryAmountString(
+                        purchase.weightAmount,
+                        purchase.weightUnit,
+                        purchase.quantityAmount,
+                        purchase.quantityUnit
+                      )}
+                    </Styled.Amount>
+                    <Styled.UnitPrice>
+                      {unitPrice(
+                        purchase.price,
+                        purchase.weightAmount,
+                        purchase.weightUnit
+                      )}
+                    </Styled.UnitPrice>
+                    <Styled.UnitPrice>
+                      {unitPrice(
+                        purchase.price,
+                        purchase.quantityAmount,
+                        purchase.quantityUnit
+                      )}
+                    </Styled.UnitPrice>
+                  </ListItem>
+                ))}
+            </Layout.List>
           </>
         )}
-
-        <Layout.List>
-          {data &&
-            data.itemById.purchases.map((purchase) => (
-              <ListItem key={purchase.id}>
-                <Styled.Date>
-                  {moment(Number(purchase.purchase.date)).format('M/D/YY')}
-                </Styled.Date>
-                <Styled.Location>
-                  {purchase.purchase.location.name}
-                </Styled.Location>
-                <Styled.Price>
-                  {purchase.price && `$${Number(purchase.price).toFixed(2)}`}
-                </Styled.Price>
-                <Styled.Amount>
-                  {inventoryAmountString(
-                    purchase.weightAmount,
-                    purchase.weightUnit,
-                    purchase.quantityAmount,
-                    purchase.quantityUnit
-                  )}
-                </Styled.Amount>
-                <Styled.UnitPrice>
-                  {unitPrice(
-                    purchase.price,
-                    purchase.weightAmount,
-                    purchase.weightUnit
-                  )}
-                </Styled.UnitPrice>
-                <Styled.UnitPrice>
-                  {unitPrice(
-                    purchase.price,
-                    purchase.quantityAmount,
-                    purchase.quantityUnit
-                  )}
-                </Styled.UnitPrice>
-              </ListItem>
-            ))}
-        </Layout.List>
       </Styled.Main>
     </Layout.Container>
   )
@@ -157,12 +164,6 @@ const ITEM_QUERY = gql`
         name
       }
     }
-  }
-`
-
-const DELETE_ITEM_MUTATION = gql`
-  mutation deleteItem($id: ID!) {
-    deleteItem(id: $id)
   }
 `
 

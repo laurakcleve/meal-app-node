@@ -5,7 +5,6 @@
   },
   "extends": [
     "airbnb",
-    "react-app",
     "plugin:prettier/recommended",
     "prettier/react"
   ],
@@ -31,7 +30,8 @@
         "trailingComma": "es5",
         "singleQuote": true,
         "arrowParens": "always",
-        "semi": false
+        "semi": false,
+        "react/jsx-wrap-multilines": "off"
       }
     ],
     "no-console": "off",
@@ -40,7 +40,7 @@
       "warn",
       "never"
     ],
-    "react/prop-types": 1
+    "react/prop-types": 1,
   },
   "overrides": [
     {

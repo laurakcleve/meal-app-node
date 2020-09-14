@@ -7,7 +7,7 @@ const GlobalStyles = createGlobalStyle`
     margin: 0;
     background: ${({ theme }) => theme.colors.background};
     color: ${({ theme }) => theme.colors.darkGrey};
-    font-family: 'Mukta';
+    font-family: 'Roboto';
   }
 
   a {
@@ -85,6 +85,15 @@ const GlobalStyles = createGlobalStyle`
     input[type="checkbox"]:focus + .labelText:before {
       border-width: 2px;
     }
+  }
+
+  select {
+    background-color: ${({ theme }) => theme.colors.lighterGrey};
+    color: ${({ theme }) => theme.colors.darkGrey};
+    border: none;
+    border-radius: 4px;
+    font-family: 'Roboto';
+    padding: 9px 10px;
   }
 `
 

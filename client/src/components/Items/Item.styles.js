@@ -29,10 +29,25 @@ export const Header = styled.div`
   }
 `
 
+export const Details = styled.div`
+  display: flex;
+  margin-top: 20px;
+
+  .main {
+    flex: 1;
+  }
+
+  .buttonContainer {
+  }
+`
+
 export const Detail = styled.div`
+  margin-bottom: 36px;
+
   h2 {
-    font-size: 14px;
-    margin-bottom: 0;
+    font-size: 12px;
+    text-transform: uppercase;
+    margin-bottom: 10px;
     color: ${({ theme }) => theme.colors.grey};
   }
 
@@ -40,6 +55,10 @@ export const Detail = styled.div`
     margin-top: 0;
     text-transform: capitalize;
     font-size: 18px;
+  }
+
+  li {
+    margin-bottom: 8px;
   }
 `
 
