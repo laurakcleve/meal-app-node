@@ -15,8 +15,7 @@ import Expander from '../Expander'
 
 const Inventory = () => {
   const [displayedItems, setDisplayedItems] = useState([])
-  const [filteredItems, setFilteredItems] = useState([])
-  const [searchedItems, setSearchedItems] = useState([])
+  const [searchText, setSearchText] = useState('')
   const [selectedItemID, setSelectedItemID] = useState('')
   const [selectedElement, setSelectedElement] = useState()
   const [selectedLocationName, setSelectedLocationName] = useState('all')
@@ -36,25 +35,23 @@ const Inventory = () => {
 
   useEffect(() => {
     if (data && data.inventoryItems) {
-      let newFilteredItems
-      if (selectedLocationName === 'all') {
-        newFilteredItems = data.inventoryItems
-      } else {
-        newFilteredItems = data.inventoryItems.filter(
-          (item) => item.location.name === selectedLocationName
+      let newDisplayedItems = data.inventoryItems.filter((item) => {
+        return (
+          selectedLocationName === 'all' ||
+          (item.location && item.location.name === selectedLocationName)
         )
+      })
+
+      // Search
+      if (searchText.length > 0) {
+        newDisplayedItems = newDisplayedItems.filter((item) => {
+          return item.item.name.includes(searchText)
+        })
       }
-      setFilteredItems(newFilteredItems)
+
+      setDisplayedItems(newDisplayedItems)
     }
-  }, [data, selectedLocationName])
-
-  useEffect(() => {
-    if (searchedItems.length > 0) setDisplayedItems(filteredItems)
-  }, [filteredItems, searchedItems.length])
-
-  useEffect(() => {
-    setDisplayedItems(searchedItems)
-  }, [searchedItems])
+  }, [data, searchText, selectedLocationName])
 
   useEffect(() => {
     if (selectedElement)
@@ -78,7 +75,7 @@ const Inventory = () => {
 
         <>
           {data && data.inventoryItems && (
-            <Search items={filteredItems} set={setSearchedItems} />
+            <Search searchText={searchText} setSearchText={setSearchText} />
           )}
 
           <button
