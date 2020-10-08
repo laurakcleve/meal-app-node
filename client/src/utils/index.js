@@ -57,3 +57,11 @@ export const inventoryAmountString = (
 export const formatDate = (milliseconds) => {
   return moment(Number(milliseconds)).format('M/D/YY')
 }
+
+export const averagePricePerWeight = () => {
+  return 0
+}
+
+export const averagePricePerQuantity = () => {
+  return 0
+}

@@ -8,6 +8,7 @@ import * as Layout from '../Layout.styles'
 import * as Styled from './Item.styles'
 import ListItem from '../ListItem'
 import EditForm from './EditForm'
+import PurchaseStats from './PurchaseStats'
 import { unitPrice, inventoryAmountString } from '../../utils'
 
 const Item = ({ match, history }) => {
@@ -85,45 +86,53 @@ const Item = ({ match, history }) => {
                 </ul>
               </Styled.Detail>
             )}
-            <Layout.List>
-              {data &&
-                data.itemById.purchases.map((purchase) => (
-                  <ListItem key={purchase.id}>
-                    <Styled.Date>
-                      {moment(Number(purchase.purchase.date)).format('M/D/YY')}
-                    </Styled.Date>
-                    <Styled.Location>
-                      {purchase.purchase.location.name}
-                    </Styled.Location>
-                    <Styled.Price>
-                      {purchase.price &&
-                        `$${Number(purchase.price).toFixed(2)}`}
-                    </Styled.Price>
-                    <Styled.Amount>
-                      {inventoryAmountString(
-                        purchase.weightAmount,
-                        purchase.weightUnit,
-                        purchase.quantityAmount,
-                        purchase.quantityUnit
-                      )}
-                    </Styled.Amount>
-                    <Styled.UnitPrice>
-                      {unitPrice(
-                        purchase.price,
-                        purchase.weightAmount,
-                        purchase.weightUnit
-                      )}
-                    </Styled.UnitPrice>
-                    <Styled.UnitPrice>
-                      {unitPrice(
-                        purchase.price,
-                        purchase.quantityAmount,
-                        purchase.quantityUnit
-                      )}
-                    </Styled.UnitPrice>
-                  </ListItem>
-                ))}
-            </Layout.List>
+
+            {data && data.itemById.purchases.length > 0 && (
+              <Styled.Detail>
+                <h2>Purchases</h2>
+                <PurchaseStats purchases={data.itemById.purchases} />
+                <Layout.List>
+                  {data.itemById.purchases.map((purchase) => (
+                    <ListItem key={purchase.id}>
+                      <Styled.Date>
+                        {moment(Number(purchase.purchase.date)).format(
+                          'M/D/YY'
+                        )}
+                      </Styled.Date>
+                      <Styled.Location>
+                        {purchase.purchase.location.name}
+                      </Styled.Location>
+                      <Styled.Price>
+                        {purchase.price &&
+                          `$${Number(purchase.price).toFixed(2)}`}
+                      </Styled.Price>
+                      <Styled.Amount>
+                        {inventoryAmountString(
+                          purchase.weightAmount,
+                          purchase.weightUnit,
+                          purchase.quantityAmount,
+                          purchase.quantityUnit
+                        )}
+                      </Styled.Amount>
+                      <Styled.UnitPrice>
+                        {unitPrice(
+                          purchase.price,
+                          purchase.weightAmount,
+                          purchase.weightUnit
+                        )}
+                      </Styled.UnitPrice>
+                      <Styled.UnitPrice>
+                        {unitPrice(
+                          purchase.price,
+                          purchase.quantityAmount,
+                          purchase.quantityUnit
+                        )}
+                      </Styled.UnitPrice>
+                    </ListItem>
+                  ))}
+                </Layout.List>
+              </Styled.Detail>
+            )}
           </>
         )}
       </Styled.Main>
