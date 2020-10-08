@@ -76,6 +76,19 @@ const resolvers = {
         location,
         itemType,
       }),
+    editItem: (
+      _,
+      { id, name, categoryId, defaultLocationId, defaultShelflife, itemType },
+      { dataSources }
+    ) =>
+      dataSources.itemAPI.edit({
+        id,
+        name,
+        categoryId,
+        defaultLocationId,
+        defaultShelflife,
+        itemType,
+      }),
   },
 
   Item: {

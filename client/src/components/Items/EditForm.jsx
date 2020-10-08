@@ -1,38 +1,69 @@
 import React, { useState } from 'react'
 import PropTypes from 'prop-types'
 import { gql } from 'apollo-boost'
-import { useLazyQuery, useMutation } from '@apollo/react-hooks'
+import { useQuery, useMutation } from '@apollo/react-hooks'
 
 import * as Styled from './EditForm.styles'
 
 const EditForm = ({ item, setIsEditing, history }) => {
-  const initialCategory = item.category ? item.category.name : ''
-  const initialDefaultLocation = item.defaultLocation
-    ? item.defaultLocation.name
-    : ''
-  const initialDefaultShelflife = item.defaultShelflife || ''
+  const initialCategory = item && item.category ? item.category.name : ''
+  const initialDefaultLocation =
+    item && item.defaultLocation ? item.defaultLocation.name : ''
+  const initialDefaultShelflife =
+    item && item.defaultShelflife ? item.defaultShelflife.toString() : ''
 
-  const [name, setName] = useState(item.name)
+  const [name, setName] = useState(item ? item.name : '')
   const [category, setCategory] = useState(initialCategory)
   const [defaultShelflife, setDefaultShelflife] = useState(
     initialDefaultShelflife
   )
   const [defaultLocation, setDefaultLocation] = useState(initialDefaultLocation)
-  const [itemType, setItemType] = useState(item.itemType)
+  const [itemType, setItemType] = useState(item ? item.itemType : '')
 
-  const [getCategories, { data: categoriesData }] = useLazyQuery(
-    CATEGORIES_QUERY
-  )
+  const { data: categoriesData } = useQuery(CATEGORIES_QUERY)
 
-  const [getItemLocations, { data: itemLocationsData }] = useLazyQuery(
-    ITEM_LOCATIONS_QUERY
-  )
+  const { data: itemLocationsData } = useQuery(ITEM_LOCATIONS_QUERY)
+
+  const [editItem] = useMutation(EDIT_ITEM_MUTATION, {
+    onCompleted: () => setIsEditing(false),
+  })
 
   const [deleteItem] = useMutation(DELETE_ITEM_MUTATION, {
     onCompleted: () => history.push('/items'),
   })
 
-  console.log(item)
+  const submitEdit = (event) => {
+    event.preventDefault()
+
+    /* State only holds the names of category and location, 
+       we need to get the IDs to send to the database */
+    const foundCategory =
+      categoriesData &&
+      categoriesData.itemCategories.find(
+        (itemCategory) => itemCategory.name === category
+      )
+    const categoryId = foundCategory ? foundCategory.id : ''
+
+    const foundDefaultLocation =
+      itemLocationsData &&
+      itemLocationsData.itemLocations.find(
+        (itemLocation) => itemLocation.name === defaultLocation
+      )
+    const defaultLocationId = foundDefaultLocation
+      ? foundDefaultLocation.id
+      : ''
+
+    editItem({
+      variables: {
+        id: Number(item.id),
+        name,
+        categoryId: Number(categoryId) || null,
+        defaultLocationId: Number(defaultLocationId) || null,
+        defaultShelflife: Number(defaultShelflife) || null,
+        itemType,
+      },
+    })
+  }
 
   const submitDelete = (event) => {
     event.preventDefault()
@@ -42,7 +73,7 @@ const EditForm = ({ item, setIsEditing, history }) => {
   }
 
   return (
-    <Styled.EditForm>
+    <Styled.EditForm onSubmit={(event) => submitEdit(event)}>
       <Styled.FormContainer>
         <Styled.Label>Name</Styled.Label>
         <Styled.Name
@@ -56,33 +87,12 @@ const EditForm = ({ item, setIsEditing, history }) => {
           id="category"
           value={category}
           onChange={(event) => setCategory(event.target.value)}
-          onFocus={() => getCategories()}
           list={
             categoriesData && categoriesData.itemCategories
               ? categoriesData.itemCategories
               : []
           }
         ></Styled.Category>
-
-        <Styled.Label>Default location</Styled.Label>
-        <Styled.Category
-          id="defaultLocation"
-          value={defaultLocation}
-          onChange={(event) => setDefaultLocation(event.target.value)}
-          onFocus={() => getItemLocations()}
-          list={
-            itemLocationsData && itemLocationsData.itemLocations
-              ? itemLocationsData.itemLocations
-              : []
-          }
-        ></Styled.Category>
-
-        <Styled.Label>Default shelflife</Styled.Label>
-        <Styled.DefaultShelflife
-          id="defaultShelflife"
-          value={defaultShelflife.toString()}
-          onChange={(event) => setDefaultShelflife(event.target.value)}
-        ></Styled.DefaultShelflife>
 
         <Styled.Label>Item Type</Styled.Label>
         <Styled.ItemType
@@ -93,6 +103,25 @@ const EditForm = ({ item, setIsEditing, history }) => {
           <option value="dish">dish</option>
           <option value="nonFoodItem">nonFoodItem</option>
         </Styled.ItemType>
+
+        <Styled.Label>Default shelflife (days)</Styled.Label>
+        <Styled.DefaultShelflife
+          id="defaultShelflife"
+          value={defaultShelflife.toString()}
+          onChange={(event) => setDefaultShelflife(event.target.value)}
+        ></Styled.DefaultShelflife>
+
+        <Styled.Label>Default location</Styled.Label>
+        <Styled.Category
+          id="defaultLocation"
+          value={defaultLocation}
+          onChange={(event) => setDefaultLocation(event.target.value)}
+          list={
+            itemLocationsData && itemLocationsData.itemLocations
+              ? itemLocationsData.itemLocations
+              : []
+          }
+        ></Styled.Category>
 
         <div>
           <button type="button" onClick={() => setIsEditing(false)}>
@@ -130,6 +159,39 @@ const ITEM_LOCATIONS_QUERY = gql`
   }
 `
 
+const EDIT_ITEM_MUTATION = gql`
+  mutation editItem(
+    $id: ID!
+    $name: String!
+    $categoryId: Int
+    $defaultLocationId: Int
+    $defaultShelflife: Int
+    $itemType: String!
+  ) {
+    editItem(
+      id: $id
+      name: $name
+      categoryId: $categoryId
+      defaultLocationId: $defaultLocationId
+      defaultShelflife: $defaultShelflife
+      itemType: $itemType
+    ) {
+      id
+      name
+      category {
+        id
+        name
+      }
+      defaultLocation {
+        id
+        name
+      }
+      defaultShelflife
+      itemType
+    }
+  }
+`
+
 const DELETE_ITEM_MUTATION = gql`
   mutation deleteItem($id: ID!) {
     deleteItem(id: $id)
@@ -138,17 +200,20 @@ const DELETE_ITEM_MUTATION = gql`
 
 EditForm.propTypes = {
   item: PropTypes.shape({
+    id: PropTypes.string.isRequired,
     name: PropTypes.string.isRequired,
     category: PropTypes.shape({
-      id: PropTypes.string.isRequired,
       name: PropTypes.string.isRequired,
     }),
-    defaultShelflife: PropTypes.number,
     defaultLocation: PropTypes.shape({
-      id: PropTypes.string.isRequired,
       name: PropTypes.string.isRequired,
     }),
+    defaultShelflife: PropTypes.string.isRequired,
     itemType: PropTypes.string.isRequired,
+  }).isRequired,
+  setIsEditing: PropTypes.func.isRequired,
+  history: PropTypes.shape({
+    push: PropTypes.func.isRequired,
   }).isRequired,
 }
 

@@ -42,6 +42,14 @@ const typeDefs = gql`
       location: String
       itemType: String!
     ): InventoryItem!
+    editItem(
+      id: ID!
+      name: String!
+      categoryId: Int
+      defaultLocationId: Int
+      defaultShelflife: Int
+      itemType: String!
+    ): Item!
   }
 
   type Item {

@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { useQuery, useMutation } from '@apollo/react-hooks'
+import { useQuery } from '@apollo/react-hooks'
 import { gql } from 'apollo-boost'
 import PropTypes from 'prop-types'
 import moment from 'moment'
@@ -15,7 +15,9 @@ const Item = ({ match, history }) => {
     variables: { id: match.params.id },
   })
 
-  const [isEditing, setIsEditing] = useState(true)
+  const [isEditing, setIsEditing] = useState(false)
+
+  console.log(data ? data.itemById : '')
 
   return (
     <Layout.Container>
@@ -56,7 +58,7 @@ const Item = ({ match, history }) => {
                     <p>{data.itemById.itemType}</p>
                   </Styled.Detail>
 
-                  {data.itemById.defaultShelflife && (
+                  {!!data.itemById.defaultShelflife && (
                     <Styled.Detail>
                       <h2>Default shelflife</h2>
                       <p>{data.itemById.defaultShelflife} days</p>
@@ -73,7 +75,7 @@ const Item = ({ match, history }) => {
               )}
             </Styled.Details>
 
-            {data.itemById.dishes && (
+            {data.itemById.dishes.length > 0 && (
               <Styled.Detail>
                 <h2>Used in</h2>
                 <ul>

@@ -33,6 +33,40 @@ class ItemAPI extends DataSource {
     return db.query(queryString, [name]).then((results) => results.rows[0])
   }
 
+  edit({ id, name, categoryId, defaultLocationId, defaultShelflife, itemType }) {
+    console.log({
+      id,
+      name,
+      categoryId,
+      defaultLocationId,
+      defaultShelflife,
+      itemType,
+    })
+
+    console.log('cat. number', Number(categoryId))
+
+    const queryString = `
+      UPDATE item
+      SET name = $2,
+          category_id = $3,
+          default_location_id = $4,
+          default_shelflife = $5,
+          item_type = $6
+      WHERE id = $1
+      RETURNING *, item_type AS "itemType", default_shelflife AS "defaultShelflife"
+    `
+    return db
+      .query(queryString, [
+        id,
+        name,
+        categoryId,
+        defaultLocationId,
+        defaultShelflife,
+        itemType,
+      ])
+      .then((results) => results.rows[0])
+  }
+
   delete({ id }) {
     const queryString = `
       DELETE FROM item
