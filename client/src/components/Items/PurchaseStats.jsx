@@ -2,6 +2,8 @@ import React from 'react'
 import PropTypes from 'prop-types'
 import pluralize from 'pluralize'
 
+import * as Styled from './PurchaseStats.styles'
+
 const PurchaseStats = ({ purchases }) => {
   console.log(purchases)
 
@@ -25,7 +27,6 @@ const PurchaseStats = ({ purchases }) => {
     }
     return acc
   }, {})
-  console.log({ pricesByLocation })
 
   const weightPrices = (purchaseList) =>
     purchaseList
@@ -50,46 +51,51 @@ const PurchaseStats = ({ purchases }) => {
 
   return (
     <div>
-      <p>Average price:</p>
-      {hasWeight && (
-        <p>
-          ${averagePrice(weightPrices(purchases))}/{purchases[0].weightUnit}
-        </p>
-      )}
-      {hasQuantity && (
-        <p>
-          ${averagePrice(quantityPrices(purchases))}/
-          {purchases[0].quantityUnit
-            ? pluralize(purchases[0].quantityUnit, 1)
-            : 'ea'}
-        </p>
-      )}
+      <Styled.Price>
+        <h3>Average price:</h3>
+        {hasWeight && (
+          <div>
+            ${averagePrice(weightPrices(purchases))}/{purchases[0].weightUnit}
+          </div>
+        )}
+        {hasQuantity && (
+          <div>
+            ${averagePrice(quantityPrices(purchases))}/
+            {purchases[0].quantityUnit
+              ? pluralize(purchases[0].quantityUnit, 1)
+              : 'ea'}
+          </div>
+        )}
+      </Styled.Price>
 
-      <p>Average price by location:</p>
-      <table>
-        <tbody>
-          {Object.keys(pricesByLocation).map(
-            (location) =>
-              console.log(quantityPrices(pricesByLocation[location])) || (
-                <tr key={location}>
-                  <td>{location}</td>
-                  <td>
-                    {hasWeight &&
-                      `$${averagePrice(
-                        weightPrices(pricesByLocation[location])
-                      )}/${pricesByLocation[location][0].weightUnit}`}
-                  </td>
-                  <td>
-                    {hasQuantity &&
-                      `$${averagePrice(
-                        quantityPrices(pricesByLocation[location])
-                      )}/${pricesByLocation[location][0].quantityUnit || 'ea'}`}
-                  </td>
-                </tr>
-              )
-          )}
-        </tbody>
-      </table>
+      <Styled.PriceByLocation>
+        <h3>Average price by location:</h3>
+        <table>
+          <tbody>
+            {Object.keys(pricesByLocation).map(
+              (location) =>
+                console.log(quantityPrices(pricesByLocation[location])) || (
+                  <tr key={location}>
+                    <td className="location">{location}</td>
+                    <td>
+                      {hasWeight &&
+                        `$${averagePrice(
+                          weightPrices(pricesByLocation[location])
+                        )}/${pricesByLocation[location][0].weightUnit}`}
+                    </td>
+                    <td>
+                      {hasQuantity &&
+                        `$${averagePrice(
+                          quantityPrices(pricesByLocation[location])
+                        )}/${pricesByLocation[location][0].quantityUnit ||
+                          'ea'}`}
+                    </td>
+                  </tr>
+                )
+            )}
+          </tbody>
+        </table>
+      </Styled.PriceByLocation>
     </div>
   )
 }
