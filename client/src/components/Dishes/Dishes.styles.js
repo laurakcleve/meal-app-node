@@ -7,6 +7,9 @@ export const Name = styled.div`
 export const Date = styled.div``
 
 export const CheckboxLabel = styled.label`
+  display: block;
+  margin: 10px 0 20px;
+  line-height: 1.6;
   cursor: pointer;
 
   .labelText:before {

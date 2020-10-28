@@ -11,14 +11,17 @@ import DishDetails from './DishDetails'
 import DishTags from './DishTags'
 import Expander from '../Expander'
 import { formatDate } from '../../utils'
+import SortingHeader from '../SortingHeader'
 
 const Dishes = () => {
   const [displayedDishes, setDisplayedDishes] = useState([])
   const [selectedItemID, setSelectedItemID] = useState('')
   const [selectedTagNames, setSelectedTagNames] = useState(['all'])
   const [match, setMatch] = useState('all')
-  const [isActiveRotation, setIsActiveRotation] = useState(true)
+  const [isActiveRotation, setIsActiveRotation] = useState(false)
   const [searchText, setSearchText] = useState('')
+  const [sortBy, setSortBy] = useState('lastDate')
+  const [sortOrder, setSortOrder] = useState('asc')
 
   const { data, loading } = useQuery(DISHES_QUERY)
 
@@ -66,6 +69,39 @@ const Dishes = () => {
           return dish.name.includes(searchText)
         })
 
+      // Sort
+      newDisplayedDishes = newDisplayedDishes.sort((a, b) => {
+        if (sortBy === 'name') {
+          if (a.name < b.name) {
+            return -1
+          }
+          if (a.name > b.name) {
+            return 1
+          }
+          return 0
+        }
+        if (sortBy === 'lastDate') {
+          if (a.dates.length <= 0) {
+            return -1
+          }
+          if (b.dates.length <= 0) {
+            return 1
+          }
+          if (Number(a.dates[0].date) < Number(b.dates[0].date)) {
+            return -1
+          }
+          if (Number(a.dates[0].date) > Number(b.dates[0].date)) {
+            return 1
+          }
+          return 0
+        }
+        return 0
+      })
+
+      if (sortOrder === 'desc') {
+        newDisplayedDishes.reverse()
+      }
+
       setDisplayedDishes(newDisplayedDishes)
     }
   }, [
@@ -75,7 +111,23 @@ const Dishes = () => {
     searchText,
     searchText.length,
     selectedTagNames,
+    sortBy,
+    sortOrder,
   ])
+
+  const setSort = (newSortBy) => {
+    let newSortOrder
+    if (newSortBy === sortBy) {
+      newSortOrder = sortOrder === 'asc' ? 'desc' : 'asc'
+    } else {
+      newSortOrder = 'asc'
+    }
+
+    console.log({ newSortBy, newSortOrder })
+
+    setSortBy(newSortBy)
+    setSortOrder(newSortOrder)
+  }
 
   return (
     <Layout.Container>
@@ -103,7 +155,22 @@ const Dishes = () => {
 
         <>
           {data && data.dishes && (
-            <Search setSearchText={setSearchText} searchText={searchText} />
+            <>
+              <Search setSearchText={setSearchText} searchText={searchText} />
+
+              <SortingHeader>
+                <div className="name">
+                  <button type="button" onClick={() => setSort('name')}>
+                    Name
+                  </button>
+                </div>
+                <div>
+                  <button type="button" onClick={() => setSort('lastDate')}>
+                    Last date
+                  </button>
+                </div>
+              </SortingHeader>
+            </>
           )}
 
           {displayedDishes.map((dish) => (
