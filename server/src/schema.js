@@ -50,6 +50,11 @@ const typeDefs = gql`
       defaultShelflife: Int
       itemType: String!
     ): Item!
+    addDish(
+      name: String!
+      tags: [String]
+      ingredientSets: [IngredientSetInput]!
+    ): Dish!
   }
 
   type Item {
@@ -89,7 +94,7 @@ const typeDefs = gql`
 
   type IngredientSet {
     id: ID!
-    optional: Boolean
+    isOptional: Boolean
     ingredients: [Ingredient]
   }
 
@@ -134,6 +139,21 @@ const typeDefs = gql`
     quantityUnit: String
     purchaseId: Int
     purchase: Purchase
+  }
+
+  input IngredientSetInput {
+    id: ID!
+    isOptional: Boolean!
+    ingredients: [IngredientInput]!
+  }
+
+  input IngredientInput {
+    id: ID!
+    item: IngredientItemInput!
+  }
+
+  input IngredientItemInput {
+    name: String!
   }
 `
 

@@ -89,6 +89,8 @@ const resolvers = {
         defaultShelflife,
         itemType,
       }),
+    addDish: (_, { name, tags, ingredientSets }, { dataSources }) =>
+      dataSources.dishAPI.addDish({ name, tags, ingredientSets }),
   },
 
   Item: {

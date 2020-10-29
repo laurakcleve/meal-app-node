@@ -1,6 +1,6 @@
 import styled from 'styled-components'
 
-export default styled.form`
+export const Form = styled.form`
   margin: 20px 0 40px;
   padding: 20px;
   background-color: #fff;

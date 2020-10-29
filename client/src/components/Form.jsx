@@ -1,10 +1,10 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 
-import StyledForm from './Form.styles'
+import * as Styled from './Form.styles'
 
 const Form = ({ children, className }) => {
-  return <StyledForm className={className}>{children}</StyledForm>
+  return <Styled.Form className={className}>{children}</Styled.Form>
 }
 
 Form.propTypes = {

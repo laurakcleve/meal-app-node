@@ -65,6 +65,121 @@ class DishAPI extends DataSource {
     `
     return db.query(queryString, [id]).then((results) => results.rows[[0]])
   }
+
+  addDish({ name, tags, ingredientSets }) {
+    // Building the return object
+    const newDish = {}
+
+    const newDishQueryString = `
+      INSERT INTO item(name, item_type)
+      VALUES($1, 'dish')
+      RETURNING *
+    `
+    return db.query(newDishQueryString, [name]).then((newDishResults) => {
+      const newDishID = newDishResults.rows[0].id
+      const newDishName = newDishResults.rows[0].name
+
+      // Building the return object
+      newDish.id = newDishID
+      newDish.name = newDishName
+      newDish.ingredientSets = []
+      newDish.tags = []
+
+      const tagsPromises = tags.map((tag) => {
+        const tagQueryString = `
+            WITH retrieved_dish_tag_id AS (
+              SELECT tag_id_for_insert($2)
+            )
+            INSERT INTO item_has_dish_tag(item_id, dish_tag_id) 
+            SELECT 
+              $1 as item_id, 
+              (SELECT * FROM retrieved_dish_tag_id) AS dish_tag_id
+            RETURNING *
+          `
+        return db.query(tagQueryString, [newDishID, tag]).then((tagResults) => {
+          // Building the return object
+          newDish.tags.push({ id: tagResults.rows[0].id, name: tag })
+        })
+      })
+
+      return Promise.all(
+        tagsPromises.concat(
+          ingredientSets.map((ingredientSet, ingredientSetIndex) => {
+            // Building the return object
+            newDish.ingredientSets.push({})
+
+            const newIngredientSetQueryString = `
+              INSERT INTO ingredient_set(parent_item_id, optional)
+              VALUES($1, $2)
+              RETURNING *
+            `
+            return db
+              .query(newIngredientSetQueryString, [
+                newDishID,
+                ingredientSet.isOptional,
+              ])
+              .then((newIngredientSetResults) => {
+                const newIngredientSetID = newIngredientSetResults.rows[0].id
+
+                // Building the return object
+                newDish.ingredientSets[ingredientSetIndex].id = newIngredientSetID
+                newDish.ingredientSets[ingredientSetIndex].isOptional =
+                  newIngredientSetResults.rows[0].optional
+                newDish.ingredientSets[ingredientSetIndex].ingredients = []
+
+                return Promise.all(
+                  ingredientSet.ingredients.map((ingredient, ingredientIndex) => {
+                    const newIngredientQueryString = `
+                      WITH new_item_id AS (
+                        INSERT INTO item(name, item_type)
+                        SELECT $1, 'baseItem'
+                        WHERE NOT EXISTS (
+                          SELECT 1
+                          FROM item
+                          WHERE name = $1
+                        )
+                        RETURNING id
+                      ), existing_item_id AS (
+                        SELECT id
+                        FROM item
+                        WHERE name = $1
+                      ), item_id_for_insert AS (
+                        SELECT id 
+                        FROM new_item_id 
+                        UNION SELECT id FROM existing_item_id
+                      )
+                      INSERT INTO ingredient(ingredient_set_id, item_id)
+                      SELECT $2 AS ingredient_set_id, id AS item_id
+                      FROM (SELECT id FROM item_id_for_insert) AS the_id
+                      RETURNING *
+                    `
+                    return db
+                      .query(newIngredientQueryString, [
+                        ingredient.item.name,
+                        newIngredientSetID,
+                      ])
+                      .then((newIngredientresults) => {
+                        const newIngredient = newIngredientresults.rows[0]
+
+                        // Building the return object
+                        newDish.ingredientSets[ingredientSetIndex].ingredients[
+                          ingredientIndex
+                        ] = {
+                          id: newIngredient.id,
+                          item: {
+                            id: newIngredient.item_id,
+                            name: ingredient.name,
+                          },
+                        }
+                      })
+                  })
+                )
+              })
+          })
+        )
+      ).then(() => Promise.resolve(newDish))
+    })
+  }
 }
 
 module.exports = DishAPI

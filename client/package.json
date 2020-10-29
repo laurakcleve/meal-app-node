@@ -45,7 +45,8 @@
     "react-scripts": "^3.3.1",
     "styled-components": "^4.4.1",
     "typeface-mukta": "0.0.72",
-    "typeface-roboto": "0.0.75"
+    "typeface-roboto": "0.0.75",
+    "uuid": "^8.3.1"
   },
   "browserslist": {
     "production": [

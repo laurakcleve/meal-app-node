@@ -46,7 +46,7 @@ export const Price = styled(Input)`
   .label::after {
     content: '$';
     position: absolute;
-    top: 40px;
+    top: 22px;
     left: 10px;
     font-size: 16px;
     z-index: 1;

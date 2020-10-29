@@ -69,7 +69,7 @@ const GlobalStyles = createGlobalStyle`
       content: none;
       position: absolute;
       top: 2px;
-      left: -20px;
+      left: -21px;
       display: inline-block;
       height: 4px;
       width: 8px;

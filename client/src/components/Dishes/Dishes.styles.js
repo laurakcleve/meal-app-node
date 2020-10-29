@@ -20,3 +20,5 @@ export const CheckboxLabel = styled.label`
     top: 8px;
   }
 `
+
+export const AddButton = styled.button``

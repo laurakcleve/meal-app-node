@@ -12,6 +12,7 @@ import DishTags from './DishTags'
 import Expander from '../Expander'
 import { formatDate } from '../../utils'
 import SortingHeader from '../SortingHeader'
+import DishAddForm from './DishAddForm'
 
 const Dishes = () => {
   const [displayedDishes, setDisplayedDishes] = useState([])
@@ -157,6 +158,10 @@ const Dishes = () => {
           {data && data.dishes && (
             <>
               <Search setSearchText={setSearchText} searchText={searchText} />
+
+              <Styled.AddButton>+</Styled.AddButton>
+
+              <DishAddForm />
 
               <SortingHeader>
                 <div className="name">
