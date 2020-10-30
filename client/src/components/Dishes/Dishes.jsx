@@ -114,6 +114,7 @@ const Dishes = () => {
     selectedTagNames,
     sortBy,
     sortOrder,
+    displayedDishes.length,
   ])
 
   const setSort = (newSortBy) => {

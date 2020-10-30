@@ -2,13 +2,11 @@ import React, { useState } from 'react'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faTimesCircle } from '@fortawesome/free-solid-svg-icons'
 import { gql } from 'apollo-boost'
-import { useQuery, useMutation, useApolloClient } from '@apollo/react-hooks'
+import { useQuery, useMutation } from '@apollo/react-hooks'
 
 import * as Styled from './DishAddForm.styles'
 
 const DishAddForm = () => {
-  const client = useApolloClient()
-
   const initialIngredientSet = [
     {
       id: Date.now(),
@@ -35,35 +33,10 @@ const DishAddForm = () => {
       setIngredientSets(initialIngredientSet)
     },
     update: (cache, { data: { addDish } }) => {
-      cache.modify({
-        fields: {
-          dishes(existingDishes = []) {
-            const newDishRef = cache.writeFragment({
-              data: addDish,
-              fragment: gql`
-                fragment NewDish on Dish {
-                  id
-                  name
-                  ingredientSets {
-                    id
-                    ingredients {
-                      id
-                      item {
-                        id
-                        name
-                      }
-                    }
-                  }
-                  tags {
-                    id
-                    name
-                  }
-                }
-              `,
-            })
-            return [...existingDishes, newDishRef]
-          },
-        },
+      const data = cache.readQuery({ query: DISHES_QUERY })
+      cache.writeQuery({
+        query: DISHES_QUERY,
+        data: { dishes: [addDish, ...data.dishes] },
       })
     },
   })
@@ -293,6 +266,11 @@ const ADD_DISH_MUTATION = gql`
     addDish(name: $name, tags: $tags, ingredientSets: $ingredientSets) {
       id
       name
+      isActiveDish
+      dates {
+        id
+        date
+      }
       ingredientSets {
         id
         ingredients {
@@ -306,6 +284,29 @@ const ADD_DISH_MUTATION = gql`
       tags {
         id
         name
+      }
+    }
+  }
+`
+
+const DISHES_QUERY = gql`
+  query dishes {
+    dishes {
+      id
+      name
+      tags {
+        id
+        name
+      }
+      ingredientSets {
+        id
+        ingredients {
+          id
+          item {
+            id
+            name
+          }
+        }
       }
     }
   }
