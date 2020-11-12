@@ -18,7 +18,8 @@ export const Button = styled.button`
   &[data-match='all'] {
     background-color: ${({ theme, match }) =>
       match === 'all' ? theme.colors.blue : '#fff'};
-    color: ${({ theme, match }) => (match === 'all' ? '#fff' : theme.colors.grey)};
+    color: ${({ theme, match }) =>
+      match === 'all' ? '#fff' : theme.colors.grey};
     border: ${({ theme, match }) =>
       match === 'all' ? 'none' : `1px solid ${theme.colors.grey}`};
   }
@@ -26,7 +27,8 @@ export const Button = styled.button`
   &[data-match='any'] {
     background-color: ${({ theme, match }) =>
       match === 'any' ? theme.colors.blue : '#fff'};
-    color: ${({ theme, match }) => (match === 'any' ? '#fff' : theme.colors.grey)};
+    color: ${({ theme, match }) =>
+      match === 'any' ? '#fff' : theme.colors.grey};
     border: ${({ theme, match }) =>
       match === 'any' ? 'none' : `1px solid ${theme.colors.grey}`};
   }
