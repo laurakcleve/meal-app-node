@@ -13,5 +13,14 @@ export const Ingredients = styled.div`
 `
 
 export const Dates = styled.div`
-  flex: 2;
+  flex: 1;
+`
+
+export const Actions = styled.div`
+  flex: 0 0;
+
+  button {
+    text-transform: uppercase;
+    font-size: 12px;
+  }
 `
