@@ -91,6 +91,8 @@ const resolvers = {
       }),
     addDish: (_, { name, tags, ingredientSets }, { dataSources }) =>
       dataSources.dishAPI.addDish({ name, tags, ingredientSets }),
+    updateDish: (_, { id, name, tags, ingredientSets }, { dataSources }) =>
+      dataSources.dishAPI.updateDish({ id, name, tags, ingredientSets }),
   },
 
   Item: {

@@ -13,16 +13,18 @@ import Expander from '../Expander'
 import { formatDate } from '../../utils'
 import SortingHeader from '../SortingHeader'
 import DishAddForm from './DishAddForm'
+import Wrapper from '../Wrapper'
 
 const Dishes = () => {
   const [displayedDishes, setDisplayedDishes] = useState([])
-  const [selectedItemID, setSelectedItemID] = useState('')
+  const [selectedItemID, setSelectedItemID] = useState('826')
   const [selectedTagNames, setSelectedTagNames] = useState(['all'])
   const [match, setMatch] = useState('all')
   const [isActiveRotation, setIsActiveRotation] = useState(false)
   const [searchText, setSearchText] = useState('')
   const [sortBy, setSortBy] = useState('lastDate')
   const [sortOrder, setSortOrder] = useState('asc')
+  const [isAdding, setIsAdding] = useState(true)
 
   const { data, loading } = useQuery(DISHES_QUERY)
 
@@ -162,7 +164,11 @@ const Dishes = () => {
 
               <Styled.AddButton>+</Styled.AddButton>
 
-              <DishAddForm />
+              {isAdding && (
+                <Wrapper>
+                  <DishAddForm />
+                </Wrapper>
+              )}
 
               <SortingHeader>
                 <div className="name">
@@ -219,6 +225,7 @@ const DISHES_QUERY = gql`
       }
       ingredientSets {
         id
+        isOptional
         ingredients {
           id
           item {

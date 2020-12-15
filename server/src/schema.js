@@ -55,6 +55,12 @@ const typeDefs = gql`
       tags: [String]
       ingredientSets: [IngredientSetInput]!
     ): Dish!
+    updateDish(
+      id: ID!
+      name: String!
+      tags: [String]!
+      ingredientSets: [IngredientSetInput]!
+    ): Dish!
   }
 
   type Item {
@@ -153,6 +159,7 @@ const typeDefs = gql`
   }
 
   input IngredientItemInput {
+    id: ID
     name: String!
   }
 `

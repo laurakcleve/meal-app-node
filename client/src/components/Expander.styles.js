@@ -14,7 +14,6 @@ export const Container = styled.div`
   ul {
     list-style-type: none;
     padding: 0;
-    margin: 5px 0;
   }
 
   li {
