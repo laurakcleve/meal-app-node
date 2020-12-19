@@ -7,7 +7,7 @@ import DishEditForm from './DishEditForm'
 
 const DishDetails = ({ dish }) => {
   const [datesExpanded, setDatesExpanded] = useState(false)
-  const [isEditing, setIsEditing] = useState(true)
+  const [isEditing, setIsEditing] = useState(false)
 
   return (
     <Styled.Container>

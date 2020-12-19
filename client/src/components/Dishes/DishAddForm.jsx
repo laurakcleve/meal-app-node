@@ -5,7 +5,7 @@ import { useMutation } from '@apollo/react-hooks'
 import * as Styled from './DishAddForm.styles'
 import DishForm from './DishForm'
 
-const DishAddForm = () => {
+const DishAddForm = ({ setIsAdding }) => {
   const [isSaveComplete, setIsSaveComplete] = useState(false)
 
   const [addDish] = useMutation(ADD_DISH_MUTATION, {
@@ -30,10 +30,13 @@ const DishAddForm = () => {
     })
   }
 
-  const handleCancel = () => {}
+  const handleCancel = () => {
+    setIsAdding(false)
+  }
 
   return (
     <Styled.Wrapper>
+      <h3>New Dish</h3>
       <DishForm
         handleSave={handleSave}
         handleCancel={handleCancel}

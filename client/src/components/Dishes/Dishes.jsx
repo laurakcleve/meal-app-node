@@ -17,14 +17,14 @@ import Wrapper from '../Wrapper'
 
 const Dishes = () => {
   const [displayedDishes, setDisplayedDishes] = useState([])
-  const [selectedItemID, setSelectedItemID] = useState('826')
+  const [selectedItemID, setSelectedItemID] = useState('')
   const [selectedTagNames, setSelectedTagNames] = useState(['all'])
   const [match, setMatch] = useState('all')
   const [isActiveRotation, setIsActiveRotation] = useState(false)
   const [searchText, setSearchText] = useState('')
   const [sortBy, setSortBy] = useState('lastDate')
   const [sortOrder, setSortOrder] = useState('asc')
-  const [isAdding, setIsAdding] = useState(true)
+  const [isAdding, setIsAdding] = useState(false)
 
   const { data, loading } = useQuery(DISHES_QUERY)
 
@@ -160,13 +160,20 @@ const Dishes = () => {
         <>
           {data && data.dishes && (
             <>
-              <Search setSearchText={setSearchText} searchText={searchText} />
+              <Styled.TopBar>
+                <Search setSearchText={setSearchText} searchText={searchText} />
 
-              <Styled.AddButton>+</Styled.AddButton>
+                <Styled.AddButton
+                  open={isAdding}
+                  onClick={() => setIsAdding(!isAdding)}
+                >
+                  <div>+</div>
+                </Styled.AddButton>
+              </Styled.TopBar>
 
               {isAdding && (
                 <Wrapper>
-                  <DishAddForm />
+                  <DishAddForm setIsAdding={setIsAdding} />
                 </Wrapper>
               )}
 
