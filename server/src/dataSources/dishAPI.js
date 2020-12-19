@@ -258,7 +258,6 @@ class DishAPI extends DataSource {
                 ].id = newIngredientSetID
                 updatedDish.ingredientSets[ingredientSetIndex].isOptional =
                   newIngredientSetResults.rows[0].optional
-                console.log(updatedDish.ingredientSets[ingredientSetIndex])
                 updatedDish.ingredientSets[ingredientSetIndex].ingredients = []
 
                 return Promise.all(

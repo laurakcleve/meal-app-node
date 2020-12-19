@@ -64,8 +64,6 @@ const DishForm = ({
   }
 
   const addSubstitute = (ingredientSetIndex) => {
-    console.log(`adding ingredient to ingredient set ${ingredientSetIndex}`)
-
     const newIngredientSets = [...ingredientSets]
     newIngredientSets[ingredientSetIndex].ingredients.push({
       id: Date.now(),
@@ -104,8 +102,6 @@ const DishForm = ({
     setTags([])
     setIngredientSets([])
   }
-
-  console.log(ingredientSets)
 
   return (
     <Styled.DishForm>
