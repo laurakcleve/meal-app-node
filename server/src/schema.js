@@ -72,6 +72,7 @@ const typeDefs = gql`
     defaultShelflife: Int
     itemType: String!
     purchases: [PurchaseItem]
+    countsAs: [Item]
   }
 
   type ItemCategory {

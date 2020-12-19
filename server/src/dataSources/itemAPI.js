@@ -127,6 +127,16 @@ class ItemAPI extends DataSource {
     `
     return db.query(queryString, [Number(id)]).then((results) => results.rows)
   }
+
+  getCountsAs({ id }) {
+    const queryString = `
+      SELECT *
+      FROM item generic
+      JOIN item_counts_as ica ON ica.generic_item_id = generic.id
+      WHERE ica.specific_item_id = $1
+    `
+    return db.query(queryString, [Number(id)]).then((results) => results.rows)
+  }
 }
 
 module.exports = ItemAPI

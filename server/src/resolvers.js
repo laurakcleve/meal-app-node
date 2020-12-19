@@ -106,6 +106,8 @@ const resolvers = {
       dataSources.itemAPI.getDefaultLocation({ id: Item.id }),
     purchases: (Item, __, { dataSources }) =>
       dataSources.itemAPI.getPurchases({ id: Item.id }),
+    countsAs: (Item, __, { dataSources }) =>
+      dataSources.itemAPI.getCountsAs({ id: Item.id }),
   },
 
   InventoryItem: {
