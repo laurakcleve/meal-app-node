@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useState } from 'react'
 import PropTypes from 'prop-types'
 import { gql } from 'apollo-boost'
 import { useMutation } from '@apollo/react-hooks'
@@ -13,8 +13,13 @@ const DishEditForm = ({
   dishIngredientSets,
   setIsEditing,
 }) => {
+  const [isSaveComplete, setIsSaveComplete] = useState(false)
+
   const [updateDish] = useMutation(UPDATE_DISH_MUTATION, {
-    onCompleted: () => setIsEditing(false),
+    onCompleted: () => {
+      setIsEditing(false)
+      setIsSaveComplete(true)
+    },
     update: (cache, { data: { updateDish } }) => {
       const data = cache.readQuery({ query: DISHES_QUERY })
       const newDishes = data.dishes.filter((dish) => dish.id !== updateDish.id)
@@ -61,6 +66,8 @@ const DishEditForm = ({
         dishIngredientSets={dishIngredientSets}
         handleSave={handleSave}
         handleCancel={handleCancel}
+        isSaveComplete={isSaveComplete}
+        setIsSaveComplete={setIsSaveComplete}
       />
     </Styled.Wrapper>
   )

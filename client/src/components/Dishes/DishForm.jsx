@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import PropTypes from 'prop-types'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faTimesCircle } from '@fortawesome/free-solid-svg-icons'
@@ -13,6 +13,8 @@ const DishForm = ({
   dishIngredientSets,
   handleSave,
   handleCancel,
+  isSaveComplete,
+  setIsSaveComplete,
 }) => {
   const { data: dishTagsData } = useQuery(DISH_TAGS_QUERY)
   const { data: itemsData } = useQuery(ITEMS_QUERY)
@@ -21,6 +23,13 @@ const DishForm = ({
   const [tags, setTags] = useState(dishTags)
   const [tagText, setTagText] = useState('')
   const [ingredientSets, setIngredientSets] = useState(dishIngredientSets)
+
+  useEffect(() => {
+    if (isSaveComplete) {
+      resetFields()
+      setIsSaveComplete(false)
+    }
+  }, [isSaveComplete, setIsSaveComplete])
 
   const initialIngredientSets = [
     {
@@ -283,6 +292,8 @@ DishForm.propTypes = {
   dishIngredientSets: PropTypes.arrayOf(PropTypes.shape({})),
   handleSave: PropTypes.func.isRequired,
   handleCancel: PropTypes.func.isRequired,
+  isSaveComplete: PropTypes.bool.isRequired,
+  setIsSaveComplete: PropTypes.func.isRequired,
 }
 
 export default DishForm
