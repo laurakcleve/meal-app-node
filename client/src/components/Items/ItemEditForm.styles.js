@@ -5,7 +5,7 @@ import Input from '../Input'
 export const EditForm = styled.form`
   display: flex;
   gap: 40px;
-  margin-bottom: 20px;
+  margin-bottom: 50px;
 
   input,
   select {
@@ -45,3 +45,8 @@ export const Category = styled(Input)``
 export const DefaultShelflife = styled(Input)``
 
 export const ItemType = styled.select``
+
+export const CountsAs = styled.div`
+  margin: 20px 0;
+  border-bottom: 1px solid #ccc;
+`

@@ -3,7 +3,8 @@ import PropTypes from 'prop-types'
 import { gql } from 'apollo-boost'
 import { useQuery, useMutation } from '@apollo/react-hooks'
 
-import * as Styled from './EditForm.styles'
+import * as Styled from './ItemEditForm.styles'
+import ListInput from '../ListInput'
 
 const EditForm = ({ item, setIsEditing, history }) => {
   const initialCategory = item && item.category ? item.category.name : ''
@@ -19,9 +20,11 @@ const EditForm = ({ item, setIsEditing, history }) => {
   )
   const [defaultLocation, setDefaultLocation] = useState(initialDefaultLocation)
   const [itemType, setItemType] = useState(item ? item.itemType : '')
+  const [countsAsItems, setCountsAsItems] = useState(item ? item.countsAs : [])
+  const [countsAsText, setCountsAsText] = useState('')
 
+  const { data: itemsData } = useQuery(ITEMS_QUERY)
   const { data: categoriesData } = useQuery(CATEGORIES_QUERY)
-
   const { data: itemLocationsData } = useQuery(ITEM_LOCATIONS_QUERY)
 
   const [editItem] = useMutation(EDIT_ITEM_MUTATION, {
@@ -71,6 +74,8 @@ const EditForm = ({ item, setIsEditing, history }) => {
       deleteItem({ variables: { id: item.id } })
     }
   }
+
+  console.log({ countsAsItems })
 
   return (
     <Styled.EditForm onSubmit={(event) => submitEdit(event)}>
@@ -123,6 +128,14 @@ const EditForm = ({ item, setIsEditing, history }) => {
           }
         ></Styled.Category>
 
+        <Styled.CountsAs>
+          <Styled.Label>Counts as</Styled.Label>
+          <ListInput
+            listItems={countsAsItems.map((countsAsItem) => countsAsItem.name)}
+            dataList={itemsData && itemsData.items ? itemsData.items : []}
+          />
+        </Styled.CountsAs>
+
         <div>
           <button type="button" onClick={() => setIsEditing(false)}>
             Cancel
@@ -140,6 +153,15 @@ const EditForm = ({ item, setIsEditing, history }) => {
     </Styled.EditForm>
   )
 }
+
+const ITEMS_QUERY = gql`
+  query items {
+    items {
+      id
+      name
+    }
+  }
+`
 
 const CATEGORIES_QUERY = gql`
   query itemCategories {

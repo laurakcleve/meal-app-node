@@ -7,7 +7,7 @@ import moment from 'moment'
 import * as Layout from '../Layout.styles'
 import * as Styled from './Item.styles'
 import ListItem from '../ListItem'
-import EditForm from './EditForm'
+import EditForm from './ItemEditForm'
 import PurchaseStats from './PurchaseStats'
 import { unitPrice, inventoryAmountString } from '../../utils'
 
@@ -70,6 +70,17 @@ const Item = ({ match, history }) => {
                     <Styled.Detail>
                       <h2>Default location</h2>
                       <p>{data.itemById.defaultLocation.name}</p>
+                    </Styled.Detail>
+                  )}
+
+                  {data.itemById.countsAs.length > 0 && (
+                    <Styled.Detail>
+                      <h2>Counts as</h2>
+                      <ul>
+                        {data.itemById.countsAs.map((countsAsItem) => (
+                          <li key={countsAsItem.id}>{countsAsItem.name}</li>
+                        ))}
+                      </ul>
                     </Styled.Detail>
                   )}
                 </div>
@@ -171,6 +182,10 @@ const ITEM_QUERY = gql`
         }
       }
       dishes {
+        id
+        name
+      }
+      countsAs {
         id
         name
       }

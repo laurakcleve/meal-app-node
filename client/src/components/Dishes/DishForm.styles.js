@@ -20,43 +20,6 @@ export const Name = styled(Input)`
 
 export const Tags = styled.div`
   width: 100%;
-
-  ul {
-    list-style-type: none;
-    margin: 16px 0;
-    padding: 0;
-
-    li {
-      display: inline;
-      margin-right: 10px;
-    }
-  }
-`
-
-export const Tag = styled.li`
-  background-color: ${({ theme }) => theme.colors.lighterGrey};
-  padding: 8px 12px;
-  border-radius: 12px;
-  font-size: 14px;
-  font-weight: normal;
-
-  button {
-    width: auto;
-    height: auto;
-    border: none;
-    padding: 0;
-    margin: 0;
-    margin-left: 15px;
-    cursor: pointer;
-
-    &:focus {
-      outline: none;
-    }
-  }
-`
-
-export const TagInput = styled(Input)`
-  max-width: 200px;
 `
 
 export const Ingredients = styled.div`

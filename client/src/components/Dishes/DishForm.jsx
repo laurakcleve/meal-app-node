@@ -6,6 +6,7 @@ import { useQuery } from '@apollo/react-hooks'
 import { gql } from 'apollo-boost'
 
 import * as Styled from './DishForm.styles'
+import ListInput from '../ListInput'
 
 const DishForm = ({
   dishName,
@@ -124,29 +125,13 @@ const DishForm = ({
       <Styled.Tags>
         <div className="label">Tags</div>
 
-        {tags.length > 0 && (
-          <ul>
-            {tags.map((tag) => (
-              <Styled.Tag key={tag}>
-                {tag}
-                <button type="button" onClick={() => deleteTag(tag)}>
-                  <FontAwesomeIcon icon={faTimesCircle} size="lg" />
-                </button>
-              </Styled.Tag>
-            ))}
-          </ul>
-        )}
-
-        <Styled.TagInput
-          id="tagText"
-          value={tagText}
-          list={
+        <ListInput
+          listItems={tags}
+          dataList={
             dishTagsData && dishTagsData.dishTags
               ? dishTagsData.dishTags.filter((tag) => !tags.includes(tag.name))
               : []
           }
-          onChange={(event) => setTagText(event.target.value)}
-          onBlur={() => addTag()}
         />
       </Styled.Tags>
 
