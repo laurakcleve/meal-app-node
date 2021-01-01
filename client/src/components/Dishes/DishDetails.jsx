@@ -10,74 +10,89 @@ const DishDetails = ({ dish }) => {
   const [isEditing, setIsEditing] = useState(false)
 
   return (
-    <Styled.Container>
-      {isEditing ? (
-        <DishEditForm
-          dishId={dish.id}
-          dishName={dish.name}
-          dishTags={dish.tags.map((tag) => tag.name)}
-          dishIngredientSets={dish.ingredientSets}
-          setIsEditing={setIsEditing}
-        />
-      ) : (
-        <>
-          <div>ID: {dish.id}</div>
-          {dish.tags && (
-            <Styled.Tags>
-              <h3>Tags</h3>
+    <>
+      <div style={{ color: '#c1c1c1', marginBottom: '20px' }}>
+        ID: {dish.id}
+      </div>
+      <Styled.Container>
+        {isEditing ? (
+          <DishEditForm
+            dishId={dish.id}
+            dishName={dish.name}
+            dishTags={dish.tags.map((tag) => tag.name)}
+            dishIngredientSets={dish.ingredientSets}
+            setIsEditing={setIsEditing}
+          />
+        ) : (
+          <>
+            {dish.ingredientSets.length > 0 && (
+              <Styled.Ingredients>
+                <h3>Ingredients</h3>
+                <ul>
+                  {dish.ingredientSets.map((ingredientSet) => (
+                    <li key={ingredientSet.id}>
+                      {ingredientSet.ingredients.map((ingredient, index) => (
+                        <Ingredient
+                          ingredient={ingredient}
+                          indented={index > 0}
+                          notLast={index < ingredientSet.ingredients.length - 1}
+                        />
+                      ))}
+
+                      {ingredientSet.isOptional ? '(optional)' : ''}
+                    </li>
+                  ))}
+                </ul>
+              </Styled.Ingredients>
+            )}
+            {dish.tags.length > 0 && (
+              <Styled.Tags>
+                <h3>Tags</h3>
+                <ul>
+                  {dish.tags.map((tag) => (
+                    <li key={tag.id}>{tag.name}</li>
+                  ))}
+                </ul>
+              </Styled.Tags>
+            )}{' '}
+            <Styled.Dates>
+              <button
+                type="button"
+                onClick={() => setDatesExpanded(!datesExpanded)}
+              >
+                {datesExpanded ? 'Hide' : 'Show more dates...'}
+              </button>
               <ul>
-                {dish.tags.map((tag) => (
-                  <li key={tag.id}>{tag.name}</li>
-                ))}
+                {datesExpanded &&
+                  dish.dates.map((date) => (
+                    <li key={date.id}>{formatDate(date.date)}</li>
+                  ))}
               </ul>
-            </Styled.Tags>
-          )}{' '}
-          {dish.ingredientSets.length > 0 && (
-            <Styled.Ingredients>
-              <h3>Ingredients</h3>
-              <ul>
-                {dish.ingredientSets.map((ingredientSet) => (
-                  <li key={ingredientSet.id}>
-                    {ingredientSet.ingredients.map(
-                      (ingredient, index) =>
-                        `${ingredient.item.name}${
-                          index < ingredientSet.ingredients.length - 1
-                            ? '/'
-                            : ''
-                        }`
-                    )}
-                  </li>
-                ))}
-              </ul>
-            </Styled.Ingredients>
-          )}
-          <Styled.Dates>
-            <button
-              type="button"
-              onClick={() => setDatesExpanded(!datesExpanded)}
-            >
-              {datesExpanded ? 'Hide' : 'Show more dates...'}
-            </button>
-            <ul>
-              {datesExpanded &&
-                dish.dates.map((date) => (
-                  <li key={date.id}>{formatDate(date.date)}</li>
-                ))}
-            </ul>
-          </Styled.Dates>
-          <Styled.Actions>
-            <button type="button" onClick={() => setIsEditing(true)}>
-              Edit
-            </button>
-          </Styled.Actions>
-        </>
-      )}
-    </Styled.Container>
+            </Styled.Dates>
+            <Styled.Actions>
+              <button type="button" onClick={() => setIsEditing(true)}>
+                Edit
+              </button>
+            </Styled.Actions>
+          </>
+        )}
+      </Styled.Container>
+    </>
+  )
+}
+
+const Ingredient = ({ ingredient, indented, notLast }) => {
+  const style = {}
+  if (indented) style.marginLeft = '5px'
+
+  return (
+    <div style={style}>{`${ingredient.item.name}${notLast ? ' /' : ''}`}</div>
   )
 }
 
 DishDetails.propTypes = {
   dish: PropTypes.shape({
+    id: PropTypes.string.isRequired,
     name: PropTypes.string.isRequired,
     tags: PropTypes.arrayOf(
       PropTypes.shape({
