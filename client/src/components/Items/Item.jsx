@@ -7,7 +7,7 @@ import moment from 'moment'
 import * as Layout from '../Layout.styles'
 import * as Styled from './Item.styles'
 import ListItem from '../ListItem'
-import EditForm from './ItemEditForm'
+import ItemEditForm from './ItemEditForm'
 import PurchaseStats from './PurchaseStats'
 import { unitPrice, inventoryAmountString } from '../../utils'
 
@@ -17,8 +17,6 @@ const Item = ({ match, history }) => {
   })
 
   const [isEditing, setIsEditing] = useState(false)
-
-  console.log(data ? data.itemById : '')
 
   return (
     <Layout.Container>
@@ -31,7 +29,7 @@ const Item = ({ match, history }) => {
             <Styled.Details>
               {isEditing ? (
                 <div className="main">
-                  <EditForm
+                  <ItemEditForm
                     item={data.itemById}
                     setIsEditing={setIsEditing}
                     history={history}

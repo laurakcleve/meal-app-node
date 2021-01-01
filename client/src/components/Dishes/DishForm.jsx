@@ -22,7 +22,6 @@ const DishForm = ({
 
   const [name, setName] = useState(dishName)
   const [tags, setTags] = useState(dishTags)
-  const [tagText, setTagText] = useState('')
   const [ingredientSets, setIngredientSets] = useState(dishIngredientSets)
 
   useEffect(() => {
@@ -46,20 +45,6 @@ const DishForm = ({
       ],
     },
   ]
-
-  const addTag = () => {
-    if (tags.includes(tagText)) return
-
-    if (tagText.length > 0) {
-      setTags([...tags, tagText])
-    }
-    setTagText('')
-  }
-
-  const deleteTag = (tagToDelete) => {
-    const newTags = [...tags].filter((tag) => tag !== tagToDelete)
-    setTags(newTags)
-  }
 
   const setIngredientText = (
     ingredientSetIndex,
@@ -108,7 +93,6 @@ const DishForm = ({
 
   const resetFields = () => {
     setName('')
-    setTagText('')
     setTags([])
     setIngredientSets([])
   }
@@ -132,6 +116,7 @@ const DishForm = ({
               ? dishTagsData.dishTags.filter((tag) => !tags.includes(tag.name))
               : []
           }
+          setListItems={setTags}
         />
       </Styled.Tags>
 

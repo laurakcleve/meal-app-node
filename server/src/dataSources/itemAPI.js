@@ -10,6 +10,7 @@ class ItemAPI extends DataSource {
     const queryString = `
       SELECT *, default_shelflife AS "defaultShelflife", item_type AS "itemType"
       FROM item 
+      WHERE item_type = 'baseItem'
       ORDER BY name
     `
     return db.query(queryString).then((results) => results.rows)
@@ -33,19 +34,21 @@ class ItemAPI extends DataSource {
     return db.query(queryString, [name]).then((results) => results.rows[0])
   }
 
-  edit({ id, name, categoryId, defaultLocationId, defaultShelflife, itemType }) {
-    console.log({
-      id,
-      name,
-      categoryId,
-      defaultLocationId,
-      defaultShelflife,
-      itemType,
-    })
-
-    console.log('cat. number', Number(categoryId))
-
-    const queryString = `
+  edit({
+    id,
+    name,
+    categoryId,
+    defaultLocationId,
+    defaultShelflife,
+    itemType,
+    countsAs,
+  }) {
+    const deleteCountsAsQuery = `
+      DELETE FROM item_counts_as
+      WHERE specific_item_id = $1 
+    `
+    return db.query(deleteCountsAsQuery, [Number(id)]).then(() => {
+      const queryString = `
       UPDATE item
       SET name = $2,
           category_id = $3,
@@ -55,16 +58,33 @@ class ItemAPI extends DataSource {
       WHERE id = $1
       RETURNING *, item_type AS "itemType", default_shelflife AS "defaultShelflife"
     `
-    return db
-      .query(queryString, [
-        id,
-        name,
-        categoryId,
-        defaultLocationId,
-        defaultShelflife,
-        itemType,
-      ])
-      .then((results) => results.rows[0])
+      return db
+        .query(queryString, [
+          id,
+          name,
+          categoryId,
+          defaultLocationId,
+          defaultShelflife,
+          itemType,
+        ])
+        .then((results) => {
+          const countsAsPromises = countsAs.map((countsAsItem) => {
+            const countsAsQuery = `
+              WITH retrieved_item_id AS (
+                SELECT item_id_for_insert($1)
+              )
+              INSERT INTO item_counts_as(specific_item_id, generic_item_id)
+              SELECT 
+                $2 as specific_item_id,
+                (SELECT * FROM retrieved_item_id) AS generic_item_id
+              RETURNING *
+            `
+            return db.query(countsAsQuery, [countsAsItem, Number(id)])
+          })
+
+          return Promise.all(countsAsPromises).then(() => results.rows[0])
+        })
+    })
   }
 
   delete({ id }) {
@@ -98,7 +118,8 @@ class ItemAPI extends DataSource {
       INNER JOIN ingredient_set ings ON ings.parent_item_id = dish.id
       INNER JOIN ingredient ing ON ing.ingredient_set_id = ings.id
       INNER JOIN item i ON i.id = ing.item_id
-      WHERE i.id IN ((SELECT itemID FROM generic_items), $1)
+      WHERE i.id IN ((SELECT UNNEST(ARRAY_APPEND(ARRAY_AGG(itemID), $1)) 
+                      FROM generic_items))
     `
     return db.query(queryString, [Number(id)]).then((results) => results.rows)
   }

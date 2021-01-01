@@ -262,6 +262,7 @@ class DishAPI extends DataSource {
 
                 return Promise.all(
                   ingredientSet.ingredients.map((ingredient, ingredientIndex) => {
+                    // fix this, this is the code in the database's function and is redundant
                     const newIngredientQueryString = `
                     WITH new_item_id AS (
                       INSERT INTO item(name, item_type)

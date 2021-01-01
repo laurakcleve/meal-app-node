@@ -49,6 +49,7 @@ const typeDefs = gql`
       defaultLocationId: Int
       defaultShelflife: Int
       itemType: String!
+      countsAs: [String]
     ): Item!
     addDish(
       name: String!

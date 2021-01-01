@@ -6,12 +6,16 @@ import { useQuery, useMutation } from '@apollo/react-hooks'
 import * as Styled from './ItemEditForm.styles'
 import ListInput from '../ListInput'
 
-const EditForm = ({ item, setIsEditing, history }) => {
+const ItemEditForm = ({ item, setIsEditing, history }) => {
   const initialCategory = item && item.category ? item.category.name : ''
   const initialDefaultLocation =
     item && item.defaultLocation ? item.defaultLocation.name : ''
   const initialDefaultShelflife =
     item && item.defaultShelflife ? item.defaultShelflife.toString() : ''
+  const initialCountsAsItems =
+    item && item.countsAs
+      ? item.countsAs.map((countsAsItem) => countsAsItem.name)
+      : []
 
   const [name, setName] = useState(item ? item.name : '')
   const [category, setCategory] = useState(initialCategory)
@@ -20,8 +24,7 @@ const EditForm = ({ item, setIsEditing, history }) => {
   )
   const [defaultLocation, setDefaultLocation] = useState(initialDefaultLocation)
   const [itemType, setItemType] = useState(item ? item.itemType : '')
-  const [countsAsItems, setCountsAsItems] = useState(item ? item.countsAs : [])
-  const [countsAsText, setCountsAsText] = useState('')
+  const [countsAsItems, setCountsAsItems] = useState(initialCountsAsItems)
 
   const { data: itemsData } = useQuery(ITEMS_QUERY)
   const { data: categoriesData } = useQuery(CATEGORIES_QUERY)
@@ -29,6 +32,13 @@ const EditForm = ({ item, setIsEditing, history }) => {
 
   const [editItem] = useMutation(EDIT_ITEM_MUTATION, {
     onCompleted: () => setIsEditing(false),
+    update: (cache, { data: { editItem } }) => {
+      // const data = cache.readQuery({ query: ITEM_QUERY })
+      cache.writeQuery({
+        query: ITEM_QUERY,
+        data: { itemById: editItem },
+      })
+    },
   })
 
   const [deleteItem] = useMutation(DELETE_ITEM_MUTATION, {
@@ -64,6 +74,7 @@ const EditForm = ({ item, setIsEditing, history }) => {
         defaultLocationId: Number(defaultLocationId) || null,
         defaultShelflife: Number(defaultShelflife) || null,
         itemType,
+        countsAs: countsAsItems,
       },
     })
   }
@@ -74,8 +85,6 @@ const EditForm = ({ item, setIsEditing, history }) => {
       deleteItem({ variables: { id: item.id } })
     }
   }
-
-  console.log({ countsAsItems })
 
   return (
     <Styled.EditForm onSubmit={(event) => submitEdit(event)}>
@@ -131,8 +140,9 @@ const EditForm = ({ item, setIsEditing, history }) => {
         <Styled.CountsAs>
           <Styled.Label>Counts as</Styled.Label>
           <ListInput
-            listItems={countsAsItems.map((countsAsItem) => countsAsItem.name)}
+            listItems={countsAsItems}
             dataList={itemsData && itemsData.items ? itemsData.items : []}
+            setListItems={setCountsAsItems}
           />
         </Styled.CountsAs>
 
@@ -189,6 +199,7 @@ const EDIT_ITEM_MUTATION = gql`
     $defaultLocationId: Int
     $defaultShelflife: Int
     $itemType: String!
+    $countsAs: [String]
   ) {
     editItem(
       id: $id
@@ -197,19 +208,28 @@ const EDIT_ITEM_MUTATION = gql`
       defaultLocationId: $defaultLocationId
       defaultShelflife: $defaultShelflife
       itemType: $itemType
+      countsAs: $countsAs
     ) {
       id
       name
-      category {
-        id
-        name
-      }
+      itemType
+      defaultShelflife
       defaultLocation {
         id
         name
       }
-      defaultShelflife
-      itemType
+      category {
+        id
+        name
+      }
+      dishes {
+        id
+        name
+      }
+      countsAs {
+        id
+        name
+      }
     }
   }
 `
@@ -220,7 +240,34 @@ const DELETE_ITEM_MUTATION = gql`
   }
 `
 
-EditForm.propTypes = {
+const ITEM_QUERY = gql`
+  query itemById($id: ID!) {
+    itemById(id: $id) {
+      id
+      name
+      itemType
+      defaultShelflife
+      defaultLocation {
+        id
+        name
+      }
+      category {
+        id
+        name
+      }
+      dishes {
+        id
+        name
+      }
+      countsAs {
+        id
+        name
+      }
+    }
+  }
+`
+
+ItemEditForm.propTypes = {
   item: PropTypes.shape({
     id: PropTypes.string.isRequired,
     name: PropTypes.string.isRequired,
@@ -230,8 +277,14 @@ EditForm.propTypes = {
     defaultLocation: PropTypes.shape({
       name: PropTypes.string.isRequired,
     }),
-    defaultShelflife: PropTypes.string.isRequired,
+    defaultShelflife: PropTypes.number,
     itemType: PropTypes.string.isRequired,
+    countsAs: PropTypes.arrayOf(
+      PropTypes.shape({
+        id: PropTypes.string.isRequired,
+        name: PropTypes.string.isRequired,
+      })
+    ),
   }).isRequired,
   setIsEditing: PropTypes.func.isRequired,
   history: PropTypes.shape({
@@ -239,4 +292,4 @@ EditForm.propTypes = {
   }).isRequired,
 }
 
-export default EditForm
+export default ItemEditForm

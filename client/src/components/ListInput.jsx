@@ -5,29 +5,28 @@ import { faTimesCircle } from '@fortawesome/free-solid-svg-icons'
 
 import * as Styled from './ListInput.styles'
 
-const ListInput = ({ listItems, dataList }) => {
-  const [items, setItems] = useState(listItems)
+const ListInput = ({ listItems, dataList, setListItems }) => {
   const [inputText, setInputText] = useState('')
 
   const addItem = () => {
-    if (items.includes(inputText)) return
+    if (listItems.includes(inputText)) return
 
     if (inputText.length > 0) {
-      setItems([...items, inputText])
+      setListItems([...listItems, inputText])
     }
     setInputText('')
   }
 
   const deleteItem = (itemToDelete) => {
-    const newItems = [...items].filter((item) => item !== itemToDelete)
-    setItems(newItems)
+    const newItems = [...listItems].filter((item) => item !== itemToDelete)
+    setListItems(newItems)
   }
 
   return (
     <Styled.Wrapper>
-      {items.length > 0 && (
+      {listItems.length > 0 && (
         <ul>
-          {items.map((item) => (
+          {listItems.map((item) => (
             <Styled.ListItem key={item}>
               {item}
 
@@ -58,6 +57,7 @@ ListInput.propTypes = {
       name: PropTypes.string.isRequired,
     })
   ).isRequired,
+  setListItems: PropTypes.func.isRequired,
 }
 
 export default ListInput

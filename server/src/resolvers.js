@@ -78,7 +78,15 @@ const resolvers = {
       }),
     editItem: (
       _,
-      { id, name, categoryId, defaultLocationId, defaultShelflife, itemType },
+      {
+        id,
+        name,
+        categoryId,
+        defaultLocationId,
+        defaultShelflife,
+        itemType,
+        countsAs,
+      },
       { dataSources }
     ) =>
       dataSources.itemAPI.edit({
@@ -88,6 +96,7 @@ const resolvers = {
         defaultLocationId,
         defaultShelflife,
         itemType,
+        countsAs,
       }),
     addDish: (_, { name, tags, ingredientSets }, { dataSources }) =>
       dataSources.dishAPI.addDish({ name, tags, ingredientSets }),
