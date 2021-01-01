@@ -59,7 +59,7 @@ class DishAPI extends DataSource {
 
   getIngredientItem({ id }) {
     const queryString = `
-      SELECT * FROM item 
+      SELECT item.* FROM item 
       INNER JOIN ingredient ON ingredient.item_id = item.id
       WHERE ingredient.id = $1
     `
