@@ -18,6 +18,7 @@ import Wrapper from '../Wrapper'
 const Dishes = () => {
   const [displayedDishes, setDisplayedDishes] = useState([])
   const [selectedItemID, setSelectedItemID] = useState('')
+  const [selectedElement, setSelectedElement] = useState()
   const [selectedTagNames, setSelectedTagNames] = useState(['all'])
   const [match, setMatch] = useState('all')
   const [isActiveRotation, setIsActiveRotation] = useState(false)
@@ -28,13 +29,23 @@ const Dishes = () => {
 
   const { data, loading } = useQuery(DISHES_QUERY)
 
-  const toggleItemOpen = (id) => {
+  const toggleItemOpen = (event, id) => {
+    setSelectedElement(event.target)
+
     if (selectedItemID === id) {
       setSelectedItemID('')
     } else {
       setSelectedItemID(id)
     }
   }
+
+  useEffect(() => {
+    if (selectedElement)
+      window.scrollTo({
+        top: selectedElement.offsetTop - 100,
+        behavior: 'smooth',
+      })
+  }, [selectedElement])
 
   useEffect(() => {
     if (data && data.dishes) {
@@ -195,7 +206,7 @@ const Dishes = () => {
           {displayedDishes.map((dish) => (
             <ListItem
               key={dish.id}
-              onClick={() => toggleItemOpen(dish.id)}
+              onClick={(event) => toggleItemOpen(event, dish.id)}
               expander={
                 selectedItemID === dish.id && (
                   <Expander>
