@@ -4,6 +4,7 @@ import PropTypes from 'prop-types'
 import * as Styled from './DishDetails.styles'
 import { formatDate } from '../../utils'
 import DishEditForm from './DishEditForm'
+import Ingredient from './Ingredient'
 
 const DishDetails = ({ dish }) => {
   const [datesExpanded, setDatesExpanded] = useState(false)
@@ -33,6 +34,7 @@ const DishDetails = ({ dish }) => {
                     <li key={ingredientSet.id}>
                       {ingredientSet.ingredients.map((ingredient, index) => (
                         <Ingredient
+                          key={ingredient.id}
                           ingredient={ingredient}
                           indented={index > 0}
                           notLast={index < ingredientSet.ingredients.length - 1}
@@ -78,15 +80,6 @@ const DishDetails = ({ dish }) => {
         )}
       </Styled.Container>
     </>
-  )
-}
-
-const Ingredient = ({ ingredient, indented, notLast }) => {
-  const style = {}
-  if (indented) style.marginLeft = '5px'
-
-  return (
-    <div style={style}>{`${ingredient.item.name}${notLast ? ' /' : ''}`}</div>
   )
 }
 

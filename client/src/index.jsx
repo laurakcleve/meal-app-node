@@ -7,6 +7,7 @@ import { BrowserRouter, Route } from 'react-router-dom'
 
 import theme from './theme/theme'
 import GlobalStyles from './theme/GlobalStyles'
+import ScrollToTop from './components/ScrollToTop'
 
 import Header from './components/Header'
 import Items from './components/Items/Items'
@@ -38,17 +39,20 @@ const client = new ApolloClient({
 const App = () => (
   <ApolloProvider client={client}>
     <BrowserRouter>
-      <ThemeProvider theme={theme}>
-        <GlobalStyles />
-        <Header />
-        <Route exact path="/" component={Items} />
-        <Route exact path="/items" component={Items} />
-        <Route exact path="/item/:id" component={Item} />
-        <Route exact path="/dishes" component={Dishes} />
-        <Route exact path="/inventory" component={Inventory} />
-        <Route exact path="/purchases" component={Purchases} />
-        <Route exact path="/purchase/:id" component={Purchase} />
-      </ThemeProvider>
+      <>
+        <ScrollToTop />
+        <ThemeProvider theme={theme}>
+          <GlobalStyles />
+          <Header />
+          <Route exact path="/" component={Items} />
+          <Route exact path="/items" component={Items} />
+          <Route exact path="/item/:id" component={Item} />
+          <Route exact path="/dishes" component={Dishes} />
+          <Route exact path="/inventory" component={Inventory} />
+          <Route exact path="/purchases" component={Purchases} />
+          <Route exact path="/purchase/:id" component={Purchase} />
+        </ThemeProvider>
+      </>
     </BrowserRouter>
   </ApolloProvider>
 )
