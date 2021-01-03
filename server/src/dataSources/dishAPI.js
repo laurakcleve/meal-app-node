@@ -54,7 +54,23 @@ class DishAPI extends DataSource {
       SELECT * FROM ingredient 
       WHERE ingredient_set_id = $1
     `
-    return db.query(queryString, [id]).then((results) => results.rows)
+    return db.query(queryString, [id]).then((results) => {
+      return Promise.all(
+        results.rows.map((row) => {
+          const inventoryQueryString = `
+          SELECT * FROM inventory_item
+          WHERE item_id = $1
+        `
+          return db
+            .query(inventoryQueryString, [row.item_id])
+            .then((inventoryItem) => {
+              const returnObj = { ...row }
+              returnObj.isInInventory = inventoryItem.rows.length > 0
+              return returnObj
+            })
+        })
+      )
+    })
   }
 
   getIngredientItem({ id }) {

@@ -109,6 +109,7 @@ const typeDefs = gql`
   type Ingredient {
     id: ID!
     item: Item!
+    isInInventory: Boolean
   }
 
   type InventoryItem {
