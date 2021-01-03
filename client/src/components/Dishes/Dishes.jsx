@@ -246,6 +246,7 @@ const DISHES_QUERY = gql`
         isOptional
         ingredients {
           id
+          isInInventory
           item {
             id
             name

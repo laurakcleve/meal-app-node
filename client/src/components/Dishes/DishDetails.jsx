@@ -38,6 +38,7 @@ const DishDetails = ({ dish }) => {
                           ingredient={ingredient}
                           indented={index > 0}
                           notLast={index < ingredientSet.ingredients.length - 1}
+                          isInInventory={ingredient.isInInventory}
                         />
                       ))}
 

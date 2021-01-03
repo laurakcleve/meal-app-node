@@ -1,15 +1,15 @@
 import React from 'react'
 import PropTypes from 'prop-types'
-import { Link } from 'react-router-dom'
 
-const Ingredient = ({ ingredient, indented, notLast }) => {
-  const style = {}
-  if (indented) style.marginLeft = '5px'
+import * as Styled from './Ingredient.styles'
 
+const Ingredient = ({ ingredient, indented, notLast, isInInventory }) => {
   return (
-    <Link to={`/item/${ingredient.item.id}`} style={style}>{`${
-      ingredient.item.name
-    }${notLast ? ' /' : ''}`}</Link>
+    <Styled.Name
+      to={`/item/${ingredient.item.id}`}
+      indented={indented ? indented.toString() : undefined}
+      isininventory={isInInventory ? isInInventory.toString() : undefined}
+    >{`${ingredient.item.name}${notLast ? ' /' : ''}`}</Styled.Name>
   )
 }
 
