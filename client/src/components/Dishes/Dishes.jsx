@@ -40,6 +40,46 @@ const Dishes = () => {
     }
   }
 
+  const matchesFilters = (dish) => {
+    return (
+      matchesActive(dish) && matchesHaveIngredients(dish) && matchesTags(dish)
+    )
+  }
+
+  const matchesActive = (dish) => {
+    return (isActiveRotation && dish.isActiveDish) || !isActiveRotation
+  }
+
+  const matchesHaveIngredients = (dish) => {
+    const hasAvailableIngredient = (ingredientSet) => {
+      return ingredientSet.ingredients.find(
+        (ingredient) => ingredient.isInInventory === true
+      )
+    }
+
+    return (
+      (haveIngredients && dish.ingredientSets.every(hasAvailableIngredient)) ||
+      !haveIngredients
+    )
+  }
+
+  const matchesTags = (dish) => {
+    if (selectedTagNames.includes('all')) {
+      return true
+    }
+    if (match === 'all') {
+      return selectedTagNames.every((tagName) =>
+        dish.tags.map((tag) => tag.name).includes(tagName)
+      )
+    }
+    if (match === 'any') {
+      return dish.tags
+        .map((tag) => tag.name)
+        .some((tagName) => selectedTagNames.includes(tagName))
+    }
+    return false
+  }
+
   useEffect(() => {
     if (selectedElement)
       window.scrollTo({
@@ -50,33 +90,7 @@ const Dishes = () => {
 
   useEffect(() => {
     if (data && data.dishes) {
-      const matchesActive = (dish) => {
-        return (
-          (isActiveRotation && dish.isActiveDish) ||
-          (!isActiveRotation && !dish.isActiveDish)
-        )
-      }
-
-      const matchesTags = (dish) => {
-        if (selectedTagNames.includes('all')) {
-          return true
-        }
-        if (match === 'all') {
-          return selectedTagNames.every((tagName) =>
-            dish.tags.map((tag) => tag.name).includes(tagName)
-          )
-        }
-        if (match === 'any') {
-          return dish.tags
-            .map((tag) => tag.name)
-            .some((tagName) => selectedTagNames.includes(tagName))
-        }
-        return false
-      }
-
-      let newDisplayedDishes = data.dishes.filter((dish) => {
-        return matchesActive(dish) && matchesTags(dish)
-      })
+      let newDisplayedDishes = [...data.dishes]
 
       // Search
       if (searchText.length > 0)
@@ -121,11 +135,8 @@ const Dishes = () => {
     }
   }, [
     data,
-    isActiveRotation,
-    match,
     searchText,
     searchText.length,
-    selectedTagNames,
     sortBy,
     sortOrder,
     displayedDishes.length,
@@ -139,27 +150,8 @@ const Dishes = () => {
       newSortOrder = 'asc'
     }
 
-    console.log({ newSortBy, newSortOrder })
-
     setSortBy(newSortBy)
     setSortOrder(newSortOrder)
-  }
-
-  const matchesHaveIngredients = (dish) => {
-    const hasAvailableIngredient = (ingredientSet) => {
-      return ingredientSet.ingredients.find(
-        (ingredient) => ingredient.isInInventory === true
-      )
-    }
-
-    if (haveIngredients) {
-      if (dish.ingredientSets.every(hasAvailableIngredient)) {
-        return true
-      }
-      return false
-    }
-
-    return true
   }
 
   return (
@@ -233,7 +225,7 @@ const Dishes = () => {
 
           {displayedDishes.map(
             (dish) =>
-              matchesHaveIngredients(dish) && (
+              matchesFilters(dish) && (
                 <ListItem
                   key={dish.id}
                   onClick={(event) => toggleItemOpen(event, dish.id)}
