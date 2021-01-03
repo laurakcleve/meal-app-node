@@ -10,6 +10,12 @@ const DishDetails = ({ dish }) => {
   const [datesExpanded, setDatesExpanded] = useState(false)
   const [isEditing, setIsEditing] = useState(false)
 
+  const dateListItem = (date) => <li key={date.id}>{formatDate(date.date)}</li>
+
+  const saveNewDate = (event) => {
+    event.preventDefault()
+  }
+
   return (
     <>
       <div style={{ color: '#c1c1c1', marginBottom: '20px' }}>
@@ -48,38 +54,59 @@ const DishDetails = ({ dish }) => {
                 </ul>
               </Styled.Ingredients>
             )}
-            {dish.tags.length > 0 && (
-              <Styled.Tags>
-                <h3>Tags</h3>
-                <ul>
-                  {dish.tags.map((tag) => (
-                    <li key={tag.id}>{tag.name}</li>
-                  ))}
-                </ul>
-              </Styled.Tags>
-            )}{' '}
+            <Styled.Tags>
+              {dish.tags.length > 0 && (
+                <>
+                  <h3>Tags</h3>
+                  <ul>
+                    {dish.tags.map((tag) => (
+                      <li key={tag.id}>{tag.name}</li>
+                    ))}
+                  </ul>
+                </>
+              )}
+            </Styled.Tags>
             <Styled.Dates>
-              <button
-                type="button"
-                onClick={() => setDatesExpanded(!datesExpanded)}
-              >
-                {datesExpanded ? 'Hide' : 'Show more dates...'}
-              </button>
-              <ul>
-                {datesExpanded &&
-                  dish.dates.map((date) => (
-                    <li key={date.id}>{formatDate(date.date)}</li>
-                  ))}
-              </ul>
+              <>
+                <Styled.DateForm>
+                  <label htmlFor="newDateText">
+                    Add date
+                    <input id="newDateText" type="date" />
+                  </label>
+                  <button type="submit" onClick={(event) => saveNewDate(event)}>
+                    Save
+                  </button>
+                </Styled.DateForm>
+
+                {dish.dates.length > 1 && (
+                  <Styled.DateList>
+                    <ul>
+                      {!datesExpanded
+                        ? dish.dates
+                            .slice(0, 3)
+                            .map((date) => dateListItem(date))
+                        : dish.dates.map((date) => dateListItem(date))}
+                    </ul>
+                    {dish.dates.length > 3 && (
+                      <button
+                        type="button"
+                        onClick={() => setDatesExpanded(!datesExpanded)}
+                      >
+                        {datesExpanded ? 'Hide' : 'Show more dates...'}
+                      </button>
+                    )}
+                  </Styled.DateList>
+                )}
+              </>
             </Styled.Dates>
-            <Styled.Actions>
-              <button type="button" onClick={() => setIsEditing(true)}>
-                Edit
-              </button>
-            </Styled.Actions>
           </>
         )}
       </Styled.Container>
+      <Styled.Actions>
+        <button type="button" onClick={() => setIsEditing(true)}>
+          Edit
+        </button>
+      </Styled.Actions>
     </>
   )
 }
