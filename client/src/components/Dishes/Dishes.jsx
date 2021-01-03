@@ -22,6 +22,7 @@ const Dishes = () => {
   const [selectedTagNames, setSelectedTagNames] = useState(['all'])
   const [match, setMatch] = useState('all')
   const [isActiveRotation, setIsActiveRotation] = useState(false)
+  const [haveIngredients, setHaveIngredients] = useState(false)
   const [searchText, setSearchText] = useState('')
   const [sortBy, setSortBy] = useState('lastDate')
   const [sortOrder, setSortOrder] = useState('asc')
@@ -144,6 +145,23 @@ const Dishes = () => {
     setSortOrder(newSortOrder)
   }
 
+  const matchesHaveIngredients = (dish) => {
+    const hasAvailableIngredient = (ingredientSet) => {
+      return ingredientSet.ingredients.find(
+        (ingredient) => ingredient.isInInventory === true
+      )
+    }
+
+    if (haveIngredients) {
+      if (dish.ingredientSets.every(hasAvailableIngredient)) {
+        return true
+      }
+      return false
+    }
+
+    return true
+  }
+
   return (
     <Layout.Container>
       <Sidebar>
@@ -155,6 +173,16 @@ const Dishes = () => {
             onChange={() => setIsActiveRotation(!isActiveRotation)}
           />
           <div className="labelText">Active rotation</div>
+        </Styled.CheckboxLabel>
+
+        <Styled.CheckboxLabel htmlFor="haveIngredients" className="checkbox">
+          <input
+            id="haveIngredients"
+            type="checkbox"
+            checked={haveIngredients}
+            onChange={() => setHaveIngredients(!haveIngredients)}
+          />
+          <div className="labelText">Have ingredients</div>
         </Styled.CheckboxLabel>
 
         <DishTags
@@ -203,24 +231,27 @@ const Dishes = () => {
             </>
           )}
 
-          {displayedDishes.map((dish) => (
-            <ListItem
-              key={dish.id}
-              onClick={(event) => toggleItemOpen(event, dish.id)}
-              expander={
-                selectedItemID === dish.id && (
-                  <Expander>
-                    <DishDetails dish={dish} />
-                  </Expander>
-                )
-              }
-            >
-              <Styled.Name>{dish.name}</Styled.Name>
-              {dish.dates.length > 0 && (
-                <Styled.Date>{formatDate(dish.dates[0].date)}</Styled.Date>
-              )}
-            </ListItem>
-          ))}
+          {displayedDishes.map(
+            (dish) =>
+              matchesHaveIngredients(dish) && (
+                <ListItem
+                  key={dish.id}
+                  onClick={(event) => toggleItemOpen(event, dish.id)}
+                  expander={
+                    selectedItemID === dish.id && (
+                      <Expander>
+                        <DishDetails dish={dish} />
+                      </Expander>
+                    )
+                  }
+                >
+                  <Styled.Name>{dish.name}</Styled.Name>
+                  {dish.dates.length > 0 && (
+                    <Styled.Date>{formatDate(dish.dates[0].date)}</Styled.Date>
+                  )}
+                </ListItem>
+              )
+          )}
         </>
       </Layout.List>
     </Layout.Container>
