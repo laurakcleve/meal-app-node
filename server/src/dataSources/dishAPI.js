@@ -51,16 +51,30 @@ class DishAPI extends DataSource {
 
   getIngredientSetIngredients({ id }) {
     const queryString = `
-      SELECT * FROM ingredient 
+      SELECT ingredient.*, item.item_type FROM ingredient 
+      JOIN item on item.id = ingredient.item_id
       WHERE ingredient_set_id = $1
     `
     return db.query(queryString, [id]).then((results) => {
       return Promise.all(
         results.rows.map((row) => {
+          // Stretch goal: if this item is a dish, get its ingredients and
+          // check if all of them are present. if any of those ingredients
+          // are dishes, check their ingredients too
+
+          // get all other items that count as this item, and check them
+          // as well
           const inventoryQueryString = `
-          SELECT * FROM inventory_item
-          WHERE item_id = $1
-        `
+            WITH specific_items AS (
+              SELECT specific_item_id
+              FROM item_counts_as
+              WHERE generic_item_id = $1
+            )
+            SELECT * FROM inventory_item
+            WHERE item_id IN (
+              SELECT UNNEST(ARRAY_APPEND(ARRAY_AGG(specific_item_id), $1)) 
+              FROM specific_items)
+          `
           return db
             .query(inventoryQueryString, [row.item_id])
             .then((inventoryItem) => {
