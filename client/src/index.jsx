@@ -19,16 +19,16 @@ import Purchase from './components/Purchases/Purchase'
 
 const cache = new InMemoryCache()
 
-cache.writeData({
-  data: {
-    filteredItems: [],
-    searchedItems: [],
-    filteredDishes: [],
-    searchedDishes: [],
-    filteredInventoryItems: [],
-    searchedInventoryItems: [],
-  },
-})
+// cache.writeData({
+//   data: {
+//     filteredItems: [],
+//     searchedItems: [],
+//     filteredDishes: [],
+//     searchedDishes: [],
+//     filteredInventoryItems: [],
+//     searchedInventoryItems: [],
+//   },
+// })
 
 const client = new ApolloClient({
   uri: 'http://localhost:4000/graphql',
