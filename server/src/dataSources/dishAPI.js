@@ -343,6 +343,18 @@ class DishAPI extends DataSource {
         ).then(() => Promise.resolve(updatedDish))
       })
   }
+
+  addDishDate({ dishId, date }) {
+    const queryString = `
+      INSERT INTO dish_date(dish_id, date)
+      VALUES($1, $2)
+      RETURNING *
+
+    `
+    return db
+      .query(queryString, [Number(dishId), date])
+      .then((results) => results.rows[0])
+  }
 }
 
 module.exports = DishAPI

@@ -1,5 +1,7 @@
 import React, { useState } from 'react'
 import PropTypes from 'prop-types'
+import { gql } from 'apollo-boost'
+import { useMutation } from '@apollo/react-hooks'
 
 import * as Styled from './DishDetails.styles'
 import { formatDate } from '../../utils'
@@ -9,11 +11,41 @@ import Ingredient from './Ingredient'
 const DishDetails = ({ dish }) => {
   const [datesExpanded, setDatesExpanded] = useState(false)
   const [isEditing, setIsEditing] = useState(false)
+  const [newDateText, setNewDateText] = useState('')
+
+  const [addDishDate] = useMutation(ADD_DISH_DATE_MUTATION, {
+    onCompleted: () => setNewDateText(''),
+    update: (cache, { data: { addDishDate } }) => {
+      const data = cache.readQuery({ query: DISHES_QUERY })
+
+      const updatedDish = data.dishes.find((d) => d.id === dish.id)
+      updatedDish.dates = [...updatedDish.dates, addDishDate]
+      updatedDish.dates.sort((a, b) => {
+        if (a.date > b.date) return -1
+        if (a.date < b.date) return 1
+        return 0
+      })
+
+      const updatedDishes = [...data.dishes]
+      updatedDishes.splice(data.dishes.indexOf(updatedDish), 1)
+
+      cache.writeQuery({
+        query: DISHES_QUERY,
+        data: { dishes: [updatedDish, ...updatedDishes] },
+      })
+    },
+  })
 
   const dateListItem = (date) => <li key={date.id}>{formatDate(date.date)}</li>
 
   const saveNewDate = (event) => {
     event.preventDefault()
+    addDishDate({
+      variables: {
+        dishId: dish.id,
+        date: newDateText,
+      },
+    })
   }
 
   return (
@@ -66,12 +98,18 @@ const DishDetails = ({ dish }) => {
                 </>
               )}
             </Styled.Tags>
+
             <Styled.Dates>
               <>
                 <Styled.DateForm>
                   <label htmlFor="newDateText">
                     Add date
-                    <input id="newDateText" type="date" />
+                    <input
+                      id="newDateText"
+                      type="date"
+                      value={newDateText}
+                      onChange={(event) => setNewDateText(event.target.value)}
+                    />
                   </label>
                   <button type="submit" onClick={(event) => saveNewDate(event)}>
                     Save
@@ -110,6 +148,57 @@ const DishDetails = ({ dish }) => {
     </>
   )
 }
+
+const ADD_DISH_DATE_MUTATION = gql`
+  mutation addDishDate($dishId: ID!, $date: String!) {
+    addDishDate(dishId: $dishId, date: $date) {
+      id
+      date
+    }
+  }
+`
+
+const DISH_QUERY = gql`
+  query dish($id: ID!) {
+    dish(id: $id) {
+      id
+      dates {
+        id
+        date
+      }
+    }
+  }
+`
+
+const DISHES_QUERY = gql`
+  query dishes {
+    dishes {
+      id
+      name
+      isActiveDish
+      tags {
+        id
+        name
+      }
+      dates {
+        id
+        date
+      }
+      ingredientSets {
+        id
+        isOptional
+        ingredients {
+          id
+          isInInventory
+          item {
+            id
+            name
+          }
+        }
+      }
+    }
+  }
+`
 
 DishDetails.propTypes = {
   dish: PropTypes.shape({

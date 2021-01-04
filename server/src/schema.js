@@ -1,5 +1,6 @@
 const { gql } = require('apollo-server')
 
+// why itemById, why not item?
 const typeDefs = gql`
   type Query {
     items: [Item]!
@@ -62,6 +63,7 @@ const typeDefs = gql`
       tags: [String]!
       ingredientSets: [IngredientSetInput]!
     ): Dish!
+    addDishDate(dishId: ID!, date: String!): DishDate!
   }
 
   type Item {
