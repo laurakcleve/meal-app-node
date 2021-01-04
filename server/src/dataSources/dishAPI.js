@@ -355,6 +355,15 @@ class DishAPI extends DataSource {
       .query(queryString, [Number(dishId), date])
       .then((results) => results.rows[0])
   }
+
+  deleteDishDate({ id }) {
+    const queryString = `
+      DELETE FROM dish_date
+      WHERE id = $1
+      RETURNING $1 AS id
+    `
+    return db.query(queryString, [Number(id)]).then((results) => results.rows[0].id)
+  }
 }
 
 module.exports = DishAPI

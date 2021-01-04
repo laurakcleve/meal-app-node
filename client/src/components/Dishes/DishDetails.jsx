@@ -2,6 +2,8 @@ import React, { useState } from 'react'
 import PropTypes from 'prop-types'
 import { gql } from 'apollo-boost'
 import { useMutation } from '@apollo/react-hooks'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { faTimesCircle } from '@fortawesome/free-solid-svg-icons'
 
 import * as Styled from './DishDetails.styles'
 import { formatDate } from '../../utils'
@@ -36,7 +38,37 @@ const DishDetails = ({ dish }) => {
     },
   })
 
-  const dateListItem = (date) => <li key={date.id}>{formatDate(date.date)}</li>
+  const [deleteDishDate] = useMutation(DELETE_DISH_DATE_MUTATION, {
+    update: (cache, { data: { deleteDishDate } }) => {
+      const data = cache.readQuery({ query: DISHES_QUERY })
+
+      const updatedDish = data.dishes.find((d) => d.id === dish.id)
+      updatedDish.dates = updatedDish.dates.filter(
+        (date) => date.id !== deleteDishDate
+      )
+
+      const updatedDishes = [...data.dishes]
+      updatedDishes.splice(data.dishes.indexOf(updatedDish), 1)
+
+      cache.writeQuery({
+        query: DISHES_QUERY,
+        data: { dishes: [updatedDish, ...updatedDishes] },
+      })
+    },
+  })
+
+  const dateListItem = (date) => (
+    <li key={date.id}>
+      {formatDate(date.date)}
+      <button
+        className="delete"
+        type="button"
+        onClick={() => deleteDate(date.id)}
+      >
+        <FontAwesomeIcon icon={faTimesCircle} size="lg" />
+      </button>
+    </li>
+  )
 
   const saveNewDate = (event) => {
     event.preventDefault()
@@ -46,6 +78,10 @@ const DishDetails = ({ dish }) => {
         date: newDateText,
       },
     })
+  }
+
+  const deleteDate = (dateId) => {
+    deleteDishDate({ variables: { id: dateId } })
   }
 
   return (
@@ -116,7 +152,7 @@ const DishDetails = ({ dish }) => {
                   </button>
                 </Styled.DateForm>
 
-                {dish.dates.length > 1 && (
+                {dish.dates.length > 0 && (
                   <Styled.DateList>
                     <ul>
                       {!datesExpanded
@@ -155,6 +191,12 @@ const ADD_DISH_DATE_MUTATION = gql`
       id
       date
     }
+  }
+`
+
+const DELETE_DISH_DATE_MUTATION = gql`
+  mutation deleteDishDate($id: ID!) {
+    deleteDishDate(id: $id)
   }
 `
 

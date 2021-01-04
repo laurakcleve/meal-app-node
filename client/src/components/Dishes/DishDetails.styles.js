@@ -23,6 +23,34 @@ export const Dates = styled.div`
 
 export const DateList = styled.div`
   margin-top: 20px;
+
+  li {
+    padding: 3px;
+
+    &:hover button.delete {
+      opacity: 1;
+    }
+  }
+
+  button.delete {
+    width: auto;
+    height: auto;
+    border: none;
+    padding: 0;
+    margin: 0;
+    margin-left: 5px;
+    cursor: pointer;
+    opacity: 0;
+    background-color: transparent;
+
+    &:focus {
+      outline: none;
+    }
+  }
+
+  .svg-inline--fa.fa-w-16 {
+    width: 0.75em;
+  }
 `
 
 export const DateForm = styled.form`
