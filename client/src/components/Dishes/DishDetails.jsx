@@ -158,18 +158,6 @@ const ADD_DISH_DATE_MUTATION = gql`
   }
 `
 
-const DISH_QUERY = gql`
-  query dish($id: ID!) {
-    dish(id: $id) {
-      id
-      dates {
-        id
-        date
-      }
-    }
-  }
-`
-
 const DISHES_QUERY = gql`
   query dishes {
     dishes {
