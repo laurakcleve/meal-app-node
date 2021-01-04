@@ -12,6 +12,7 @@ const Input = ({
   onChange,
   className,
   forwardRef,
+  backgroundColor,
   ...rest
 }) => {
   return (
@@ -23,6 +24,7 @@ const Input = ({
           value={value}
           onChange={onChange}
           list={list.length > 0 ? `${id}List` : null}
+          backgroundColor={backgroundColor}
           ref={forwardRef}
           {...rest}
         />
@@ -52,13 +54,14 @@ Input.propTypes = {
   ),
   value: PropTypes.string.isRequired,
   onChange: PropTypes.func.isRequired,
-  className: PropTypes.string.isRequired,
+  className: PropTypes.string,
 }
 
 Input.defaultProps = {
   type: 'text',
   list: [],
   label: '',
+  className: '',
 }
 
 export default Input

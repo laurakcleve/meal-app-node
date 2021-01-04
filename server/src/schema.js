@@ -162,6 +162,7 @@ const typeDefs = gql`
   input IngredientInput {
     id: ID!
     item: IngredientItemInput!
+    isInInventory: Boolean
   }
 
   input IngredientItemInput {

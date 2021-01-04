@@ -212,6 +212,8 @@ class DishAPI extends DataSource {
   }
 
   updateDish({ id, name, tags, ingredientSets }) {
+    console.log('in api')
+
     // Building the return object
     const updatedDish = { id, name, tags: [] }
 

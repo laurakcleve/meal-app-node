@@ -20,7 +20,7 @@ const PurchaseItemAddForm = ({ purchaseId, PURCHASE_QUERY }) => {
   const [isNonFoodItem, setIsNonFoodItem] = useState(false)
   const [doNotInventory, setDoNotInventory] = useState(false)
 
-  const [daysLeft, setDaysLeft] = useState('0')
+  const [daysLeft, setDaysLeft] = useState('')
   const [category, setCategory] = useState('')
   const [location, setLocation] = useState('')
 
@@ -51,7 +51,7 @@ const PurchaseItemAddForm = ({ purchaseId, PURCHASE_QUERY }) => {
       if (itemData.itemByName.defaultShelflife) {
         setDaysLeft(itemData.itemByName.defaultShelflife.toString())
       } else {
-        setDaysLeft(0)
+        setDaysLeft('')
       }
 
       if (itemData.itemByName.itemType === 'nonFoodItem') {
@@ -158,7 +158,7 @@ const PurchaseItemAddForm = ({ purchaseId, PURCHASE_QUERY }) => {
     setDoNotInventory(false)
     setCategory('')
     setLocation('')
-    setDaysLeft(0)
+    setDaysLeft('')
   }
 
   const queryItemDetails = () => {

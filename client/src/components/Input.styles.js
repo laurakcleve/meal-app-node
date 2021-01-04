@@ -12,7 +12,7 @@ export const Label = styled.label`
   }
 `
 export const InputEl = styled.input`
-  background-color: ${({ theme }) => theme.colors.lighterGrey};
+  background-color: ${(props) => props.backgroundColor};
   width: 100%;
   box-sizing: border-box;
 

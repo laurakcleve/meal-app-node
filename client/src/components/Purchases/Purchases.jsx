@@ -6,7 +6,6 @@ import * as Layout from '../Layout.styles'
 import * as Styled from './Purchases.styles'
 import Sidebar from '../Sidebar'
 import Input from '../Input'
-import Form from '../Form'
 import ListItem from '../ListItem'
 import { formatDate } from '../../utils'
 
@@ -46,13 +45,14 @@ const Purchases = () => {
     <Layout.Container>
       <Sidebar>Sidebar</Sidebar>
       <Layout.List>
-        <Form>
+        <Styled.AddForm>
           <Input
             id="date"
             label="Date"
             type="date"
             value={date}
             onChange={(e) => setDate(e.target.value)}
+            backgroundColor="#fff"
           />
           <Input
             id="location"
@@ -65,7 +65,7 @@ const Purchases = () => {
           <button type="submit" onClick={(e) => submit(e)}>
             SAVE
           </button>
-        </Form>
+        </Styled.AddForm>
 
         {loading && <p>Loading...</p>}
         {error && <p>Error</p>}

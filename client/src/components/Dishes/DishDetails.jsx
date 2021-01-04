@@ -19,7 +19,7 @@ const DishDetails = ({ dish }) => {
     update: (cache, { data: { addDishDate } }) => {
       const data = cache.readQuery({ query: DISHES_QUERY })
 
-      const updatedDish = data.dishes.find((d) => d.id === dish.id)
+      const updatedDish = { ...data.dishes.find((d) => d.id === dish.id) }
       updatedDish.dates = [...updatedDish.dates, addDishDate]
       updatedDish.dates.sort((a, b) => {
         if (a.date > b.date) return -1
@@ -28,7 +28,10 @@ const DishDetails = ({ dish }) => {
       })
 
       const updatedDishes = [...data.dishes]
-      updatedDishes.splice(data.dishes.indexOf(updatedDish), 1)
+      const indexToDelete = updatedDishes.findIndex(
+        (d) => d.id === updatedDish.id
+      )
+      updatedDishes.splice(indexToDelete, 1)
 
       cache.writeQuery({
         query: DISHES_QUERY,
@@ -41,13 +44,16 @@ const DishDetails = ({ dish }) => {
     update: (cache, { data: { deleteDishDate } }) => {
       const data = cache.readQuery({ query: DISHES_QUERY })
 
-      const updatedDish = data.dishes.find((d) => d.id === dish.id)
+      const updatedDish = { ...data.dishes.find((d) => d.id === dish.id) }
       updatedDish.dates = updatedDish.dates.filter(
         (date) => date.id !== deleteDishDate
       )
 
       const updatedDishes = [...data.dishes]
-      updatedDishes.splice(data.dishes.indexOf(updatedDish), 1)
+      const indexToDelete = updatedDishes.findIndex(
+        (d) => d.id === updatedDish.id
+      )
+      updatedDishes.splice(indexToDelete, 1)
 
       cache.writeQuery({
         query: DISHES_QUERY,

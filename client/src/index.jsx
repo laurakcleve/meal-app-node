@@ -16,7 +16,34 @@ import Inventory from './components/Inventory/Inventory'
 import Purchases from './components/Purchases/Purchases'
 import Purchase from './components/Purchases/Purchase'
 
-const cache = new InMemoryCache()
+const cache = new InMemoryCache({
+  typePolicies: {
+    Query: {
+      fields: {
+        purchases: {
+          merge: false,
+        },
+      },
+    },
+    Item: {
+      fields: {
+        dishes: {
+          merge: false,
+        },
+        countsAs: {
+          merge: false,
+        },
+      },
+    },
+    Dish: {
+      fields: {
+        dates: {
+          merge: false,
+        },
+      },
+    },
+  },
+})
 
 const client = new ApolloClient({
   uri: 'http://localhost:4000/graphql',
