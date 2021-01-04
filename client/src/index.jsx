@@ -1,6 +1,5 @@
-import ApolloClient, { InMemoryCache } from 'apollo-boost'
+import { InMemoryCache, ApolloProvider, ApolloClient } from '@apollo/client'
 import React from 'react'
-import { ApolloProvider } from '@apollo/react-hooks'
 import { render } from 'react-dom'
 import { ThemeProvider } from 'styled-components'
 import { BrowserRouter, Route } from 'react-router-dom'
@@ -18,17 +17,6 @@ import Purchases from './components/Purchases/Purchases'
 import Purchase from './components/Purchases/Purchase'
 
 const cache = new InMemoryCache()
-
-// cache.writeData({
-//   data: {
-//     filteredItems: [],
-//     searchedItems: [],
-//     filteredDishes: [],
-//     searchedDishes: [],
-//     filteredInventoryItems: [],
-//     searchedInventoryItems: [],
-//   },
-// })
 
 const client = new ApolloClient({
   uri: 'http://localhost:4000/graphql',

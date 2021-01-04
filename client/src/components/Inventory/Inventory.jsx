@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react'
-import { useQuery } from '@apollo/react-hooks'
-import { gql } from 'apollo-boost'
+import { useQuery, gql } from '@apollo/client'
 import moment from 'moment'
 
 import * as Layout from '../Layout.styles'

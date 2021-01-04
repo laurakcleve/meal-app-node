@@ -1,6 +1,5 @@
 import React, { useEffect, useState, useRef } from 'react'
-import { gql } from 'apollo-boost'
-import { useQuery, useLazyQuery, useMutation } from '@apollo/react-hooks'
+import { useQuery, useLazyQuery, useMutation, gql } from '@apollo/client'
 import PropTypes from 'prop-types'
 
 import * as Styled from './PurchaseItemAddForm.styles'

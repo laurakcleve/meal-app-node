@@ -1,6 +1,5 @@
 import React, { useState } from 'react'
-import { gql } from 'apollo-boost'
-import { useMutation } from '@apollo/react-hooks'
+import { useMutation, gql } from '@apollo/client'
 
 import * as Styled from './DishAddForm.styles'
 import DishForm from './DishForm'
