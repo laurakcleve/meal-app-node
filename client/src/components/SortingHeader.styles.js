@@ -7,6 +7,10 @@ export const ListHeader = styled.div`
     flex: 1;
   }
 
+  .location {
+    flex: 1;
+  }
+
   button {
     padding: 15px;
     border: none;

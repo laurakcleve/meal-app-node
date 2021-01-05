@@ -5,6 +5,7 @@ import moment from 'moment'
 import * as Layout from '../Layout.styles'
 import * as Styled from './Inventory.styles'
 import Sidebar from '../Sidebar'
+import SortingHeader from '../SortingHeader'
 import InventoryLocations from './InventoryLocations'
 import Search from '../Search'
 import ListItem from '../ListItem'
@@ -19,6 +20,8 @@ const Inventory = () => {
   const [selectedElement, setSelectedElement] = useState()
   const [selectedLocationName, setSelectedLocationName] = useState('all')
   const [adding, setAdding] = useState(true)
+  const [sortBy, setSortBy] = useState('expiration')
+  const [sortOrder, setSortOrder] = useState('asc')
 
   const { data, loading } = useQuery(INVENTORY_ITEMS_QUERY)
 
@@ -48,9 +51,54 @@ const Inventory = () => {
         })
       }
 
+      console.log('sorting by', sortBy)
+      // Sort
+      newDisplayedItems = newDisplayedItems.sort((a, b) => {
+        if (sortBy === 'name') {
+          if (a.item.name < b.item.name) {
+            return -1
+          }
+          if (a.item.name > b.item.name) {
+            return 1
+          }
+          return 0
+        }
+
+        if (sortBy === 'location') {
+          if (a.location.name < b.location.name) {
+            return -1
+          }
+          if (a.location.name > b.location.name) {
+            return 1
+          }
+          return 0
+        }
+
+        if (sortBy === 'expiration') {
+          if (!a.expiration) {
+            return -1
+          }
+          if (!b.expiration) {
+            return 1
+          }
+          if (Number(a.expiration) < Number(b.expiration)) {
+            return -1
+          }
+          if (Number(a.expiration) > Number(b.expiration)) {
+            return 1
+          }
+          return 0
+        }
+        return 0
+      })
+
+      if (sortOrder === 'desc') {
+        newDisplayedItems.reverse()
+      }
+
       setDisplayedItems(newDisplayedItems)
     }
-  }, [data, searchText, selectedLocationName])
+  }, [data, searchText, selectedLocationName, sortBy, sortOrder])
 
   useEffect(() => {
     if (selectedElement)
@@ -59,6 +107,18 @@ const Inventory = () => {
         behavior: 'smooth',
       })
   }, [selectedElement])
+
+  const setSort = (newSortBy) => {
+    let newSortOrder
+    if (newSortBy === sortBy) {
+      newSortOrder = sortOrder === 'asc' ? 'desc' : 'asc'
+    } else {
+      newSortOrder = 'asc'
+    }
+
+    setSortBy(newSortBy)
+    setSortOrder(newSortOrder)
+  }
 
   return (
     <Layout.Container>
@@ -86,6 +146,24 @@ const Inventory = () => {
           </button>
 
           {adding && <AddItem />}
+
+          <SortingHeader>
+            <div className="name">
+              <button type="button" onClick={() => setSort('name')}>
+                Name
+              </button>
+            </div>
+            <div className="location">
+              <button type="button" onClick={() => setSort('location')}>
+                Location
+              </button>
+            </div>
+            <div>
+              <button type="button" onClick={() => setSort('expiration')}>
+                Expiration
+              </button>
+            </div>
+          </SortingHeader>
 
           {displayedItems.map((item) => (
             <ListItem
