@@ -9,6 +9,11 @@ export const Container = styled.div`
     font-size: 13px;
     text-transform: uppercase;
   }
+
+  input {
+    background-color: #f8f7f7;
+    border: 1px solid #c1bfbe;
+  }
 `
 
 export const Button = styled.button`
