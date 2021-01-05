@@ -29,8 +29,6 @@ const Dishes = () => {
 
   const { data, loading } = useQuery(DISHES_QUERY)
 
-  console.log('data', data)
-
   const toggleItemOpen = (event, id) => {
     setSelectedElement(event.target)
 
@@ -90,7 +88,6 @@ const Dishes = () => {
   }, [selectedElement])
 
   useEffect(() => {
-    console.log('running effect')
     if (data && data.dishes) {
       let newDisplayedDishes = [...data.dishes]
 

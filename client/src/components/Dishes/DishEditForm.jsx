@@ -20,14 +20,6 @@ const DishEditForm = ({
       setIsEditing(false)
       setIsSaveComplete(true)
     },
-    update: (cache, { data: { updateDish } }) => {
-      const data = cache.readQuery({ query: DISHES_QUERY })
-      const newDishes = data.dishes.filter((dish) => dish.id !== updateDish.id)
-      cache.writeQuery({
-        query: DISHES_QUERY,
-        data: { dishes: [updateDish, ...newDishes] },
-      })
-    },
   })
 
   const handleSave = (event, { name, tags, isActive, ingredientSets }) => {

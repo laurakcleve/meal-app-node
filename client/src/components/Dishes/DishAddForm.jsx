@@ -11,7 +11,6 @@ const DishAddForm = ({ setIsAdding }) => {
     onCompleted: () => setIsSaveComplete(true),
     update: (cache, { data: { addDish } }) => {
       const data = cache.readQuery({ query: DISHES_QUERY })
-      console.log('addDish result', addDish)
       cache.writeQuery({
         query: DISHES_QUERY,
         data: { dishes: [addDish, ...data.dishes] },
