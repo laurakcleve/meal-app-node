@@ -55,12 +55,14 @@ const typeDefs = gql`
     addDish(
       name: String!
       tags: [String]
+      isActive: Boolean!
       ingredientSets: [IngredientSetInput]!
     ): Dish!
     updateDish(
       id: ID!
       name: String!
       tags: [String]!
+      isActive: Boolean!
       ingredientSets: [IngredientSetInput]!
     ): Dish!
     addDishDate(dishId: ID!, date: String!): DishDate!

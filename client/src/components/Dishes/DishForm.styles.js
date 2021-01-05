@@ -12,6 +12,11 @@ export const DishForm = styled(Form)`
     text-transform: uppercase;
     color: ${({ theme }) => theme.colors.grey};
   }
+
+  .row {
+    display: flex;
+    width: 100%;
+  }
 `
 
 export const Name = styled(Input)`
@@ -20,7 +25,10 @@ export const Name = styled(Input)`
 
 export const Tags = styled.div`
   width: 100%;
+  flex: 0 0 68%;
 `
+
+export const Active = styled.div``
 
 export const Ingredients = styled.div`
   width: 100%;

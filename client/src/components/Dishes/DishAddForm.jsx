@@ -11,6 +11,7 @@ const DishAddForm = ({ setIsAdding }) => {
     onCompleted: () => setIsSaveComplete(true),
     update: (cache, { data: { addDish } }) => {
       const data = cache.readQuery({ query: DISHES_QUERY })
+      console.log('addDish result', addDish)
       cache.writeQuery({
         query: DISHES_QUERY,
         data: { dishes: [addDish, ...data.dishes] },
@@ -18,12 +19,13 @@ const DishAddForm = ({ setIsAdding }) => {
     },
   })
 
-  const handleSave = (event, { name, tags, ingredientSets }) => {
+  const handleSave = (event, { name, tags, isActive, ingredientSets }) => {
     event.preventDefault()
     addDish({
       variables: {
         name,
         tags,
+        isActive,
         ingredientSets,
       },
     })
@@ -50,9 +52,15 @@ const ADD_DISH_MUTATION = gql`
   mutation addDish(
     $name: String!
     $tags: [String]
+    $isActive: Boolean!
     $ingredientSets: [IngredientSetInput]!
   ) {
-    addDish(name: $name, tags: $tags, ingredientSets: $ingredientSets) {
+    addDish(
+      name: $name
+      tags: $tags
+      isActive: $isActive
+      ingredientSets: $ingredientSets
+    ) {
       id
       name
       isActiveDish
@@ -88,6 +96,7 @@ const DISHES_QUERY = gql`
         id
         name
       }
+      isActiveDish
       ingredientSets {
         id
         isOptional

@@ -29,6 +29,8 @@ const Dishes = () => {
 
   const { data, loading } = useQuery(DISHES_QUERY)
 
+  console.log('data', data)
+
   const toggleItemOpen = (event, id) => {
     setSelectedElement(event.target)
 
@@ -88,6 +90,7 @@ const Dishes = () => {
   }, [selectedElement])
 
   useEffect(() => {
+    console.log('running effect')
     if (data && data.dishes) {
       let newDisplayedDishes = [...data.dishes]
 
@@ -237,6 +240,9 @@ const Dishes = () => {
                   }
                 >
                   <Styled.Name>{dish.name}</Styled.Name>
+
+                  <Styled.Active>{dish.isActiveDish && 'Active'}</Styled.Active>
+
                   {dish.dates.length > 0 && (
                     <Styled.Date>{formatDate(dish.dates[0].date)}</Styled.Date>
                   )}

@@ -1,7 +1,13 @@
 import styled from 'styled-components'
 
 export const Name = styled.div`
+  flex: 6;
+`
+
+export const Active = styled.div`
   flex: 1;
+  text-transform: uppercase;
+  font-size: 12px;
 `
 
 export const Date = styled.div``

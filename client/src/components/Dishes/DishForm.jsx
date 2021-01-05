@@ -10,6 +10,7 @@ import ListInput from '../ListInput'
 const DishForm = ({
   dishName,
   dishTags,
+  isActiveDish,
   dishIngredientSets,
   handleSave,
   handleCancel,
@@ -21,6 +22,7 @@ const DishForm = ({
 
   const [name, setName] = useState(dishName)
   const [tags, setTags] = useState(dishTags)
+  const [isActive, setIsActive] = useState(isActiveDish)
   const [ingredientSets, setIngredientSets] = useState(dishIngredientSets)
 
   useEffect(() => {
@@ -105,19 +107,35 @@ const DishForm = ({
         onChange={(event) => setName(event.target.value)}
       ></Styled.Name>
 
-      <Styled.Tags>
-        <div className="label">Tags</div>
+      <div className="row">
+        <Styled.Tags>
+          <div className="label">Tags</div>
 
-        <ListInput
-          listItems={tags}
-          dataList={
-            dishTagsData && dishTagsData.dishTags
-              ? dishTagsData.dishTags.filter((tag) => !tags.includes(tag.name))
-              : []
-          }
-          setListItems={setTags}
-        />
-      </Styled.Tags>
+          <ListInput
+            listItems={tags}
+            dataList={
+              dishTagsData && dishTagsData.dishTags
+                ? dishTagsData.dishTags.filter(
+                    (tag) => !tags.includes(tag.name)
+                  )
+                : []
+            }
+            setListItems={setTags}
+          />
+        </Styled.Tags>
+
+        <Styled.Active>
+          <Styled.Checkbox htmlFor="active" className="checkbox">
+            <input
+              id="active"
+              type="checkbox"
+              checked={isActive}
+              onChange={() => setIsActive(!isActive)}
+            />
+            <div className="labelText">Active rotation</div>
+          </Styled.Checkbox>
+        </Styled.Active>
+      </div>
 
       <Styled.Ingredients>
         <div className="label">Ingredients</div>
@@ -210,7 +228,14 @@ const DishForm = ({
 
         <button
           type="button"
-          onClick={(event) => handleSave(event, { name, tags, ingredientSets })}
+          onClick={(event) =>
+            handleSave(event, {
+              name,
+              tags,
+              isActive,
+              ingredientSets,
+            })
+          }
         >
           Save
         </button>
@@ -240,6 +265,7 @@ const ITEMS_QUERY = gql`
 DishForm.defaultProps = {
   dishName: '',
   dishTags: [],
+  isActiveDish: true,
   dishIngredientSets: [
     {
       id: Date.now(),
@@ -259,6 +285,7 @@ DishForm.defaultProps = {
 DishForm.propTypes = {
   dishName: PropTypes.string,
   dishTags: PropTypes.arrayOf(PropTypes.string),
+  isActiveDish: PropTypes.bool,
   dishIngredientSets: PropTypes.arrayOf(PropTypes.shape({})),
   handleSave: PropTypes.func.isRequired,
   handleCancel: PropTypes.func.isRequired,

@@ -100,6 +100,7 @@ const DishDetails = ({ dish }) => {
             dishId={dish.id}
             dishName={dish.name}
             dishTags={dish.tags.map((tag) => tag.name)}
+            isActiveDish={dish.isActiveDish}
             dishIngredientSets={dish.ingredientSets}
             setIsEditing={setIsEditing}
           />
@@ -181,6 +182,7 @@ const DishDetails = ({ dish }) => {
           </>
         )}
       </Styled.Container>
+
       <Styled.Actions>
         <button type="button" onClick={() => setIsEditing(true)}>
           Edit
@@ -245,6 +247,7 @@ DishDetails.propTypes = {
         name: PropTypes.string.isRequired,
       })
     ),
+    isActiveDish: PropTypes.bool.isRequired,
     ingredientSets: PropTypes.arrayOf(
       PropTypes.shape({
         id: PropTypes.string.isRequired,

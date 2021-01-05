@@ -9,6 +9,7 @@ const DishEditForm = ({
   dishId,
   dishName,
   dishTags,
+  isActiveDish,
   dishIngredientSets,
   setIsEditing,
 }) => {
@@ -29,7 +30,7 @@ const DishEditForm = ({
     },
   })
 
-  const handleSave = (event, { name, tags, ingredientSets }) => {
+  const handleSave = (event, { name, tags, isActive, ingredientSets }) => {
     event.preventDefault()
 
     const newIngredientSets = ingredientSets.map((iSet) => {
@@ -48,6 +49,7 @@ const DishEditForm = ({
         id: dishId,
         name,
         tags,
+        isActive,
         ingredientSets: newIngredientSets,
       },
     })
@@ -62,6 +64,7 @@ const DishEditForm = ({
       <DishForm
         dishName={dishName}
         dishTags={dishTags}
+        isActiveDish={isActiveDish}
         dishIngredientSets={dishIngredientSets}
         handleSave={handleSave}
         handleCancel={handleCancel}
@@ -77,12 +80,14 @@ const UPDATE_DISH_MUTATION = gql`
     $id: ID!
     $name: String!
     $tags: [String]!
+    $isActive: Boolean!
     $ingredientSets: [IngredientSetInput]!
   ) {
     updateDish(
       id: $id
       name: $name
       tags: $tags
+      isActive: $isActive
       ingredientSets: $ingredientSets
     ) {
       id
@@ -120,6 +125,7 @@ const DISHES_QUERY = gql`
         id
         name
       }
+      isActiveDish
       ingredientSets {
         id
         isOptional
@@ -144,6 +150,7 @@ DishEditForm.propTypes = {
   dishId: PropTypes.string.isRequired,
   dishName: PropTypes.string.isRequired,
   dishTags: PropTypes.arrayOf(PropTypes.string),
+  isActiveDish: PropTypes.bool.isRequired,
   dishIngredientSets: PropTypes.arrayOf(PropTypes.shape({})),
   setIsEditing: PropTypes.func.isRequired,
 }

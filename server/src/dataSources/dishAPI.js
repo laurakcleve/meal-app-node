@@ -96,22 +96,22 @@ class DishAPI extends DataSource {
     return db.query(queryString, [id]).then((results) => results.rows[[0]])
   }
 
-  addDish({ name, tags, ingredientSets }) {
+  addDish({ name, tags, isActive, ingredientSets }) {
     // Building the return object
     const newDish = {}
 
     const newDishQueryString = `
-      INSERT INTO item(name, item_type)
-      VALUES($1, 'dish')
+      INSERT INTO item(name, item_type, is_active_dish)
+      VALUES($1, 'dish', $2)
       RETURNING *
     `
-    return db.query(newDishQueryString, [name]).then((newDishResults) => {
+    return db.query(newDishQueryString, [name, isActive]).then((newDishResults) => {
       const newDishID = newDishResults.rows[0].id
-      const newDishName = newDishResults.rows[0].name
 
       // Building the return object
       newDish.id = newDishID
-      newDish.name = newDishName
+      newDish.name = name
+      newDish.isActiveDish = isActive
       newDish.ingredientSets = []
       newDish.tags = []
 
@@ -211,11 +211,9 @@ class DishAPI extends DataSource {
     })
   }
 
-  updateDish({ id, name, tags, ingredientSets }) {
-    console.log('in api')
-
+  updateDish({ id, name, tags, isActive, ingredientSets }) {
     // Building the return object
-    const updatedDish = { id, name, tags: [] }
+    const updatedDish = { id, name, isActiveDish: isActive, tags: [] }
 
     const deleteTagsPromise = () => {
       const queryString = `
@@ -237,11 +235,15 @@ class DishAPI extends DataSource {
       .then(() => {
         const updateDishQueryString = `
           UPDATE item
-          SET name = $2
+          SET name = $2, is_active_dish = $3
           WHERE id = $1
           RETURNING *
         `
-        const namePromise = db.query(updateDishQueryString, [Number(id), name])
+        const namePromise = db.query(updateDishQueryString, [
+          Number(id),
+          name,
+          isActive,
+        ])
 
         const tagsPromises = tags.map((tag) => {
           const tagQueryString = `
@@ -342,7 +344,7 @@ class DishAPI extends DataSource {
                 )
               })
           })
-        ).then(() => Promise.resolve(updatedDish))
+        ).then(() => console.log('updatedDish', updatedDish) || updatedDish)
       })
   }
 

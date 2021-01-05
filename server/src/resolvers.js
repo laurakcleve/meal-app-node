@@ -98,11 +98,16 @@ const resolvers = {
         itemType,
         countsAs,
       }),
-    addDish: (_, { name, tags, ingredientSets }, { dataSources }) =>
-      dataSources.dishAPI.addDish({ name, tags, ingredientSets }),
-    updateDish: (_, { id, name, tags, ingredientSets }, { dataSources }) =>
-      console.log('in resolvers') ||
-      dataSources.dishAPI.updateDish({ id, name, tags, ingredientSets }),
+    addDish: (_, { name, tags, isActive, ingredientSets }, { dataSources }) =>
+      dataSources.dishAPI.addDish({ name, tags, isActive, ingredientSets }),
+    updateDish: (_, { id, name, tags, isActive, ingredientSets }, { dataSources }) =>
+      dataSources.dishAPI.updateDish({
+        id,
+        name,
+        tags,
+        isActive,
+        ingredientSets,
+      }),
     addDishDate: (_, { dishId, date }, { dataSources }) =>
       dataSources.dishAPI.addDishDate({ dishId, date }),
     deleteDishDate: (_, { id }, { dataSources }) =>
