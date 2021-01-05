@@ -348,6 +348,15 @@ class DishAPI extends DataSource {
       })
   }
 
+  deleteDish({ id }) {
+    const queryString = `
+      DELETE FROM item
+      WHERE id = $1
+      RETURNING $1 AS id
+    `
+    return db.query(queryString, [Number(id)]).then((results) => results.rows[0].id)
+  }
+
   addDishDate({ dishId, date }) {
     const queryString = `
       INSERT INTO dish_date(dish_id, date)

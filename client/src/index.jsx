@@ -23,6 +23,9 @@ const cache = new InMemoryCache({
         purchases: {
           merge: false,
         },
+        dishes: {
+          merge: false,
+        },
       },
     },
     Item: {

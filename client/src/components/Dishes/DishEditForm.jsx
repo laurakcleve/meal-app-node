@@ -22,6 +22,21 @@ const DishEditForm = ({
     },
   })
 
+  const [deleteDish] = useMutation(DELETE_DISH_MUTATION, {
+    update: (cache, { data: { deleteDish } }) => {
+      const data = cache.readQuery({ query: DISHES_QUERY })
+
+      const updatedDishes = [...data.dishes]
+      const indexToDelete = updatedDishes.findIndex((d) => d.id === deleteDish)
+      updatedDishes.splice(indexToDelete, 1)
+
+      cache.writeQuery({
+        query: DISHES_QUERY,
+        data: { dishes: [...updatedDishes] },
+      })
+    },
+  })
+
   const handleSave = (event, { name, tags, isActive, ingredientSets }) => {
     event.preventDefault()
 
@@ -51,8 +66,21 @@ const DishEditForm = ({
     setIsEditing(false)
   }
 
+  const submitDelete = (event) => {
+    event.preventDefault()
+    if (window.confirm('Delete dish?')) {
+      deleteDish({ variables: { id: dishId } })
+    }
+  }
+
   return (
     <Styled.Wrapper>
+      <Styled.Delete>
+        <button type="button" onClick={(event) => submitDelete(event)}>
+          Delete
+        </button>
+      </Styled.Delete>
+
       <DishForm
         dishName={dishName}
         dishTags={dishTags}
@@ -105,6 +133,12 @@ const UPDATE_DISH_MUTATION = gql`
         name
       }
     }
+  }
+`
+
+const DELETE_DISH_MUTATION = gql`
+  mutation deleteDish($id: ID!) {
+    deleteDish(id: $id)
   }
 `
 

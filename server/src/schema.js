@@ -65,6 +65,7 @@ const typeDefs = gql`
       isActive: Boolean!
       ingredientSets: [IngredientSetInput]!
     ): Dish!
+    deleteDish(id: ID!): String!
     addDishDate(dishId: ID!, date: String!): DishDate!
     deleteDishDate(id: ID!): ID
   }

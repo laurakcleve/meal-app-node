@@ -108,6 +108,8 @@ const resolvers = {
         isActive,
         ingredientSets,
       }),
+    deleteDish: (_, { id }, { dataSources }) =>
+      dataSources.dishAPI.deleteDish({ id }),
     addDishDate: (_, { dishId, date }, { dataSources }) =>
       dataSources.dishAPI.addDishDate({ dishId, date }),
     deleteDishDate: (_, { id }, { dataSources }) =>
