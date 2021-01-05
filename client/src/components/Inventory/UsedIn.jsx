@@ -10,7 +10,7 @@ const UsedIn = ({ dishes }) => {
   const itemsToShow = 5
 
   const displayItem = (dish) => {
-    return <DetailListItem key={dish.id} name={dish.name} />
+    return <DetailListItem key={dish.id} dishId={dish.id} name={dish.name} />
   }
 
   return (

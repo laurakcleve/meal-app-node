@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useRef } from 'react'
 import { useQuery, gql } from '@apollo/client'
 
 import * as Layout from '../Layout.styles'
@@ -14,9 +14,13 @@ import SortingHeader from '../SortingHeader'
 import DishAddForm from './DishAddForm'
 import Wrapper from '../Wrapper'
 
-const Dishes = () => {
+const Dishes = ({ match: routerMatch }) => {
+  const listItemsRef = useRef([])
+
   const [displayedDishes, setDisplayedDishes] = useState([])
-  const [selectedItemID, setSelectedItemID] = useState('')
+  const [selectedItemID, setSelectedItemID] = useState(
+    routerMatch.params.id || ''
+  )
   const [selectedElement, setSelectedElement] = useState()
   const [selectedTagNames, setSelectedTagNames] = useState(['all'])
   const [match, setMatch] = useState('all')
@@ -78,6 +82,10 @@ const Dishes = () => {
     }
     return false
   }
+
+  useEffect(() => {
+    listItemsRef.current = listItemsRef.current.slice()
+  })
 
   useEffect(() => {
     if (selectedElement)

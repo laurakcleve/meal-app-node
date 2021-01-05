@@ -66,6 +66,7 @@ const App = () => (
           <Route exact path="/items" component={Items} />
           <Route exact path="/item/:id" component={Item} />
           <Route exact path="/dishes" component={Dishes} />
+          <Route exact path="/dishes/:id" component={Dishes} />
           <Route exact path="/inventory" component={Inventory} />
           <Route exact path="/purchases" component={Purchases} />
           <Route exact path="/purchase/:id" component={Purchase} />
