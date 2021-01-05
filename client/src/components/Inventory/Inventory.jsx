@@ -18,6 +18,7 @@ const Inventory = () => {
   const [searchText, setSearchText] = useState('')
   const [selectedItemID, setSelectedItemID] = useState('')
   const [selectedElement, setSelectedElement] = useState()
+  const [selectedElementHeight, setSelectedElementHeight] = useState()
   const [selectedLocationName, setSelectedLocationName] = useState('all')
   const [adding, setAdding] = useState(true)
   const [sortBy, setSortBy] = useState('expiration')
@@ -27,6 +28,7 @@ const Inventory = () => {
 
   const toggleItemOpen = (event, id) => {
     setSelectedElement(event.target)
+    setSelectedElementHeight(event.target.offsetHeight)
 
     if (selectedItemID === id) {
       setSelectedItemID('')
@@ -34,6 +36,12 @@ const Inventory = () => {
       setSelectedItemID(id)
     }
   }
+
+  useEffect(() => {
+    if (selectedElement) {
+      setSelectedElementHeight(selectedElement.offsetHeight)
+    }
+  }, [selectedElement])
 
   useEffect(() => {
     if (data && data.inventoryItems) {
@@ -106,7 +114,7 @@ const Inventory = () => {
         top: selectedElement.offsetTop - 100,
         behavior: 'smooth',
       })
-  }, [selectedElement])
+  }, [selectedElement, selectedElementHeight])
 
   const setSort = (newSortBy) => {
     let newSortOrder
