@@ -51,7 +51,6 @@ const Inventory = () => {
         })
       }
 
-      console.log('sorting by', sortBy)
       // Sort
       newDisplayedItems = newDisplayedItems.sort((a, b) => {
         if (sortBy === 'name') {

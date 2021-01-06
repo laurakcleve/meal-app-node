@@ -12,6 +12,17 @@ export const Container = styled.div`
   }
 `
 
+export const Delete = styled.div`
+  display: flex;
+  width: 100%;
+  justify-content: flex-end;
+
+  button {
+    text-transform: uppercase;
+    font-size: 12px;
+  }
+`
+
 export const AddDate = styled.div``
 
 export const Amount = styled.div``

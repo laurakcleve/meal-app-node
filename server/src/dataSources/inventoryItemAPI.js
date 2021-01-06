@@ -108,6 +108,15 @@ class inventoryItemAPI extends DataSource {
         )
       })
   }
+
+  delete({ id }) {
+    const queryString = `
+      DELETE FROM inventory_item
+      WHERE id = $1
+      RETURNING $1 as id
+    `
+    return db.query(queryString, [Number(id)]).then((results) => results.rows[0].id)
+  }
 }
 
 module.exports = inventoryItemAPI

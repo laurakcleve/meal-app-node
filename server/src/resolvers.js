@@ -76,6 +76,8 @@ const resolvers = {
         location,
         itemType,
       }),
+    deleteInventoryItem: (_, { id }, { dataSources }) =>
+      dataSources.inventoryItemAPI.delete({ id }),
     editItem: (
       _,
       {
