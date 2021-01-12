@@ -12,7 +12,7 @@ export const Container = styled.div`
   }
 `
 
-export const Delete = styled.div`
+export const Actions = styled.div`
   display: flex;
   width: 100%;
   justify-content: flex-end;
@@ -20,6 +20,7 @@ export const Delete = styled.div`
   button {
     text-transform: uppercase;
     font-size: 12px;
+    margin-left: 10px;
   }
 `
 

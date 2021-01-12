@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useState } from 'react'
 import moment from 'moment'
 import PropTypes from 'prop-types'
 import { useMutation, gql } from '@apollo/client'
@@ -8,6 +8,7 @@ import { formatDate } from '../../utils'
 import UsedIn from './UsedIn'
 
 const InventoryItemDetails = ({ inventoryItem }) => {
+  const [isEditing, setIsEditing] = useState(false)
   const [deleteInventoryItem] = useMutation(DELETE_INVENTORY_ITEM_MUTATION, {
     update: (cache, { data: { deleteInventoryItem } }) => {
       const data = cache.readQuery({ query: INVENTORY_ITEMS_QUERY })
@@ -32,11 +33,15 @@ const InventoryItemDetails = ({ inventoryItem }) => {
 
   return (
     <>
-      <Styled.Delete>
+      <Styled.Actions>
         <button type="button" onClick={(event) => submitDelete(event)}>
           Delete
         </button>
-      </Styled.Delete>
+
+        <button type="button" onClick={() => setIsEditing(true)}>
+          Edit
+        </button>
+      </Styled.Actions>
       <Styled.Container>
         <div className="column">
           {inventoryItem.addDate && (

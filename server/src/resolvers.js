@@ -63,6 +63,7 @@ const resolvers = {
         category,
         location,
         itemType,
+        number,
       },
       { dataSources }
     ) =>
@@ -75,6 +76,7 @@ const resolvers = {
         category,
         location,
         itemType,
+        number,
       }),
     deleteInventoryItem: (_, { id }, { dataSources }) =>
       dataSources.inventoryItemAPI.delete({ id }),

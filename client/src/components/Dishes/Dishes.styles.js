@@ -41,6 +41,7 @@ export const AddButton = styled.button`
   font-weight: bold;
   font-size: 24px;
   line-height: 0;
+  cursor: pointer;
 
   &:focus {
     outline: none;

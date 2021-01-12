@@ -10,8 +10,9 @@ import InventoryLocations from './InventoryLocations'
 import Search from '../Search'
 import ListItem from '../ListItem'
 import InventoryItemDetails from './InventoryItemDetails'
-import AddItem from './AddItem'
 import Expander from '../Expander'
+import InventoryItemAddForm from './InventoryItemAddForm'
+import Wrapper from '../Wrapper'
 
 const Inventory = () => {
   const [displayedItems, setDisplayedItems] = useState([])
@@ -19,7 +20,7 @@ const Inventory = () => {
   const [selectedItemID, setSelectedItemID] = useState('')
   const [selectedElement, setSelectedElement] = useState()
   const [selectedLocationName, setSelectedLocationName] = useState('all')
-  const [adding, setAdding] = useState(true)
+  const [isAdding, setIsAdding] = useState(false)
   const [sortBy, setSortBy] = useState('expiration')
   const [sortOrder, setSortOrder] = useState('asc')
 
@@ -133,18 +134,23 @@ const Inventory = () => {
 
         <>
           {data && data.inventoryItems && (
-            <Search searchText={searchText} setSearchText={setSearchText} />
+            <Styled.TopBar>
+              <Search searchText={searchText} setSearchText={setSearchText} />
+
+              <Styled.AddButton
+                open={isAdding}
+                onClick={() => setIsAdding(!isAdding)}
+              >
+                <div>+</div>
+              </Styled.AddButton>
+            </Styled.TopBar>
           )}
 
-          <button
-            className="add"
-            type="button"
-            onClick={() => setAdding(!adding)}
-          >
-            <span className={adding ? 'close' : 'open'}>+</span>
-          </button>
-
-          {adding && <AddItem />}
+          {isAdding && (
+            <Wrapper>
+              <InventoryItemAddForm setIsAdding={setIsAdding} />
+            </Wrapper>
+          )}
 
           <SortingHeader>
             <div className="name">

@@ -59,6 +59,7 @@ class inventoryItemAPI extends DataSource {
     category,
     location,
     itemType,
+    number,
   }) {
     const queryString = `
       WITH retrieved_item_id AS (
@@ -73,10 +74,19 @@ class inventoryItemAPI extends DataSource {
         $3 AS expiration,
         $4 AS amount,
         (SELECT * FROM retrieved_location_id) AS location_id
+      FROM GENERATE_SERIES(1, $7)
       RETURNING *
     `
     return db
-      .query(queryString, [name, addDate, expiration, amount, location, itemType])
+      .query(queryString, [
+        name,
+        addDate,
+        expiration,
+        amount,
+        location,
+        itemType,
+        number,
+      ])
       .then((results) => {
         const shelfLifePromise = () => {
           const updateShelflifeQueryString = `

@@ -206,6 +206,7 @@ const DishForm = ({
           Add ingredient
         </button>
 
+        {/* TODO: Input component does this for a list, just pass it */}
         {itemsData && itemsData.items && (
           <datalist id="itemList">
             {itemsData.items.map((item) => (
