@@ -2,6 +2,9 @@ import React, { useState } from 'react'
 import moment from 'moment'
 import PropTypes from 'prop-types'
 import { useMutation, gql } from '@apollo/client'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { faExternalLinkAlt } from '@fortawesome/free-solid-svg-icons'
+import { Link } from 'react-router-dom'
 
 import * as Styled from './InventoryItemDetails.styles'
 import { formatDate } from '../../utils'
@@ -35,6 +38,12 @@ const InventoryItemDetails = ({ inventoryItem }) => {
   return (
     <>
       <Styled.Actions>
+        <button type="button">
+          <Link to={`/item/${inventoryItem.item.id}`}>Item page</Link>
+
+          <FontAwesomeIcon icon={faExternalLinkAlt} />
+        </button>
+
         <button type="button" onClick={(event) => submitDelete(event)}>
           Delete
         </button>
@@ -121,6 +130,7 @@ InventoryItemDetails.propTypes = {
     addDate: PropTypes.string,
     amount: PropTypes.string,
     item: PropTypes.shape({
+      id: PropTypes.string.isRequired,
       dishes: PropTypes.arrayOf(PropTypes.shape({})),
     }),
   }).isRequired,

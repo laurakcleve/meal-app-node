@@ -22,6 +22,10 @@ export const Actions = styled.div`
     font-size: 12px;
     margin-left: 10px;
   }
+
+  .svg-inline--fa.fa-w-16 {
+    margin-left: 8px;
+  }
 `
 
 export const AddDate = styled.div``
