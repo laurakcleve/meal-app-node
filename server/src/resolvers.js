@@ -52,6 +52,20 @@ const resolvers = {
         number,
         itemType,
       }),
+    updatePurchaseItem: (
+      _,
+      { id, name, price, weightAmount, weightUnit, quantityAmount, quantityUnit },
+      { dataSources }
+    ) =>
+      dataSources.purchaseAPI.updatePurchaseItem({
+        id,
+        name,
+        price,
+        weightAmount,
+        weightUnit,
+        quantityAmount,
+        quantityUnit,
+      }),
     addInventoryItem: (
       _,
       {

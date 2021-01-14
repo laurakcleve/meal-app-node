@@ -130,6 +130,50 @@ class PurchaseAPI extends DataSource {
       ])
       .then((results) => results.rows[0])
   }
+
+  updatePurchaseItem({
+    id,
+    name,
+    price,
+    weightAmount,
+    weightUnit,
+    quantityAmount,
+    quantityUnit,
+  }) {
+    const queryString = `
+      WITH retrieved_item_id AS (
+        SELECT item_id_for_insert($2) 
+      )
+      UPDATE purchase_item
+      SET item_id = (SELECT * FROM retrieved_item_id), 
+        price = $3, 
+        weight_amount = $4, 
+        weight_unit = $5, 
+        quantity_amount = $6, 
+        quantity_unit = $7
+      WHERE id = $1
+      RETURNING 
+        id, 
+        purchase_id AS "purchaseId",  
+        item_id AS "itemId",
+        price, 
+        weight_amount AS "weightAmount",
+        weight_unit AS "weightUnit",
+        quantity_amount AS "quantityAmount",
+        quantity_unit AS "quantityUnit"
+    `
+    return db
+      .query(queryString, [
+        Number(id),
+        name,
+        price,
+        weightAmount,
+        weightUnit,
+        quantityAmount,
+        quantityUnit,
+      ])
+      .then((results) => results.rows[0])
+  }
 }
 
 module.exports = PurchaseAPI

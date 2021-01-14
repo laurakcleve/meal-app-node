@@ -33,6 +33,15 @@ const typeDefs = gql`
       number: Int!
       itemType: String!
     ): PurchaseItem!
+    updatePurchaseItem(
+      id: ID!
+      name: String!
+      price: Float
+      weightAmount: Float
+      weightUnit: String
+      quantityAmount: Float
+      quantityUnit: String
+    ): PurchaseItem!
     addInventoryItem(
       name: String!
       addDate: String

@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { useQuery, useMutation, gql } from '@apollo/client'
 import PropTypes from 'prop-types'
 import moment from 'moment'
@@ -8,8 +8,12 @@ import * as Styled from './Purchase.styles'
 import ListItem from '../ListItem'
 import PurchaseItemAddForm from './PurchaseItemAddForm'
 import { unitPrice } from '../../utils'
+import Expander from '../Expander'
+import PurchaseItemDetails from './PurchaseItemDetails'
 
 const Purchase = ({ match, history }) => {
+  const [selectedItemID, setSelectedItemID] = useState('')
+
   const { data, loading, error } = useQuery(PURCHASE_QUERY, {
     variables: { id: match.params.id },
   })
@@ -22,6 +26,14 @@ const Purchase = ({ match, history }) => {
     event.preventDefault()
     if (window.confirm('Delete purchase?')) {
       deletePurchase({ variables: { id: match.params.id } })
+    }
+  }
+
+  const toggleItemOpen = (id) => {
+    if (selectedItemID === id) {
+      setSelectedItemID('')
+    } else {
+      setSelectedItemID(id)
     }
   }
 
@@ -51,7 +63,17 @@ const Purchase = ({ match, history }) => {
             />
 
             {data.purchase.items.map((purchaseItem) => (
-              <ListItem key={purchaseItem.id}>
+              <ListItem
+                key={purchaseItem.id}
+                onClick={() => toggleItemOpen(purchaseItem.id)}
+                expander={
+                  selectedItemID === purchaseItem.id && (
+                    <Expander>
+                      <PurchaseItemDetails purchaseItem={purchaseItem} />
+                    </Expander>
+                  )
+                }
+              >
                 <Styled.Name>{purchaseItem.item.name}</Styled.Name>
                 <Styled.Weight>
                   {purchaseItem.weightAmount} {purchaseItem.weightUnit}
