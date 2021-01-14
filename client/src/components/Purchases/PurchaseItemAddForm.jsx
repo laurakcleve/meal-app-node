@@ -137,6 +137,7 @@ const PurchaseItemAddForm = ({ purchaseId, PURCHASE_QUERY }) => {
             defaultShelflife: daysLeft || null,
             category: category || null,
             location: location || null,
+            number: Number(number) || 1,
             itemType: isNonFoodItem ? 'nonFoodItem' : 'baseItem',
           },
         })
@@ -406,6 +407,7 @@ const ADD_INVENTORY_ITEM_MUTATION = gql`
     $category: String
     $location: String
     $itemType: String!
+    $number: Int!
   ) {
     addInventoryItem(
       name: $name
@@ -416,6 +418,7 @@ const ADD_INVENTORY_ITEM_MUTATION = gql`
       category: $category
       location: $location
       itemType: $itemType
+      number: $number
     ) {
       id
     }
