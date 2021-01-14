@@ -5,7 +5,7 @@ import PropTypes from 'prop-types'
 import * as Styled from './PurchaseItemAddForm.styles'
 import {
   millisecondsToPgFormat,
-  getExpiration,
+  getExpirationFromAddDate,
   inventoryAmountString,
 } from '../../utils'
 
@@ -124,7 +124,7 @@ const PurchaseItemAddForm = ({ purchaseId, PURCHASE_QUERY }) => {
               : null,
             expiration: purchaseData
               ? millisecondsToPgFormat(
-                  getExpiration(purchaseData.purchase.date, daysLeft)
+                  getExpirationFromAddDate(purchaseData.purchase.date, daysLeft)
                 )
               : null,
             amount:

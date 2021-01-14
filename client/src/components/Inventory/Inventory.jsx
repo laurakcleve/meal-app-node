@@ -206,6 +206,11 @@ const INVENTORY_ITEMS_QUERY = gql`
           id
           name
         }
+        itemType
+        category {
+          id
+          name
+        }
       }
       location {
         id

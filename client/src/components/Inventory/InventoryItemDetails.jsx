@@ -6,6 +6,7 @@ import { useMutation, gql } from '@apollo/client'
 import * as Styled from './InventoryItemDetails.styles'
 import { formatDate } from '../../utils'
 import UsedIn from './UsedIn'
+import InventoryItemEditForm from './InventoryItemEditForm'
 
 const InventoryItemDetails = ({ inventoryItem }) => {
   const [isEditing, setIsEditing] = useState(false)
@@ -42,36 +43,44 @@ const InventoryItemDetails = ({ inventoryItem }) => {
           Edit
         </button>
       </Styled.Actions>
-      <Styled.Container>
-        <div className="column">
-          {inventoryItem.addDate && (
-            <Styled.AddDate>
-              <h3>Added:</h3>
-              <p>
-                {formatDate(inventoryItem.addDate)} (
-                {moment(Number(inventoryItem.addDate)).fromNow()})
-              </p>
-            </Styled.AddDate>
-          )}
 
-          {inventoryItem.amount && (
-            <Styled.Amount>
-              <h3>Amount:</h3>
-              <p>{inventoryItem.amount}</p>
-            </Styled.Amount>
-          )}
-        </div>
+      {isEditing ? (
+        <InventoryItemEditForm
+          setIsEditing={setIsEditing}
+          inventoryItem={inventoryItem}
+        />
+      ) : (
+        <Styled.Container>
+          <div className="column">
+            {inventoryItem.addDate && (
+              <Styled.AddDate>
+                <h3>Added:</h3>
+                <p>
+                  {formatDate(inventoryItem.addDate)} (
+                  {moment(Number(inventoryItem.addDate)).fromNow()})
+                </p>
+              </Styled.AddDate>
+            )}
 
-        <div className="column">
-          {inventoryItem.item.dishes.length > 0 && (
-            <Styled.UsedIn>
-              {inventoryItem.item.dishes && (
-                <UsedIn dishes={inventoryItem.item.dishes} />
-              )}
-            </Styled.UsedIn>
-          )}
-        </div>
-      </Styled.Container>
+            {inventoryItem.amount && (
+              <Styled.Amount>
+                <h3>Amount:</h3>
+                <p>{inventoryItem.amount}</p>
+              </Styled.Amount>
+            )}
+          </div>
+
+          <div className="column">
+            {inventoryItem.item.dishes.length > 0 && (
+              <Styled.UsedIn>
+                {inventoryItem.item.dishes && (
+                  <UsedIn dishes={inventoryItem.item.dishes} />
+                )}
+              </Styled.UsedIn>
+            )}
+          </div>
+        </Styled.Container>
+      )}
     </>
   )
 }
@@ -89,6 +98,7 @@ const INVENTORY_ITEMS_QUERY = gql`
       item {
         id
         name
+        itemType
         dishes {
           id
           name

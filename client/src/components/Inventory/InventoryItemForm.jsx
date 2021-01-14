@@ -7,23 +7,30 @@ import * as Styled from './InventoryItemForm.styles'
 
 const InventoryItemForm = ({
   addDate: initialAddDate,
+  location: initialLocation,
+  category: initialCategory,
+  daysLeft: initialDaysLeft,
+  amount: initialAmount,
+  itemType: initialItemType,
   handleSave,
   handleCancel,
   isSaveComplete,
   setIsSaveComplete,
+  isEdit,
+  isBaseItem,
 }) => {
   const { data: itemsData } = useQuery(ITEMS_QUERY)
   const { data: itemLocationsData } = useQuery(ITEM_LOCATIONS_QUERY)
   const { data: categoriesData } = useQuery(CATEGORIES_QUERY)
 
   const [name, setName] = useState('')
-  const [location, setLocation] = useState('')
-  const [category, setCategory] = useState('')
+  const [location, setLocation] = useState(initialLocation)
+  const [category, setCategory] = useState(initialCategory)
   const [addDate, setAddDate] = useState(initialAddDate)
-  const [daysLeft, setDaysLeft] = useState('')
-  const [amount, setAmount] = useState('')
+  const [daysLeft, setDaysLeft] = useState(initialDaysLeft)
+  const [amount, setAmount] = useState(initialAmount)
   const [number, setNumber] = useState('1')
-  const [itemType, setItemType] = useState('')
+  const [itemType, setItemType] = useState(initialItemType)
 
   const setItemDetails = () => {
     if (itemData.itemByName) {
@@ -81,14 +88,16 @@ const InventoryItemForm = ({
 
   return (
     <Styled.InventoryItemForm>
-      <Styled.Name
-        id="name"
-        label="Name"
-        value={name}
-        onChange={(event) => setName(event.target.value)}
-        list={itemsData && itemsData.items ? itemsData.items : []}
-        onBlur={queryItemDetails}
-      ></Styled.Name>
+      {!isEdit && (
+        <Styled.Name
+          id="name"
+          label="Name"
+          value={name}
+          onChange={(event) => setName(event.target.value)}
+          list={itemsData && itemsData.items ? itemsData.items : []}
+          onBlur={queryItemDetails}
+        ></Styled.Name>
+      )}
 
       <Styled.Location
         id="location"
@@ -102,17 +111,19 @@ const InventoryItemForm = ({
         }
       ></Styled.Location>
 
-      <Styled.Category
-        id="category"
-        label="Category"
-        value={category}
-        onChange={(event) => setCategory(event.target.value)}
-        list={
-          categoriesData && categoriesData.itemCategories
-            ? categoriesData.itemCategories
-            : []
-        }
-      ></Styled.Category>
+      {isBaseItem && (
+        <Styled.Category
+          id="category"
+          label="Category"
+          value={category}
+          onChange={(event) => setCategory(event.target.value)}
+          list={
+            categoriesData && categoriesData.itemCategories
+              ? categoriesData.itemCategories
+              : []
+          }
+        ></Styled.Category>
+      )}
 
       <Styled.AddDate
         id="addDate"
@@ -136,24 +147,29 @@ const InventoryItemForm = ({
         onChange={(event) => setAmount(event.target.value)}
       ></Styled.Amount>
 
+      {!isEdit && (
+        <div>
+          <Styled.Label>Add multiple?</Styled.Label>
+          <Styled.Multiple
+            id="number"
+            value={number}
+            onChange={(event) => setNumber(event.target.value)}
+          />
+        </div>
+      )}
+
       <div>
-        <Styled.Label>Add multiple?</Styled.Label>
-        <Styled.Multiple
-          id="number"
-          value={number}
-          onChange={(event) => setNumber(event.target.value)}
-        />
+        <Styled.Label>Item Type</Styled.Label>
+        <Styled.ItemType
+          value={itemType}
+          onChange={(event) => setItemType(event.target.value)}
+        >
+          <option value="baseItem">baseItem</option>
+          <option value="dish">dish</option>
+          <option value="nonFoodItem">nonFoodItem</option>
+        </Styled.ItemType>
       </div>
 
-      <Styled.Label>Item Type</Styled.Label>
-      <Styled.ItemType
-        value={itemType}
-        onChange={(event) => setItemType(event.target.value)}
-      >
-        <option value="baseItem">baseItem</option>
-        <option value="dish">dish</option>
-        <option value="nonFoodItem">nonFoodItem</option>
-      </Styled.ItemType>
       <Styled.Actions>
         <button type="button" onClick={handleCancel}>
           Cancel
@@ -227,12 +243,28 @@ const ITEM_QUERY = gql`
 
 InventoryItemForm.propTypes = {
   addDate: PropTypes.string,
+  location: PropTypes.string,
+  category: PropTypes.string,
+  daysLeft: PropTypes.string,
+  amount: PropTypes.string,
+  itemType: PropTypes.string,
   handleSave: PropTypes.func.isRequired,
   handleCancel: PropTypes.func.isRequired,
+  isSaveComplete: PropTypes.bool.isRequired,
+  setIsSaveComplete: PropTypes.func.isRequired,
+  isEdit: PropTypes.bool,
+  isBaseItem: PropTypes.bool,
 }
 
 InventoryItemForm.defaultProps = {
   addDate: moment(Date.now()).format('YYYY-MM-DD'),
+  location: '',
+  category: '',
+  daysLeft: '',
+  amount: '',
+  itemType: 'baseItem',
+  isEdit: false,
+  isBaseItem: true,
 }
 
 export default InventoryItemForm

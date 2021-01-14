@@ -44,6 +44,15 @@ const typeDefs = gql`
       itemType: String!
       number: Int!
     ): InventoryItem!
+    updateInventoryItem(
+      id: ID!
+      addDate: String
+      expiration: String
+      amount: String
+      location: String
+      category: String
+      itemType: String
+    ): InventoryItem!
     deleteInventoryItem(id: ID!): ID
     editItem(
       id: ID!

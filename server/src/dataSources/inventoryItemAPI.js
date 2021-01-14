@@ -26,7 +26,7 @@ class inventoryItemAPI extends DataSource {
 
   getSubItem({ id }) {
     const queryString = `
-      SELECT item.id, item.name
+      SELECT item.*, item_type AS "itemType"
       FROM item
       INNER JOIN inventory_item
         ON inventory_item.item_id = item.id
@@ -115,6 +115,76 @@ class inventoryItemAPI extends DataSource {
 
         return Promise.all([shelfLifePromise, categoryPromise]).then(
           () => results.rows[0]
+        )
+      })
+  }
+
+  update({ id, addDate, expiration, amount, location, category, itemType }) {
+    console.log({ location, category, expiration })
+
+    const queryString = `
+      UPDATE inventory_item
+      SET add_date = $2,
+          amount = $3,
+          expiration = $4
+      WHERE id = $1
+      RETURNING *
+    `
+    return db
+      .query(queryString, [Number(id), addDate, amount, expiration])
+      .then((results) => {
+        // Building the return object
+        const updatedInventoryItem = {
+          id,
+          addDate: results.rows[0].add_date,
+          expiration: results.rows[0].expiration,
+          amount,
+        }
+
+        const categoryPromise = () => {
+          const categoryQuery = `
+          UPDATE item
+          SET category_id = (SELECT category_id_for_insert($1))
+          WHERE id = $2
+          RETURNING *
+        `
+          return db.query(categoryQuery, [category, results.rows[0].item_id])
+        }
+
+        const locationPromise = () => {
+          const locationQuery = `
+            UPDATE inventory_item
+            SET location_id = (SELECT location_id_for_insert($1))
+            WHERE id = $2
+            RETURNING *
+          `
+          return db.query(locationQuery, [location, Number(id)])
+        }
+
+        return Promise.all([categoryPromise(), locationPromise()]).then(
+          (categoryLocationResults) => {
+            // Building the return object
+            updatedInventoryItem.item = {
+              id: results.rows[0].item_id,
+              name: categoryLocationResults[0].rows[0].name,
+            }
+
+            updatedInventoryItem.category = category
+              ? {
+                  id: categoryLocationResults[0].rows[0].category_id,
+                  name: category,
+                }
+              : null
+
+            updatedInventoryItem.location = location
+              ? {
+                  id: categoryLocationResults[1].rows[0].location_id,
+                  name: location,
+                }
+              : null
+
+            return updatedInventoryItem
+          }
         )
       })
   }

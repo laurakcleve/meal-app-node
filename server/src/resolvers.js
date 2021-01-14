@@ -78,6 +78,20 @@ const resolvers = {
         itemType,
         number,
       }),
+    updateInventoryItem: (
+      _,
+      { id, addDate, expiration, amount, location, category, itemType },
+      { dataSources }
+    ) =>
+      dataSources.inventoryItemAPI.update({
+        id,
+        addDate,
+        expiration,
+        amount,
+        location,
+        category,
+        itemType,
+      }),
     deleteInventoryItem: (_, { id }, { dataSources }) =>
       dataSources.inventoryItemAPI.delete({ id }),
     editItem: (

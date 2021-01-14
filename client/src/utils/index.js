@@ -16,8 +16,14 @@ export const millisecondsToPgFormat = (milliseconds) => {
   return moment(Number(milliseconds)).format('YYYY-MM-DD')
 }
 
-export const getExpiration = (addDate, daysLeft) => {
+export const getExpirationFromAddDate = (addDate, daysLeft) => {
   return moment(Number(addDate))
+    .add(daysLeft, 'days')
+    .valueOf()
+}
+
+export const getExpirationFromNow = (daysLeft) => {
+  return moment()
     .add(daysLeft, 'days')
     .valueOf()
 }
