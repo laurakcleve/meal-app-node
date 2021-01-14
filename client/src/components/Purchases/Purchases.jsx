@@ -4,7 +4,6 @@ import { Link } from 'react-router-dom'
 
 import * as Layout from '../Layout.styles'
 import * as Styled from './Purchases.styles'
-import Sidebar from '../Sidebar'
 import Input from '../Input'
 import ListItem from '../ListItem'
 import { formatDate } from '../../utils'
@@ -14,14 +13,19 @@ const Purchases = () => {
     PURCHASE_LOCATIONS_QUERY
   )
 
-  const { data: purchasesData } = useQuery(PURCHASES_QUERY, {
-    fetchPolicy: 'network-only',
-  })
+  const { data: purchasesData } = useQuery(PURCHASES_QUERY)
 
   const [addPurchase] = useMutation(ADD_PURCHASE_MUTATION, {
     onCompleted: () => {
       setDate('')
       setLocation('')
+    },
+    update: (cache, { data: { addPurchase } }) => {
+      const data = cache.readQuery({ query: PURCHASES_QUERY })
+      cache.writeQuery({
+        query: PURCHASES_QUERY,
+        data: { purchases: [addPurchase, ...data.purchases] },
+      })
     },
   })
 
@@ -36,50 +40,49 @@ const Purchases = () => {
           date,
           location,
         },
-        refetchQueries: [{ query: PURCHASES_QUERY }],
       })
     }
   }
 
   return (
     <Layout.Container>
-      <Sidebar>Sidebar</Sidebar>
       <Layout.List>
-        <Styled.AddForm>
-          <Input
-            id="date"
-            label="Date"
-            type="date"
-            value={date}
-            onChange={(e) => setDate(e.target.value)}
-            backgroundColor="#fff"
-          />
-          <Input
-            id="location"
-            label="Location"
-            type="text"
-            value={location}
-            onChange={(e) => setLocation(e.target.value)}
-            list={locationsData && locationsData.purchaseLocations}
-          />
-          <button type="submit" onClick={(e) => submit(e)}>
-            SAVE
-          </button>
-        </Styled.AddForm>
+        <div style={{ maxWidth: '540px', margin: '0 auto' }}>
+          <Styled.AddForm>
+            <Input
+              id="date"
+              label="Date"
+              type="date"
+              value={date}
+              onChange={(e) => setDate(e.target.value)}
+              backgroundColor="#fff"
+            />
+            <Input
+              id="location"
+              label="Location"
+              type="text"
+              value={location}
+              onChange={(e) => setLocation(e.target.value)}
+              list={locationsData && locationsData.purchaseLocations}
+            />
+            <button type="submit" onClick={(e) => submit(e)}>
+              SAVE
+            </button>
+          </Styled.AddForm>
 
-        {loading && <p>Loading...</p>}
-        {error && <p>Error</p>}
-        {purchasesData &&
-          purchasesData.purchases &&
-          purchasesData.purchases.map((purchase) => (
-            <Link key={purchase.id} to={`/purchase/${purchase.id}`}>
-              <ListItem>
-                <Styled.Title>
-                  {`${purchase.location.name} - ${formatDate(purchase.date)}`}
-                </Styled.Title>
-              </ListItem>
-            </Link>
-          ))}
+          {loading && <p>Loading...</p>}
+          {error && <p>Error</p>}
+          {purchasesData &&
+            purchasesData.purchases &&
+            purchasesData.purchases.map((purchase) => (
+              <Link key={purchase.id} to={`/purchase/${purchase.id}`}>
+                <ListItem>
+                  <Styled.Location>{purchase.location.name}</Styled.Location>
+                  <Styled.Date>{formatDate(purchase.date)}</Styled.Date>
+                </ListItem>
+              </Link>
+            ))}
+        </div>
       </Layout.List>
     </Layout.Container>
   )
