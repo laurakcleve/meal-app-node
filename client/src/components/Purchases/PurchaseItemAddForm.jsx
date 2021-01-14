@@ -70,9 +70,22 @@ const PurchaseItemAddForm = ({ purchaseId, PURCHASE_QUERY }) => {
   })
 
   const [addPurchaseItem] = useMutation(ADD_PURCHASE_ITEM_MUTATION, {
-    refetchQueries: [{ query: PURCHASE_QUERY, variables: { id: purchaseId } }],
     onCompleted: () => {
       setIsAddPurchaseItemDone(true)
+    },
+    update: (cache, { data: { addPurchaseItem } }) => {
+      const data = cache.readQuery({
+        query: PURCHASE_QUERY,
+        variables: { id: purchaseId },
+      })
+      const updatedPurchase = { ...data.purchase }
+      updatedPurchase.items = [addPurchaseItem, ...updatedPurchase.items]
+
+      cache.writeQuery({
+        query: PURCHASE_QUERY,
+        variables: { id: purchaseId },
+        data: { purchase: updatedPurchase },
+      })
     },
   })
 
@@ -80,6 +93,7 @@ const PurchaseItemAddForm = ({ purchaseId, PURCHASE_QUERY }) => {
     onCompleted: () => {
       setIsAddInventoryItemDone(true)
     },
+    refetchQueries: [{ query: INVENTORY_ITEMS_QUERY }],
   })
 
   useEffect(() => {
@@ -421,6 +435,53 @@ const ADD_INVENTORY_ITEM_MUTATION = gql`
       number: $number
     ) {
       id
+    }
+  }
+`
+const PURCHASE_QUERY = gql`
+  query purchase($id: ID!) {
+    purchase(id: $id) {
+      id
+      date
+      location {
+        id
+        name
+      }
+      items {
+        id
+        item {
+          id
+          name
+        }
+        price
+        weightAmount
+        weightUnit
+        quantityAmount
+        quantityUnit
+      }
+    }
+  }
+`
+
+const INVENTORY_ITEMS_QUERY = gql`
+  query inventoryItems {
+    inventoryItems {
+      id
+      item {
+        id
+        name
+        dishes {
+          id
+          name
+        }
+      }
+      location {
+        id
+        name
+      }
+      expiration
+      addDate
+      amount
     }
   }
 `
