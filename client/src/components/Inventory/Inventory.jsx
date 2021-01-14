@@ -39,10 +39,19 @@ const Inventory = () => {
   useEffect(() => {
     if (data && data.inventoryItems) {
       let newDisplayedItems = data.inventoryItems.filter((item) => {
-        return (
-          selectedLocationName === 'all' ||
-          (item.location && item.location.name === selectedLocationName)
-        )
+        if (selectedLocationName === 'all') {
+          return true
+        }
+        if (
+          selectedLocationName === 'perishable' &&
+          item.location &&
+          (item.location.name === 'fridge' ||
+            item.location.name === 'leftovers' ||
+            item.location.name === 'produce')
+        ) {
+          return true
+        }
+        return item.location && item.location.name === selectedLocationName
       })
 
       // Search

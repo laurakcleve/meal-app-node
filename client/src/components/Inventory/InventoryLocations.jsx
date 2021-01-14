@@ -15,7 +15,12 @@ const InventoryLocations = ({
       {loading && <div>Loading...</div>}
       {data && data.itemLocations && (
         <SidebarList
-          items={[{ id: '1000', name: 'all' }].concat(data.itemLocations)}
+          items={[
+            { id: '1000', name: 'all' },
+            { id: '2000', name: 'perishable' },
+            ...data.itemLocations,
+          ]}
+          // items={[{ id: '1000', name: 'all' }].concat(data.itemLocations)}
           selectedName={selectedLocationName}
           setSelectedName={setSelectedLocationName}
         />
