@@ -1,7 +1,7 @@
 import styled from 'styled-components'
 
 export const Name = styled.div`
-  flex: 6;
+  flex: 4;
 `
 
 export const Active = styled.div`
@@ -10,7 +10,10 @@ export const Active = styled.div`
   font-size: 12px;
 `
 
-export const Date = styled.div``
+export const Date = styled.div`
+  flex: 1;
+  text-align: right;
+`
 
 export const CheckboxLabel = styled.label`
   display: block;

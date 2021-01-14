@@ -162,17 +162,21 @@ const Inventory = () => {
           )}
 
           <SortingHeader>
-            <div className="name">
+            <div style={{ flex: '3' }}>
               <button type="button" onClick={() => setSort('name')}>
                 Name
               </button>
             </div>
-            <div className="location">
-              <button type="button" onClick={() => setSort('location')}>
+            <div style={{ flex: '2' }}>
+              <button
+                style={{ paddingLeft: '0' }}
+                type="button"
+                onClick={() => setSort('location')}
+              >
                 Location
               </button>
             </div>
-            <div>
+            <div style={{ flex: '1', textAlign: 'right' }}>
               <button type="button" onClick={() => setSort('expiration')}>
                 Expiration
               </button>

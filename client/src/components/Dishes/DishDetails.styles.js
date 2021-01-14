@@ -7,6 +7,10 @@ export const Container = styled.div`
 
 export const Tags = styled.div`
   flex: 1;
+
+  h3 {
+    margin-top: 0;
+  }
 `
 
 export const Ingredients = styled.div`

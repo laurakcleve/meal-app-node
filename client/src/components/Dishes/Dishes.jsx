@@ -208,12 +208,12 @@ const Dishes = () => {
               )}
 
               <SortingHeader>
-                <div className="name">
+                <div style={{ flex: '5' }}>
                   <button type="button" onClick={() => setSort('name')}>
                     Name
                   </button>
                 </div>
-                <div>
+                <div style={{ flex: '1', textAlign: 'right' }}>
                   <button type="button" onClick={() => setSort('lastDate')}>
                     Last date
                   </button>
@@ -240,9 +240,9 @@ const Dishes = () => {
 
                   <Styled.Active>{dish.isActiveDish && 'Active'}</Styled.Active>
 
-                  {dish.dates.length > 0 && (
-                    <Styled.Date>{formatDate(dish.dates[0].date)}</Styled.Date>
-                  )}
+                  <Styled.Date>
+                    {dish.dates.length > 0 && formatDate(dish.dates[0].date)}
+                  </Styled.Date>
                 </ListItem>
               )
           )}

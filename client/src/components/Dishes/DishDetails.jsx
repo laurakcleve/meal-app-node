@@ -145,7 +145,7 @@ const DishDetails = ({ dish }) => {
               <>
                 <Styled.DateForm>
                   <label htmlFor="newDateText">
-                    Add date
+                    Add a date
                     <input
                       id="newDateText"
                       type="date"

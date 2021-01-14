@@ -26,11 +26,14 @@ export const AddButton = styled.button`
 `
 
 export const Name = styled.div`
-  flex: 1;
+  flex: 3;
 `
 
 export const Location = styled.div`
-  flex: 1;
+  flex: 2;
 `
 
-export const Expiration = styled.div``
+export const Expiration = styled.div`
+  flex: 1;
+  text-align: right;
+`
