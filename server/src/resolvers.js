@@ -66,6 +66,8 @@ const resolvers = {
         quantityAmount,
         quantityUnit,
       }),
+    deletePurchaseItem: (_, { id }, { dataSources }) =>
+      dataSources.purchaseAPI.deletePurchaseItem({ id }),
     addInventoryItem: (
       _,
       {

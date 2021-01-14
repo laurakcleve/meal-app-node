@@ -48,6 +48,13 @@ const cache = new InMemoryCache({
         },
       },
     },
+    Purchase: {
+      fields: {
+        items: {
+          merge: false,
+        },
+      },
+    },
   },
 })
 

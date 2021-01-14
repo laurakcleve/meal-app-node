@@ -1,4 +1,5 @@
 const { DataSource } = require('apollo-datasource')
+const { query } = require('../db')
 const db = require('../db')
 
 class PurchaseAPI extends DataSource {
@@ -173,6 +174,14 @@ class PurchaseAPI extends DataSource {
         quantityUnit,
       ])
       .then((results) => results.rows[0])
+  }
+
+  deletePurchaseItem({ id }) {
+    const queryString = `
+      DELETE FROM purchase_item
+      WHERE id = $1
+    `
+    return db.query(queryString, [Number(id)]).then(() => id)
   }
 }
 

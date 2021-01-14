@@ -69,7 +69,10 @@ const Purchase = ({ match, history }) => {
                 expander={
                   selectedItemID === purchaseItem.id && (
                     <Expander>
-                      <PurchaseItemDetails purchaseItem={purchaseItem} />
+                      <PurchaseItemDetails
+                        purchaseId={data.purchase.id}
+                        purchaseItem={purchaseItem}
+                      />
                     </Expander>
                   )
                 }
