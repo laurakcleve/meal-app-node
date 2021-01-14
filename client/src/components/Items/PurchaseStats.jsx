@@ -5,8 +5,6 @@ import pluralize from 'pluralize'
 import * as Styled from './PurchaseStats.styles'
 
 const PurchaseStats = ({ purchases }) => {
-  console.log(purchases)
-
   const hasWeight = purchases.find(
     (purchase) => purchase.weightAmount && purchase.weightUnit
   )
@@ -72,27 +70,23 @@ const PurchaseStats = ({ purchases }) => {
         <h3>Average price by location:</h3>
         <table>
           <tbody>
-            {Object.keys(pricesByLocation).map(
-              (location) =>
-                console.log(quantityPrices(pricesByLocation[location])) || (
-                  <tr key={location}>
-                    <td className="location">{location}</td>
-                    <td>
-                      {hasWeight &&
-                        `$${averagePrice(
-                          weightPrices(pricesByLocation[location])
-                        )}/${pricesByLocation[location][0].weightUnit}`}
-                    </td>
-                    <td>
-                      {hasQuantity &&
-                        `$${averagePrice(
-                          quantityPrices(pricesByLocation[location])
-                        )}/${pricesByLocation[location][0].quantityUnit ||
-                          'ea'}`}
-                    </td>
-                  </tr>
-                )
-            )}
+            {Object.keys(pricesByLocation).map((location) => (
+              <tr key={location}>
+                <td className="location">{location}</td>
+                <td>
+                  {hasWeight &&
+                    `$${averagePrice(
+                      weightPrices(pricesByLocation[location])
+                    )}/${pricesByLocation[location][0].weightUnit}`}
+                </td>
+                <td>
+                  {hasQuantity &&
+                    `$${averagePrice(
+                      quantityPrices(pricesByLocation[location])
+                    )}/${pricesByLocation[location][0].quantityUnit || 'ea'}`}
+                </td>
+              </tr>
+            ))}
           </tbody>
         </table>
       </Styled.PriceByLocation>

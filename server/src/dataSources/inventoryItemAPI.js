@@ -120,8 +120,6 @@ class inventoryItemAPI extends DataSource {
   }
 
   update({ id, addDate, expiration, amount, location, category, itemType }) {
-    console.log({ location, category, expiration })
-
     const queryString = `
       UPDATE inventory_item
       SET add_date = $2,

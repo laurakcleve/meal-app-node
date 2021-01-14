@@ -344,7 +344,7 @@ class DishAPI extends DataSource {
                 )
               })
           })
-        ).then(() => console.log('updatedDish', updatedDish) || updatedDish)
+        ).then(() => updatedDish)
       })
   }
 
