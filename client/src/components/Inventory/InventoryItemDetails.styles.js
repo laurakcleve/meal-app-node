@@ -16,6 +16,7 @@ export const Actions = styled.div`
   display: flex;
   width: 100%;
   justify-content: flex-end;
+  margin-bottom: 30px;
 
   button {
     text-transform: uppercase;
@@ -28,8 +29,16 @@ export const Actions = styled.div`
   }
 `
 
-export const AddDate = styled.div``
+export const AddDate = styled.div`
+  h3 {
+    margin-top: 0;
+  }
+`
 
 export const Amount = styled.div``
 
-export const UsedIn = styled.div``
+export const UsedIn = styled.div`
+  h3 {
+    margin-top: 0;
+  }
+`
