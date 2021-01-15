@@ -114,6 +114,7 @@ const UPDATE_INVENTORY_ITEM_MUTATION = gql`
 
 InventoryItemEditForm.propTypes = {
   inventoryItem: PropTypes.shape({
+    id: PropTypes.string.isRequired,
     addDate: PropTypes.string,
     expiration: PropTypes.string,
     amount: PropTypes.string,

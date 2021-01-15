@@ -9,7 +9,7 @@ import {
   inventoryAmountString,
 } from '../../utils'
 
-const PurchaseItemAddForm = ({ purchaseId, PURCHASE_QUERY }) => {
+const PurchaseItemAddForm = ({ purchaseId }) => {
   const [itemName, setItemName] = useState('')
   const [weightAmount, setWeightAmount] = useState('')
   const [weightUnit, setWeightUnit] = useState('')
@@ -93,7 +93,7 @@ const PurchaseItemAddForm = ({ purchaseId, PURCHASE_QUERY }) => {
     onCompleted: () => {
       setIsAddInventoryItemDone(true)
     },
-    refetchQueries: [{ query: INVENTORY_ITEMS_QUERY }],
+    refetchQueries: [{ query: INVENTORY_ITEMS_QUERY }, { query: ITEMS_QUERY }],
   })
 
   useEffect(() => {

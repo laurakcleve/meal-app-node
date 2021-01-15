@@ -57,10 +57,7 @@ const Purchase = ({ match, history }) => {
               </button>
             </Styled.Header>
 
-            <PurchaseItemAddForm
-              purchaseId={match.params.id}
-              PURCHASE_QUERY={PURCHASE_QUERY}
-            />
+            <PurchaseItemAddForm purchaseId={match.params.id} />
 
             {data.purchase.items.map((purchaseItem) => (
               <ListItem
