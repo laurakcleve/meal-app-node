@@ -90,13 +90,13 @@ class inventoryItemAPI extends DataSource {
       .then((results) => {
         const shelfLifePromise = () => {
           const updateShelflifeQueryString = `
-          UPDATE item
-          SET default_shelflife = $1
-          WHERE id = $2
-          RETURNING *
-        `
+            UPDATE item
+            SET default_shelflife = $1
+            WHERE id = $2
+            RETURNING *
+          `
           return db.query(updateShelflifeQueryString, [
-            defaultShelflife,
+            Number(defaultShelflife),
             results.rows[0].item_id,
           ])
         }
@@ -113,13 +113,13 @@ class inventoryItemAPI extends DataSource {
             .then(() => results.rows[0])
         }
 
-        return Promise.all([shelfLifePromise, categoryPromise]).then(
+        return Promise.all([shelfLifePromise(), categoryPromise()]).then(
           () => results.rows[0]
         )
       })
   }
 
-  update({ id, addDate, expiration, amount, location, category, itemType }) {
+  update({ id, addDate, expiration, amount, location, category }) {
     const queryString = `
       UPDATE inventory_item
       SET add_date = $2,
@@ -141,11 +141,11 @@ class inventoryItemAPI extends DataSource {
 
         const categoryPromise = () => {
           const categoryQuery = `
-          UPDATE item
-          SET category_id = (SELECT category_id_for_insert($1))
-          WHERE id = $2
-          RETURNING *
-        `
+            UPDATE item
+            SET category_id = (SELECT category_id_for_insert($1))
+            WHERE id = $2
+            RETURNING *
+          `
           return db.query(categoryQuery, [category, results.rows[0].item_id])
         }
 
