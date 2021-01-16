@@ -16,6 +16,7 @@ const DishAddForm = ({ setIsAdding }) => {
         data: { dishes: [addDish, ...data.dishes] },
       })
     },
+    refetchQueries: [{ query: DISH_TAGS_QUERY }],
   })
 
   const handleSave = (event, { name, tags, isActive, ingredientSets }) => {
@@ -107,6 +108,15 @@ const DISHES_QUERY = gql`
           }
         }
       }
+    }
+  }
+`
+
+const DISH_TAGS_QUERY = gql`
+  query dishTags {
+    dishTags {
+      id
+      name
     }
   }
 `
