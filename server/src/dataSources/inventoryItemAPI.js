@@ -91,12 +91,13 @@ class inventoryItemAPI extends DataSource {
         const shelfLifePromise = () => {
           const updateShelflifeQueryString = `
             UPDATE item
-            SET default_shelflife = $1
-            WHERE id = $2
+            SET default_shelflife = $1, default_location_id = $2
+            WHERE id = $3
             RETURNING *
           `
           return db.query(updateShelflifeQueryString, [
             Number(defaultShelflife),
+            results.rows[0].location_id,
             results.rows[0].item_id,
           ])
         }

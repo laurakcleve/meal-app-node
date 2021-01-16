@@ -14,6 +14,7 @@ const InventoryItemEditForm = ({ inventoryItem, setIsEditing }) => {
       setIsEditing(false)
       setIsSaveComplete(true)
     },
+    refetchQueries: [{ query: LOCATIONS_QUERY }, { query: CATEGORIES_QUERY }],
   })
 
   const handleSave = (
@@ -108,6 +109,24 @@ const UPDATE_INVENTORY_ITEM_MUTATION = gql`
         id
         name
       }
+    }
+  }
+`
+
+const CATEGORIES_QUERY = gql`
+  query itemCategories {
+    itemCategories {
+      id
+      name
+    }
+  }
+`
+
+const LOCATIONS_QUERY = gql`
+  query itemLocations {
+    itemLocations {
+      id
+      name
     }
   }
 `

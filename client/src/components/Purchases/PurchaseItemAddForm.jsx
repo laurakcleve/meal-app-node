@@ -19,7 +19,6 @@ const PurchaseItemAddForm = ({ purchaseId }) => {
   const [number, setNumber] = useState('1')
   const [isNonFoodItem, setIsNonFoodItem] = useState(false)
   const [doNotInventory, setDoNotInventory] = useState(false)
-
   const [daysLeft, setDaysLeft] = useState('')
   const [category, setCategory] = useState('')
   const [location, setLocation] = useState('')
@@ -93,7 +92,12 @@ const PurchaseItemAddForm = ({ purchaseId }) => {
     onCompleted: () => {
       setIsAddInventoryItemDone(true)
     },
-    refetchQueries: [{ query: INVENTORY_ITEMS_QUERY }, { query: ITEMS_QUERY }],
+    refetchQueries: [
+      { query: INVENTORY_ITEMS_QUERY },
+      { query: ITEMS_QUERY },
+      { query: LOCATIONS_QUERY },
+      { query: CATEGORIES_QUERY },
+    ],
   })
 
   useEffect(() => {
