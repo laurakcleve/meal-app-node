@@ -188,25 +188,23 @@ const Dishes = () => {
         {loading && <p>Loading...</p>}
 
         <>
+          <Styled.TopBar>
+            <Search setSearchText={setSearchText} searchText={searchText} />
+
+            <Styled.AddButton
+              open={isAdding}
+              onClick={() => setIsAdding(!isAdding)}
+            >
+              <div>+</div>
+            </Styled.AddButton>
+          </Styled.TopBar>
+          {isAdding && (
+            <Wrapper>
+              <DishAddForm setIsAdding={setIsAdding} />
+            </Wrapper>
+          )}
           {data && data.dishes && (
             <>
-              <Styled.TopBar>
-                <Search setSearchText={setSearchText} searchText={searchText} />
-
-                <Styled.AddButton
-                  open={isAdding}
-                  onClick={() => setIsAdding(!isAdding)}
-                >
-                  <div>+</div>
-                </Styled.AddButton>
-              </Styled.TopBar>
-
-              {isAdding && (
-                <Wrapper>
-                  <DishAddForm setIsAdding={setIsAdding} />
-                </Wrapper>
-              )}
-
               <SortingHeader>
                 <div style={{ flex: '5' }}>
                   <button type="button" onClick={() => setSort('name')}>
