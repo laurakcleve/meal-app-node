@@ -8,7 +8,10 @@ const DishAddForm = ({ setIsAdding }) => {
   const [isSaveComplete, setIsSaveComplete] = useState(false)
 
   const [addDish] = useMutation(ADD_DISH_MUTATION, {
-    onCompleted: () => setIsSaveComplete(true),
+    onCompleted: () => {
+      setIsSaveComplete(true)
+      setIsAdding(false)
+    },
     update: (cache, { data: { addDish } }) => {
       const data = cache.readQuery({ query: DISHES_QUERY })
       cache.writeQuery({
