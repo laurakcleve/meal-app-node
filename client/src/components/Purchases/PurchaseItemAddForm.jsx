@@ -292,7 +292,7 @@ const PurchaseItemAddForm = ({ purchaseId }) => {
               ? categoriesData.itemCategories
               : []
           }
-          disabled={!!doNotInventory}
+          disabled={!!isNonFoodItem}
         ></Styled.Category>
 
         <Styled.Location
@@ -305,7 +305,7 @@ const PurchaseItemAddForm = ({ purchaseId }) => {
               ? locationsData.itemLocations
               : []
           }
-          disabled={!!doNotInventory}
+          disabled={!!isNonFoodItem}
         ></Styled.Location>
 
         <Styled.DaysLeft
@@ -313,7 +313,7 @@ const PurchaseItemAddForm = ({ purchaseId }) => {
           label="Days Left"
           value={daysLeft}
           onChange={(event) => setDaysLeft(event.target.value)}
-          disabled={!!doNotInventory}
+          disabled={!!isNonFoodItem}
         ></Styled.DaysLeft>
       </Styled.InventorySection>
 
