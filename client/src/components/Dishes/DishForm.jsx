@@ -3,6 +3,7 @@ import PropTypes from 'prop-types'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faTimesCircle } from '@fortawesome/free-solid-svg-icons'
 import { useQuery, gql } from '@apollo/client'
+import cloneDeep from 'lodash.clonedeep'
 
 import * as Styled from './DishForm.styles'
 import ListInput from '../ListInput'
@@ -24,6 +25,12 @@ const DishForm = ({
   const [tags, setTags] = useState(dishTags)
   const [isActive, setIsActive] = useState(isActiveDish)
   const [ingredientSets, setIngredientSets] = useState(dishIngredientSets)
+
+  const resetFields = () => {
+    setName('')
+    setTags([])
+    setIngredientSets(initialIngredientSets)
+  }
 
   useEffect(() => {
     if (isSaveComplete) {
@@ -52,7 +59,7 @@ const DishForm = ({
     ingredientIndex,
     ingredientText
   ) => {
-    const newIngredientSets = [...ingredientSets]
+    const newIngredientSets = cloneDeep(ingredientSets)
     newIngredientSets[ingredientSetIndex].ingredients[
       ingredientIndex
     ].item.name = ingredientText
@@ -60,7 +67,7 @@ const DishForm = ({
   }
 
   const addSubstitute = (ingredientSetIndex) => {
-    const newIngredientSets = [...ingredientSets]
+    const newIngredientSets = cloneDeep(ingredientSets)
     newIngredientSets[ingredientSetIndex].ingredients.push({
       id: Date.now(),
       item: {
@@ -71,7 +78,7 @@ const DishForm = ({
   }
 
   const deleteIngredient = (ingredientSetIndex, ingredientIndex) => {
-    const newIngredientSets = [...ingredientSets]
+    const newIngredientSets = cloneDeep(ingredientSets)
 
     if (newIngredientSets[ingredientSetIndex].ingredients.length > 1) {
       newIngredientSets[ingredientSetIndex].ingredients.splice(
@@ -86,16 +93,10 @@ const DishForm = ({
   }
 
   const handleOptionalCheck = (ingredientSetIndex) => {
-    const newIngredientSets = [...ingredientSets]
+    const newIngredientSets = cloneDeep(ingredientSets)
     const oldOptionalValue = newIngredientSets[ingredientSetIndex].isOptional
     newIngredientSets[ingredientSetIndex].isOptional = !oldOptionalValue
     setIngredientSets(newIngredientSets)
-  }
-
-  const resetFields = () => {
-    setName('')
-    setTags([])
-    setIngredientSets([])
   }
 
   return (
