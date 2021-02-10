@@ -83,7 +83,14 @@ const PurchaseStats = ({ purchases }) => {
                   {hasQuantity &&
                     `$${averagePrice(
                       quantityPrices(pricesByLocation[location])
-                    )}/${pricesByLocation[location][0].quantityUnit || 'ea'}`}
+                    )}/${
+                      pricesByLocation[location][0].quantityUnit
+                        ? pluralize(
+                            pricesByLocation[location][0].quantityUnit,
+                            1
+                          )
+                        : 'ea'
+                    }`}
                 </td>
               </tr>
             ))}
